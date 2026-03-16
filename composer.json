@@ -1,0 +1,8 @@
+{
+    "name": "miauto/theme",
+    "description": "MI-AUTO WordPress theme",
+    "type": "wordpress-theme",
+    "require": {
+        "htmlburger/carbon-fields": "^3.6"
+    }
+}

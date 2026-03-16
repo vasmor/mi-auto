@@ -1,0 +1,127 @@
+<?php
+/**
+ * Carbon Fields: Service card (miauto_service CPT) post meta.
+ *
+ * @package miauto
+ */
+
+use Carbon_Fields\Container;
+use Carbon_Fields\Field;
+
+// ── SC-Hero ─────────────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'miauto_sc_hero', 'Услуга — Герой' )
+	->where( 'post_type', '=', 'miauto_service' )
+	->add_fields( array(
+		Field::make( 'text', 'miauto_sc_hero_subtitle', 'Подзаголовок' )
+			->set_help_text( 'Краткое описание под заголовком (H1 берется из заголовка записи).' ),
+		Field::make( 'complex', 'miauto_sc_hero_features', 'Список преимуществ (галочки)' )
+			->set_layout( 'tabbed-vertical' )
+			->add_fields( array(
+				Field::make( 'text', 'text', 'Текст пункта' ),
+			) )
+			->set_header_template( '<%- text %>' ),
+		Field::make( 'text', 'miauto_sc_hero_cta_primary_text', 'Текст основной кнопки' )
+			->set_default_value( 'Записаться на диагностику' ),
+		Field::make( 'text', 'miauto_sc_hero_cta_secondary_text', 'Текст второй кнопки' )
+			->set_default_value( 'Рассчитать стоимость' ),
+		Field::make( 'image', 'miauto_sc_hero_image', 'Изображение' ),
+		Field::make( 'complex', 'miauto_sc_hero_stats', 'Статистика (рейтинг, отзывы, опыт)' )
+			->set_layout( 'tabbed-vertical' )
+			->add_fields( array(
+				Field::make( 'text', 'stat_value', 'Значение' )
+					->set_help_text( 'Например: 5,0 / 500+ / с 2018' ),
+				Field::make( 'text', 'stat_label', 'Подпись' )
+					->set_help_text( 'Например: Рейтинг на картах / Отзывов на картах / Опыт работы' ),
+			) )
+			->set_header_template( '<%- stat_value %> — <%- stat_label %>' ),
+	) );
+
+// ── Symptoms ────────────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'miauto_sc_symptoms', 'Услуга — Симптомы' )
+	->where( 'post_type', '=', 'miauto_service' )
+	->add_fields( array(
+		Field::make( 'text', 'miauto_sc_symptoms_title', 'Заголовок' )
+			->set_default_value( 'Когда нужен ремонт транспорта' ),
+		Field::make( 'text', 'miauto_sc_symptoms_subtitle', 'Подзаголовок' ),
+		Field::make( 'complex', 'miauto_sc_symptoms_cards', 'Карточки симптомов' )
+			->set_layout( 'tabbed-vertical' )
+			->add_fields( array(
+				Field::make( 'image', 'image', 'Изображение' ),
+				Field::make( 'text', 'title', 'Заголовок' ),
+				Field::make( 'textarea', 'desc', 'Описание' ),
+			) )
+			->set_header_template( '<%- title %>' ),
+		Field::make( 'text', 'miauto_sc_symptoms_cta_text', 'Текст призыва (над кнопкой)' )
+			->set_default_value( 'Запишитесь — проверим причину и предложим варианты решения' ),
+		Field::make( 'text', 'miauto_sc_symptoms_cta_btn_text', 'Текст кнопки' )
+			->set_default_value( 'Записаться на диагностику' ),
+	) );
+
+// ── Services List ───────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'miauto_sc_svc_list', 'Услуга — Список работ' )
+	->where( 'post_type', '=', 'miauto_service' )
+	->add_fields( array(
+		Field::make( 'text', 'miauto_sc_svc_list_title', 'Заголовок' )
+			->set_default_value( 'Какие работы выполняем' ),
+		Field::make( 'complex', 'miauto_sc_svc_list_items', 'Пункты работ' )
+			->set_layout( 'tabbed-vertical' )
+			->add_fields( array(
+				Field::make( 'text', 'title', 'Заголовок' ),
+				Field::make( 'textarea', 'desc', 'Описание' ),
+			) )
+			->set_header_template( '<%- title %>' ),
+	) );
+
+// ── Prices ──────────────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'miauto_sc_prices', 'Услуга — Цены' )
+	->where( 'post_type', '=', 'miauto_service' )
+	->add_fields( array(
+		Field::make( 'text', 'miauto_sc_prices_title', 'Заголовок' )
+			->set_default_value( 'Стоимость ремонта' ),
+		Field::make( 'text', 'miauto_sc_prices_subtitle', 'Подзаголовок' ),
+		Field::make( 'complex', 'miauto_sc_prices_rows', 'Строки прайса' )
+			->set_layout( 'tabbed-vertical' )
+			->add_fields( array(
+				Field::make( 'text', 'name', 'Название услуги' ),
+				Field::make( 'text', 'price', 'Цена' )
+					->set_help_text( 'Например: от 5 000 ₽' ),
+			) )
+			->set_header_template( '<%- name %> — <%- price %>' ),
+		Field::make( 'text', 'miauto_sc_prices_footer_heading', 'Заголовок футера' )
+			->set_default_value( 'Получите точную смету после дефектовки' ),
+		Field::make( 'text', 'miauto_sc_prices_footer_desc', 'Описание футера' )
+			->set_default_value( 'До начала работ всё согласуем' ),
+		Field::make( 'text', 'miauto_sc_prices_footer_btn_text', 'Текст кнопки футера' )
+			->set_default_value( 'Записаться на диагностику' ),
+	) );
+
+// ── Warranty ────────────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'miauto_sc_warranty', 'Услуга — Гарантия' )
+	->where( 'post_type', '=', 'miauto_service' )
+	->add_fields( array(
+		Field::make( 'text', 'miauto_sc_warranty_title', 'Заголовок' )
+			->set_default_value( 'Гарантия и ответственность' ),
+		Field::make( 'text', 'miauto_sc_warranty_subtitle', 'Подзаголовок' ),
+		Field::make( 'complex', 'miauto_sc_warranty_cards', 'Карточки гарантии' )
+			->set_layout( 'tabbed-vertical' )
+			->add_fields( array(
+				Field::make( 'textarea', 'svg', 'SVG-иконка' )
+					->set_help_text( 'SVG-код иконки (тег &lt;svg&gt;...&lt;/svg&gt;).' ),
+				Field::make( 'text', 'text', 'Текст' ),
+			) )
+			->set_header_template( '<%- text %>' ),
+	) );
+
+// ── Service Price (for listings / cards) ────────────────────────────
+
+Container::make( 'post_meta', 'miauto_sc_price_display', 'Услуга — Цена (для карточки)' )
+	->where( 'post_type', '=', 'miauto_service' )
+	->add_fields( array(
+		Field::make( 'text', 'miauto_service_price', 'Цена услуги' )
+			->set_help_text( 'Отображается в карточке услуги на странице каталога. Например: от 25 000 ₽' ),
+	) );

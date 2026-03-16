@@ -1,0 +1,118 @@
+/* ============================================================
+   advantages.css
+   Desktop 1440px: 3-column advantages grid
+   Mobile  370px:  single column
+   ============================================================ */
+
+.advantages {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.advantages__container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  padding-left:  var(--content-padding-x);
+  padding-right: var(--content-padding-x);
+}
+
+.advantages__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+.advantages__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(30 / var(--vw-base) * 100vw);
+}
+
+.advantages__card {
+  display: flex;
+  flex-direction: column;
+  gap: calc(15 / var(--vw-base) * 100vw);
+  padding: calc(30 / var(--vw-base) * 100vw);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+}
+
+.advantages__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:  calc(50 / var(--vw-base) * 100vw);
+  height: calc(50 / var(--vw-base) * 100vw);
+  border-radius: calc(10 / var(--vw-base) * 100vw);
+  background-color: rgba(234, 51, 35, 0.08);
+}
+
+.advantages__icon svg {
+  width:  calc(24 / var(--vw-base) * 100vw);
+  height: calc(24 / var(--vw-base) * 100vw);
+  fill: none;
+  stroke: var(--color-red);
+  stroke-width: 2;
+}
+
+.advantages__card-title {
+  font-size:   calc(18 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.22;
+  color: var(--color-text);
+}
+
+.advantages__card-text {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.43;
+  color: var(--color-text);
+}
+
+/* ── MOBILE ─────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .advantages {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__container {
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__title {
+    font-size:   calc(26 / var(--vw-base) * 100vw);
+    line-height: 1.15;
+  }
+
+  .advantages__grid {
+    grid-template-columns: 1fr;
+    gap: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__card {
+    padding: calc(20 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__icon {
+    width:  calc(40 / var(--vw-base) * 100vw);
+    height: calc(40 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__icon svg {
+    width:  calc(20 / var(--vw-base) * 100vw);
+    height: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__card-title {
+    font-size: calc(16 / var(--vw-base) * 100vw);
+  }
+
+  .advantages__card-text {
+    font-size: calc(13 / var(--vw-base) * 100vw);
+  }
+}

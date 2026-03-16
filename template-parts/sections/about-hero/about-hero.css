@@ -1,0 +1,102 @@
+/* ============================================================
+   about-hero.css
+   Desktop 1440px: about company hero section
+   Mobile  370px:  stacked single column
+   ============================================================ */
+
+.about-hero {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.about-hero__container {
+  display: flex;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  padding-left:  var(--content-padding-x);
+  padding-right: var(--content-padding-x);
+}
+
+.about-hero__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(20 / var(--vw-base) * 100vw);
+  flex: 1;
+}
+
+.about-hero__badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: calc(8 / var(--vw-base) * 100vw) calc(15 / var(--vw-base) * 100vw);
+  border-radius: calc(10 / var(--vw-base) * 100vw);
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.43;
+  color: var(--color-red);
+  background-color: rgba(234, 51, 35, 0.08);
+}
+
+.about-hero__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+.about-hero__title-accent {
+  color: var(--color-red);
+}
+
+.about-hero__text {
+  font-size:   calc(18 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.56;
+  color: var(--color-text);
+}
+
+.about-hero__image {
+  flex-shrink: 0;
+  width:  calc(605 / var(--vw-base) * 100vw);
+  height: calc(350 / var(--vw-base) * 100vw);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  object-fit: cover;
+}
+
+/* ── MOBILE ─────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .about-hero {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .about-hero__container {
+    flex-direction: column;
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .about-hero__content {
+    gap: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .about-hero__badge {
+    padding: calc(6 / var(--vw-base) * 100vw) calc(12 / var(--vw-base) * 100vw);
+    font-size: calc(12 / var(--vw-base) * 100vw);
+  }
+
+  .about-hero__title {
+    font-size:   calc(26 / var(--vw-base) * 100vw);
+    line-height: 1.15;
+  }
+
+  .about-hero__text {
+    font-size:   calc(14 / var(--vw-base) * 100vw);
+    line-height: 1.43;
+  }
+
+  .about-hero__image {
+    width: 100%;
+    height: calc(200 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+}

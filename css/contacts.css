@@ -1,0 +1,201 @@
+/* ============================================================
+   contacts.css
+   Desktop 1440px: three-column layout — info + decoration + map
+   Mobile  370px:  hidden (contacts info in footer)
+   ============================================================ */
+
+/* ── Section ────────────────────────────────────────────────── */
+.contacts {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+/* ── Container ───────────────────────────────────────────────── */
+.contacts__container {
+  display: flex;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  padding-left:  var(--content-padding-x);
+  padding-right: var(--content-padding-x);
+}
+
+/* ── Info column ─────────────────────────────────────────────── */
+.contacts__info {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: calc(293 / var(--vw-base) * 100vw);
+  padding: calc(20 / var(--vw-base) * 100vw);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+}
+
+.contacts__info-inner {
+  display: flex;
+  flex-direction: column;
+  gap: calc(28 / var(--vw-base) * 100vw);
+}
+
+/* Title */
+.contacts__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+/* ── Details list ────────────────────────────────────────────── */
+.contacts__list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(18 / var(--vw-base) * 100vw);
+}
+
+/* Contact item row (icon + text) */
+.contacts__item {
+  display: flex;
+  align-items: center;
+  gap: calc(10 / var(--vw-base) * 100vw);
+}
+
+.contacts__icon {
+  flex-shrink: 0;
+  width:  calc(16 / var(--vw-base) * 100vw);
+  height: calc(16 / var(--vw-base) * 100vw);
+}
+
+.contacts__text {
+  font-size:   calc(16 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+/* Phone links */
+.contacts__phones {
+  display: flex;
+  flex-direction: column;
+  gap: calc(5 / var(--vw-base) * 100vw);
+}
+
+.contacts__phone-row {
+  display: flex;
+  align-items: center;
+  gap: calc(5 / var(--vw-base) * 100vw);
+}
+
+.contacts__phone-text {
+  font-size:   calc(16 / var(--vw-base) * 100vw);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+/* Social icons */
+.contacts__socials {
+  display: flex;
+  gap: calc(10 / var(--vw-base) * 100vw);
+}
+
+.contacts__social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:  calc(40 / var(--vw-base) * 100vw);
+  height: calc(40 / var(--vw-base) * 100vw);
+  border-radius: 50%;
+  background-color: var(--color-red);
+  transition: opacity 0.2s;
+}
+.contacts__social:hover { opacity: 0.85; }
+
+.contacts__social-icon {
+  width:  calc(20 / var(--vw-base) * 100vw);
+  height: calc(20 / var(--vw-base) * 100vw);
+  fill: var(--color-white);
+}
+
+/* ── Decoration image ────────────────────────────────────────── */
+.contacts__decoration {
+  flex-shrink: 0;
+  width:  calc(350 / var(--vw-base) * 100vw);
+  height: calc(405 / var(--vw-base) * 100vw);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  object-fit: cover;
+}
+
+/* ── Map image ───────────────────────────────────────────────── */
+.contacts__map {
+  flex: 1;
+  height: calc(405 / var(--vw-base) * 100vw);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  object-fit: cover;
+}
+
+/* ============================================================
+   MOBILE  (max-width: 767px)
+   ============================================================ */
+@media (max-width: 767px) {
+  .contacts {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .contacts__container {
+    flex-direction: column;
+    gap: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  /* Info card: full width, auto height */
+  .contacts__info {
+    width: 100%;
+    padding: calc(15 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .contacts__info-inner {
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .contacts__title {
+    font-size:   calc(26 / var(--vw-base) * 100vw);
+    line-height: 1.15;
+  }
+
+  .contacts__text {
+    font-size:   calc(14 / var(--vw-base) * 100vw);
+    line-height: 1.43;
+  }
+
+  .contacts__phone-text {
+    font-size:   calc(14 / var(--vw-base) * 100vw);
+    line-height: 1.43;
+  }
+
+  .contacts__icon {
+    width:  calc(14 / var(--vw-base) * 100vw);
+    height: calc(14 / var(--vw-base) * 100vw);
+  }
+
+  .contacts__social {
+    width:  calc(35 / var(--vw-base) * 100vw);
+    height: calc(35 / var(--vw-base) * 100vw);
+  }
+
+  .contacts__social-icon {
+    width:  calc(17 / var(--vw-base) * 100vw);
+    height: calc(17 / var(--vw-base) * 100vw);
+  }
+
+  /* Hide decoration image on mobile */
+  .contacts__decoration {
+    display: none;
+  }
+
+  /* Map: full width, shorter */
+  .contacts__map {
+    width: 100%;
+    height: calc(200 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+}

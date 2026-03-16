@@ -1,0 +1,201 @@
+/* ============================================================
+   form.css
+   Desktop 1440px: appointment form with dark bg image
+   Mobile  370px:  stacked inputs, full-width button
+   ============================================================ */
+
+/* ── Section ────────────────────────────────────────────────── */
+.form-section {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+/* ── Container (dark card with bg image) ─────────────────────── */
+.form-section__container {
+  position: relative;
+  overflow: hidden;
+  padding: calc(40 / var(--vw-base) * 100vw);
+  margin-left:  var(--content-padding-x);
+  margin-right: var(--content-padding-x);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+}
+
+/* Background image */
+.form-section__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Dark overlay */
+.form-section__container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+/* ── Form wrapper ────────────────────────────────────────────── */
+.form-section__form {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  max-width: calc(940 / var(--vw-base) * 100vw);
+  margin: 0 auto;
+}
+
+/* ── Title ────────────────────────────────────────────────────── */
+.form-section__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-white);
+  text-align: center;
+}
+
+/* ── Form content ────────────────────────────────────────────── */
+.form-section__content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 / var(--vw-base) * 100vw);
+  width: 100%;
+}
+
+/* ── Input row ───────────────────────────────────────────────── */
+.form-section__inputs {
+  display: flex;
+  gap: calc(20 / var(--vw-base) * 100vw);
+}
+
+.form-section__input {
+  flex: 1;
+  height: calc(50 / var(--vw-base) * 100vw);
+  padding: 0 calc(20 / var(--vw-base) * 100vw);
+  border: none;
+  border-radius: calc(10 / var(--vw-base) * 100vw);
+  font-family: 'Inter', sans-serif;
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.43;
+  color: var(--color-text);
+  background-color: var(--color-white);
+}
+.form-section__input::placeholder {
+  color: rgb(154, 154, 154);
+}
+
+/* ── Submit button ───────────────────────────────────────────── */
+.form-section__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(50 / var(--vw-base) * 100vw);
+  border: none;
+  border-radius: calc(10 / var(--vw-base) * 100vw);
+  font-family: 'Inter', sans-serif;
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 500;
+  line-height: 1.43;
+  color: var(--color-white);
+  background-color: var(--color-red);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.form-section__btn:hover { opacity: 0.9; }
+
+/* ── Privacy checkbox row ────────────────────────────────────── */
+.form-section__privacy {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: calc(10 / var(--vw-base) * 100vw);
+}
+
+.form-section__checkbox {
+  flex-shrink: 0;
+  width:  calc(16 / var(--vw-base) * 100vw);
+  height: calc(16 / var(--vw-base) * 100vw);
+  margin-top: calc(1 / var(--vw-base) * 100vw);
+  border: none;
+  border-radius: calc(4 / var(--vw-base) * 100vw);
+  accent-color: var(--color-red);
+  cursor: pointer;
+}
+
+.form-section__privacy-text {
+  font-size:   calc(12 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.17;
+  color: var(--color-white);
+}
+
+.form-section__privacy-link {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
+/* ============================================================
+   MOBILE  (max-width: 767px)
+   ============================================================ */
+@media (max-width: 767px) {
+  .form-section {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .form-section__container {
+    padding: calc(30 / var(--vw-base) * 100vw) calc(15 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  /* Lighter overlay + blur on mobile */
+  .form-section__bg {
+    filter: blur(10px);
+    /* slightly scale to cover blur edge bleed */
+    transform: scale(1.05);
+  }
+
+  .form-section__container::after {
+    background-color: rgba(0, 0, 0, 0.30);
+  }
+
+  .form-section__form {
+    gap: calc(20 / var(--vw-base) * 100vw);
+    max-width: none;
+  }
+
+  .form-section__title {
+    font-size:   calc(26 / var(--vw-base) * 100vw);
+    line-height: calc(30 / 26);
+    text-align: left;
+  }
+
+  .form-section__inputs {
+    flex-direction: column;
+    gap: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .form-section__input {
+    flex: none;
+    width: 100%;
+    height: calc(45 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .form-section__btn {
+    height: calc(45 / var(--vw-base) * 100vw);
+  }
+
+  .form-section__privacy {
+    justify-content: flex-start;
+  }
+}

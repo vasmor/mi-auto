@@ -1,0 +1,109 @@
+/* ============================================================
+   car-models.css
+   Desktop 1440px: 4-column grid of car model cards (8 cards)
+   Mobile  370px:  2-column grid
+   ============================================================ */
+
+/* ── Section ────────────────────────────────────────────────── */
+.car-models {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+/* ── Container (1240px inner) ────────────────────────────────── */
+.car-models__container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  padding-left:  var(--content-padding-x);
+  padding-right: var(--content-padding-x);
+}
+
+/* ── Title ────────────────────────────────────────────────────── */
+.car-models__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+/* ── Grid (4 columns desktop) ─────────────────────────────────── */
+.car-models__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: calc(30 / var(--vw-base) * 100vw);
+}
+
+/* ── Card ──────────────────────────────────────────────────────── */
+.car-models__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(20 / var(--vw-base) * 100vw);
+  padding: calc(30 / var(--vw-base) * 100vw) calc(20 / var(--vw-base) * 100vw);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+  transition: box-shadow 0.2s;
+}
+.car-models__card:hover {
+  box-shadow: 0 4px 20px rgba(14, 13, 13, 0.08);
+}
+
+/* ── Car image ──────────────────────────────────────────────── */
+.car-models__image {
+  width:  calc(229 / var(--vw-base) * 100vw);
+  height: calc(120 / var(--vw-base) * 100vw);
+  object-fit: contain;
+  object-position: center;
+}
+
+/* ── Car name ───────────────────────────────────────────────── */
+.car-models__name {
+  font-size:   calc(18 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.11;
+  color: var(--color-text);
+  text-align: center;
+}
+
+/* ============================================================
+   MOBILE  (max-width: 767px)
+   ============================================================ */
+@media (max-width: 767px) {
+  .car-models {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .car-models__container {
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .car-models__title {
+    font-size:   calc(26 / var(--vw-base) * 100vw);
+    line-height: 1.15;
+  }
+
+  .car-models__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .car-models__card {
+    gap: calc(10 / var(--vw-base) * 100vw);
+    padding: calc(20 / var(--vw-base) * 100vw) calc(15 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .car-models__image {
+    width:  calc(134 / var(--vw-base) * 100vw);
+    height: calc(70  / var(--vw-base) * 100vw);
+  }
+
+  .car-models__name {
+    font-size:   calc(14 / var(--vw-base) * 100vw);
+    line-height: 1.43;
+  }
+}

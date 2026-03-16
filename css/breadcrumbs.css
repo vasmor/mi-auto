@@ -1,0 +1,65 @@
+/* ============================================================
+   breadcrumbs.css
+   Desktop 1440px: horizontal breadcrumb trail
+   Mobile  370px:  same, smaller font
+   ============================================================ */
+
+/* ── Wrapper ─────────────────────────────────────────────────── */
+.breadcrumbs {
+  padding-top:    calc(20 / var(--vw-base) * 100vw);
+  padding-bottom: calc(20 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.breadcrumbs__list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(8 / var(--vw-base) * 100vw);
+  padding-left:  var(--content-padding-x);
+  padding-right: var(--content-padding-x);
+}
+
+/* ── Link ────────────────────────────────────────────────────── */
+.breadcrumbs__link {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.43;
+  color: var(--color-text);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.breadcrumbs__link:hover {
+  opacity: 1;
+}
+
+/* ── Separator ───────────────────────────────────────────────── */
+.breadcrumbs__sep {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  color: var(--color-text);
+  opacity: 0.4;
+}
+
+/* ── Current page ────────────────────────────────────────────── */
+.breadcrumbs__current {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 500;
+  line-height: 1.43;
+  color: var(--color-text);
+}
+
+/* ============================================================
+   MOBILE  (max-width: 767px)
+   ============================================================ */
+@media (max-width: 767px) {
+  .breadcrumbs {
+    padding-top:    calc(10 / var(--vw-base) * 100vw);
+    padding-bottom: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .breadcrumbs__link,
+  .breadcrumbs__sep,
+  .breadcrumbs__current {
+    font-size: calc(12 / var(--vw-base) * 100vw);
+  }
+}
