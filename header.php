@@ -30,7 +30,7 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<?php get_template_part( 'template-parts/sections/top-bar/top-bar' ); ?>
+<?php get_template_part( 'template-parts/sections/top-bar' ); ?>
 
 <header class="header" role="banner">
     <div class="header__container">

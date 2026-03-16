@@ -8,7 +8,7 @@
 get_header();
 
 // Breadcrumbs.
-get_template_part( 'template-parts/sections/breadcrumbs/breadcrumbs', null, array(
+get_template_part( 'template-parts/sections/breadcrumbs', null, array(
     'breadcrumbs' => array(
         array( 'label' => 'Главная', 'url' => home_url( '/' ) ),
         array( 'label' => 'Блог' ),
@@ -16,6 +16,6 @@ get_template_part( 'template-parts/sections/breadcrumbs/breadcrumbs', null, arra
 ) );
 
 // Blog grid.
-get_template_part( 'template-parts/sections/blog/blog' );
+get_template_part( 'template-parts/sections/blog' );
 
 get_footer();

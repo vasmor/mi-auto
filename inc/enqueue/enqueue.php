@@ -16,43 +16,43 @@ function miauto_register_assets() {
 
     wp_register_style(
         'miauto-base',
-        $uri . '/assets/css/base/base.css',
+        $uri . '/css/base.css',
         array(),
-        filemtime( $dir . '/assets/css/base/base.css' )
+        filemtime( $dir . '/css/base.css' )
     );
 
     // ── Section styles ───────────────────────────────────────
 
     $sections_css = array(
-        'miauto-top-bar'      => 'top-bar/top-bar.css',
-        'miauto-header'       => 'header/header.css',
-        'miauto-hero'         => 'hero/hero.css',
-        'miauto-car-models'   => 'car-models/car-models.css',
-        'miauto-services'     => 'services/services.css',
-        'miauto-about'        => 'about/about.css',
-        'miauto-partners'     => 'partners/partners.css',
-        'miauto-svc-details'  => 'svc-details/svc-details.css',
-        'miauto-contacts'     => 'contacts/contacts.css',
-        'miauto-form'         => 'form-section/form-section.css',
-        'miauto-footer'       => 'footer/footer.css',
-        'miauto-scroll-top'   => 'scroll-top/scroll-top.css',
-        'miauto-breadcrumbs'  => 'breadcrumbs/breadcrumbs.css',
-        'miauto-about-hero'   => 'about-hero/about-hero.css',
-        'miauto-about-intro'  => 'about-intro/about-intro.css',
-        'miauto-work-process'  => 'work-process/work-process.css',
-        'miauto-advantages'    => 'advantages/advantages.css',
-        'miauto-works'         => 'works/works.css',
-        'miauto-prices'        => 'prices/prices.css',
-        'miauto-blog'          => 'blog/blog.css',
-        'miauto-article'       => 'article/article.css',
-        'miauto-service-card'  => 'service-card/service-card.css',
+        'miauto-top-bar'       => 'top-bar.css',
+        'miauto-header'        => 'header.css',
+        'miauto-hero'          => 'hero.css',
+        'miauto-car-models'    => 'car-models.css',
+        'miauto-services'      => 'services.css',
+        'miauto-about'         => 'about.css',
+        'miauto-partners'      => 'partners.css',
+        'miauto-svc-details'   => 'svc-details.css',
+        'miauto-contacts'      => 'contacts.css',
+        'miauto-form'          => 'form-section.css',
+        'miauto-footer'        => 'footer.css',
+        'miauto-scroll-top'    => 'scroll-top.css',
+        'miauto-breadcrumbs'   => 'breadcrumbs.css',
+        'miauto-about-hero'    => 'about-hero.css',
+        'miauto-about-intro'   => 'about-intro.css',
+        'miauto-work-process'  => 'work-process.css',
+        'miauto-advantages'    => 'advantages.css',
+        'miauto-works'         => 'works.css',
+        'miauto-prices'        => 'prices.css',
+        'miauto-blog'          => 'blog.css',
+        'miauto-article'       => 'article.css',
+        'miauto-service-card'  => 'service-card.css',
     );
 
     foreach ( $sections_css as $handle => $path ) {
-        $full_path = $dir . '/template-parts/sections/' . $path;
+        $full_path = $dir . '/css/' . $path;
         wp_register_style(
             $handle,
-            $uri . '/template-parts/sections/' . $path,
+            $uri . '/css/' . $path,
             array( 'miauto-base' ),
             filemtime( $full_path )
         );
@@ -61,24 +61,24 @@ function miauto_register_assets() {
     // ── Section scripts ──────────────────────────────────────
 
     $sections_js = array(
-        'miauto-top-bar'     => 'top-bar/top-bar.js',
-        'miauto-header'      => 'header/header.js',
-        'miauto-hero'        => 'hero/hero.js',
-        'miauto-services'    => 'services/services.js',
-        'miauto-svc-details' => 'svc-details/svc-details.js',
-        'miauto-footer'       => 'footer/footer.js',
-        'miauto-scroll-top'   => 'scroll-top/scroll-top.js',
-        'miauto-works'         => 'works/works.js',
-        'miauto-prices'        => 'prices/prices.js',
-        'miauto-blog'          => 'blog/blog.js',
-        'miauto-service-card'  => 'service-card/service-card.js',
+        'miauto-top-bar'       => 'top-bar.js',
+        'miauto-header'        => 'header.js',
+        'miauto-hero'          => 'hero.js',
+        'miauto-services'      => 'services.js',
+        'miauto-svc-details'   => 'svc-details.js',
+        'miauto-footer'        => 'footer.js',
+        'miauto-scroll-top'    => 'scroll-top.js',
+        'miauto-works'         => 'works.js',
+        'miauto-prices'        => 'prices.js',
+        'miauto-blog'          => 'blog.js',
+        'miauto-service-card'  => 'service-card.js',
     );
 
     foreach ( $sections_js as $handle => $path ) {
-        $full_path = $dir . '/template-parts/sections/' . $path;
+        $full_path = $dir . '/js/' . $path;
         wp_register_script(
             $handle,
-            $uri . '/template-parts/sections/' . $path,
+            $uri . '/js/' . $path,
             array(),
             filemtime( $full_path ),
             true

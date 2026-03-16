@@ -19,28 +19,28 @@ if ( $services_page ) {
 }
 $breadcrumbs[] = array( 'label' => get_the_title() );
 
-get_template_part( 'template-parts/sections/breadcrumbs/breadcrumbs', null, array(
+get_template_part( 'template-parts/sections/breadcrumbs', null, array(
 	'breadcrumbs' => $breadcrumbs,
 ) );
 
 // Service Card — all unique sections (sc-hero, symptoms, svc-list, sc-prices, warranty).
-get_template_part( 'template-parts/sections/service-card/service-card', null, $miauto_args );
+get_template_part( 'template-parts/sections/service-card', null, $miauto_args );
 
 // Work Process (reused — data stored on the about page or current post).
 $about_page    = get_page_by_path( 'about' );
 $wp_source_id  = $about_page ? $about_page->ID : get_the_ID();
-get_template_part( 'template-parts/sections/work-process/work-process', null, array( 'post_id' => $wp_source_id ) );
+get_template_part( 'template-parts/sections/work-process', null, array( 'post_id' => $wp_source_id ) );
 
 // Works gallery (reused — queries miauto_work CPT).
-get_template_part( 'template-parts/sections/works/works', null, $miauto_args );
+get_template_part( 'template-parts/sections/works', null, $miauto_args );
 
 // Advantages (reused — data stored on the about page).
-get_template_part( 'template-parts/sections/advantages/advantages', null, array( 'post_id' => $wp_source_id ) );
+get_template_part( 'template-parts/sections/advantages', null, array( 'post_id' => $wp_source_id ) );
 
 // Contacts (reused).
-get_template_part( 'template-parts/sections/contacts/contacts', null, $miauto_args );
+get_template_part( 'template-parts/sections/contacts', null, $miauto_args );
 
 // Form Section (reused).
-get_template_part( 'template-parts/sections/form-section/form-section', null, $miauto_args );
+get_template_part( 'template-parts/sections/form-section', null, $miauto_args );
 
 get_footer();

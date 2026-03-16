@@ -46,8 +46,9 @@ mi-auto/
 │   │   ├── fields-works.php            # Поля CPT miauto_work
 │   │   └── fields-contacts.php         # Поля «Контакты»
 │   └── demo-import/demo-import.php     # Импорт демо-контента
-├── template-parts/sections/            # 19 секций-компонентов
-├── assets/                             # CSS, JS, изображения
+├── template-parts/sections/            # 19 секций-компонентов (плоская структура)
+├── css/                                # Все стили (base + 22 секции)
+├── js/                                 # Все скрипты (11 секций)
 └── img/                                # Демо-изображения для импорта
 ```
 
@@ -264,9 +265,10 @@ mi-auto/
 
 **Файл:** `inc/enqueue/enqueue.php` — хук `wp_enqueue_scripts`
 
-- **Глобальные CSS:** base, top-bar, header, footer, scroll-top
-- **Глобальные JS:** top-bar, header, footer, scroll-top
-- **По секциям:** 19 CSS + 11 JS файлов (регистрируются, подключаются в шаблонах)
+- **CSS:** `css/base.css` (глобальный) + 22 файла секций в `css/` (регистрируются с зависимостью от base)
+- **JS:** 11 файлов секций в `js/`
+- **Глобально подключаются:** base, top-bar, header, footer, scroll-top (CSS + JS)
+- **Остальные секции:** регистрируются в `enqueue.php`, подключаются по хэндлу внутри шаблонов секций
 - **Cache busting:** через `filemtime()`
 - **Nonce:** передаётся в JS через `wp_localize_script('miauto-header', 'miAutoData', ...)`
 
