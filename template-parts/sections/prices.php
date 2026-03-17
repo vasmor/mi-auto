@@ -21,7 +21,7 @@ if ( empty( $models ) ) {
 ?>
 
 <section class="prices" aria-label="<?php echo esc_attr( $title ); ?>">
-    <div class="prices__container">
+    <div class="container">
 
         <div class="prices__header">
             <?php if ( ! empty( $title ) ) : ?>

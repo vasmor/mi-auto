@@ -23,7 +23,7 @@ if ( ! $works->have_posts() ) {
 ?>
 
 <section class="works" aria-label="Наши работы">
-    <div class="works__container">
+    <div class="container">
 
         <h1 class="works__title">Наши работы</h1>
 

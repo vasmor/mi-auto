@@ -12,11 +12,9 @@
 }
 
 /* ── Container ───────────────────────────────────────────────── */
-.contacts__container {
+.contacts .container {
   display: flex;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 /* ── Info column ─────────────────────────────────────────────── */
@@ -141,7 +139,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .contacts__container {
+  .contacts .container {
     flex-direction: column;
     gap: calc(15 / var(--vw-base) * 100vw);
   }

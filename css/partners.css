@@ -12,12 +12,10 @@
 }
 
 /* ── Container ───────────────────────────────────────────────── */
-.partners__container {
+.partners .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 /* ── Title ────────────────────────────────────────────────────── */
@@ -60,7 +58,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .partners__container {
+  .partners .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 

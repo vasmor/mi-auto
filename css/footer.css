@@ -13,11 +13,9 @@
 }
 
 /* ── Container ───────────────────────────────────────────────── */
-.footer__container {
+.footer .container {
   display: flex;
   gap: calc(68 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 /* ── Brand column ────────────────────────────────────────────── */
@@ -196,7 +194,7 @@
     padding-bottom: calc(20 / var(--vw-base) * 100vw);
   }
 
-  .footer__container {
+  .footer .container {
     flex-direction: column;
     gap: calc(20 / var(--vw-base) * 100vw);
   }

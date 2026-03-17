@@ -25,7 +25,7 @@ if ( ! $models_query->have_posts() ) {
 ?>
 
 <section class="car-models" aria-label="Модели автомобилей">
-    <div class="car-models__container">
+    <div class="container">
 
         <?php if ( ! empty( $title ) ) : ?>
         <h2 class="car-models__title"><?php echo esc_html( $title ); ?></h2>
@@ -47,5 +47,5 @@ if ( ! $models_query->have_posts() ) {
             <?php endwhile; wp_reset_postdata(); ?>
         </div>
 
-    </div><!-- /.car-models__container -->
+    </div><!-- /.container -->
 </section><!-- /.car-models -->

@@ -23,7 +23,7 @@ $vk      = miauto_get_option( 'miauto_vk_url' );
 ?>
 
 <section class="contacts" aria-label="Наши контакты">
-    <div class="contacts__container">
+    <div class="container">
 
         <!-- Info card -->
         <div class="contacts__info">
@@ -114,5 +114,5 @@ $vk      = miauto_get_option( 'miauto_vk_url' );
         }
         ?>
 
-    </div><!-- /.contacts__container -->
+    </div><!-- /.container -->
 </section><!-- /.contacts -->

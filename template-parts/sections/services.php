@@ -27,7 +27,7 @@ if ( ! $services_query->have_posts() ) {
 ?>
 
 <section class="services" aria-label="Категории услуг">
-    <div class="services__container">
+    <div class="container">
 
         <?php if ( ! empty( $title ) ) : ?>
         <h2 class="services__title"><?php echo esc_html( $title ); ?></h2>
@@ -61,5 +61,5 @@ if ( ! $services_query->have_posts() ) {
         <button class="services__more" type="button"><?php echo esc_html( $more_text ); ?></button>
         <?php endif; ?>
 
-    </div><!-- /.services__container -->
+    </div><!-- /.container -->
 </section><!-- /.services -->

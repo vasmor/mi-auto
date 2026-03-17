@@ -10,11 +10,9 @@
   background-color: var(--color-bg);
 }
 
-.about-intro__container {
+.about-intro .container {
   display: flex;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .about-intro__image {
@@ -54,7 +52,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .about-intro__container {
+  .about-intro .container {
     flex-direction: column;
     gap: calc(20 / var(--vw-base) * 100vw);
   }

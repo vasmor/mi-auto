@@ -16,7 +16,7 @@ $categories = get_categories( array(
 ?>
 
 <section class="blog" aria-label="Полезные статьи">
-    <div class="blog__container">
+    <div class="container">
         <h1 class="blog__title">Блог</h1>
 
         <?php if ( ! empty( $categories ) ) : ?>

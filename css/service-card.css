@@ -13,12 +13,10 @@
   background-color: var(--color-bg);
 }
 
-.sc-hero__container {
+.sc-hero .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .sc-hero__content {
@@ -235,12 +233,10 @@
   background-color: var(--color-bg);
 }
 
-.symptoms__container {
+.symptoms .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .symptoms__header {
@@ -358,12 +354,10 @@
   background-color: var(--color-bg);
 }
 
-.svc-list__container {
+.svc-list .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .svc-list__title {
@@ -422,12 +416,10 @@
   background-color: var(--color-bg);
 }
 
-.sc-prices__container {
+.sc-prices .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .sc-prices__header {
@@ -553,12 +545,10 @@
   background-color: var(--color-bg);
 }
 
-.warranty__container {
+.warranty .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .warranty__header {
@@ -628,12 +618,10 @@
   background-color: var(--color-bg);
 }
 
-.sc-examples__container {
+.sc-examples .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .sc-examples__header {
@@ -720,12 +708,10 @@
   background-color: var(--color-bg);
 }
 
-.reviews__container {
+.reviews .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .reviews__title {
@@ -843,12 +829,10 @@
   background-color: var(--color-bg);
 }
 
-.faq__container {
+.faq .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .faq__title {
@@ -932,10 +916,6 @@
   background-color: var(--color-bg);
 }
 
-.seo-text__container {
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
-}
 
 .seo-text__content {
   font-size:   calc(18 / var(--vw-base) * 100vw);
@@ -987,7 +967,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .sc-hero__container {
+  .sc-hero .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 
@@ -1078,7 +1058,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .symptoms__container {
+  .symptoms .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 
@@ -1156,7 +1136,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .sc-prices__container {
+  .sc-prices .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 
@@ -1219,7 +1199,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .warranty__container {
+  .warranty .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 
@@ -1314,7 +1294,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .reviews__container {
+  .reviews .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 
@@ -1361,7 +1341,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .faq__container {
+  .faq .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 

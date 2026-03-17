@@ -54,49 +54,34 @@
     });
   }
 
-  /* ── Desktop dropdown ("Услуги и ремонт") → toggles hero service-menu card */
+  /* ── Mobile submenu toggle (chevron button click) ───────────── */
   function initDropdown() {
-    var navItem = document.querySelector('.header__nav-item.-dropdown');
-    var serviceMenu = document.querySelector('.hero__service-menu');
-    if (!navItem || !serviceMenu) return;
+    var drawer = document.querySelector('.header__drawer');
+    if (!drawer) return;
 
-    var hideTimeout;
+    // Handle chevron toggle buttons inside the drawer nav.
+    drawer.addEventListener('click', function (e) {
+      var btn = e.target.closest('.header__nav-toggle');
+      if (!btn) return;
 
-    function show() {
-      clearTimeout(hideTimeout);
-      navItem.classList.add('-open');
-      serviceMenu.classList.add('-visible');
-    }
+      e.preventDefault();
+      var li = btn.closest('li.menu-item');
+      if (!li) return;
 
-    function hide() {
-      hideTimeout = setTimeout(function () {
-        navItem.classList.remove('-open');
-        serviceMenu.classList.remove('-visible');
-      }, 200);
-    }
+      var isOpen = li.classList.contains('-open');
 
-    // Show on hover over nav item
-    navItem.addEventListener('mouseenter', show);
-    navItem.addEventListener('mouseleave', hide);
+      // Close all other open items at the same level.
+      var siblings = li.parentElement.querySelectorAll(':scope > li.menu-item.-open');
+      siblings.forEach(function (s) {
+        if (s !== li) {
+          s.classList.remove('-open');
+          var sibBtn = s.querySelector(':scope > .header__nav-toggle');
+          if (sibBtn) sibBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
 
-    // Keep visible when hovering over the service-menu card itself
-    serviceMenu.addEventListener('mouseenter', show);
-    serviceMenu.addEventListener('mouseleave', hide);
-
-    // Toggle on click (for touch devices)
-    navItem.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (serviceMenu.classList.contains('-visible')) {
-        serviceMenu.classList.remove('-visible');
-        navItem.classList.remove('-open');
-      } else {
-        show();
-      }
-    });
-
-    document.addEventListener('click', function () {
-      serviceMenu.classList.remove('-visible');
-      navItem.classList.remove('-open');
+      li.classList.toggle('-open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
     });
   }
 

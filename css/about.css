@@ -12,11 +12,9 @@
 }
 
 /* ── Container (two columns) ─────────────────────────────────── */
-.about__container {
+.about .container {
   display: flex;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 /* ── Left column — "О нас" ────────────────────────────────────── */
@@ -161,7 +159,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .about__container {
+  .about .container {
     flex-direction: column;
     gap: calc(20 / var(--vw-base) * 100vw);
   }

@@ -33,7 +33,7 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
 <?php get_template_part( 'template-parts/sections/top-bar' ); ?>
 
 <header class="header" role="banner">
-    <div class="header__container">
+    <div class="container">
 
         <!-- Desktop: company-info row -->
         <div class="header__info" aria-label="Информация о компании">
@@ -91,10 +91,8 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
                 wp_nav_menu( array(
                     'theme_location' => 'primary',
                     'container'      => false,
-                    'items_wrap'     => '%3$s',
-                    'link_before'    => '',
-                    'link_after'     => '',
-                    'walker'         => null,
+                    'menu_class'     => 'header__nav-list',
+                    'walker'         => new Miauto_Nav_Walker(),
                     'fallback_cb'    => false,
                 ) );
                 ?>
@@ -129,7 +127,7 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
 
         </div><!-- /.header__nav-bar -->
 
-    </div><!-- /.header__container -->
+    </div><!-- /.container -->
 
     <!-- Mobile header bar -->
     <div class="header__mobile">
@@ -173,7 +171,8 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
                 wp_nav_menu( array(
                     'theme_location' => 'mobile',
                     'container'      => false,
-                    'items_wrap'     => '%3$s',
+                    'menu_class'     => 'header__drawer-nav-list',
+                    'walker'         => new Miauto_Nav_Walker(),
                     'fallback_cb'    => false,
                 ) );
                 ?>

@@ -1065,7 +1065,7 @@ function miauto_demo_create_blog_posts( $images ) {
 // ─── 9. Navigation menu ─────────────────────────────────────────────
 
 function miauto_demo_create_menu( $pages ) {
-    $menu_name = 'Главное меню';
+    $menu_name   = 'Главное меню';
     $menu_exists = wp_get_nav_menu_object( $menu_name );
 
     if ( $menu_exists ) {
@@ -1079,14 +1079,14 @@ function miauto_demo_create_menu( $pages ) {
     }
 
     // Clear existing items.
-    $items = wp_get_nav_menu_items( $menu_id );
-    if ( $items ) {
-        foreach ( $items as $item ) {
+    $existing_items = wp_get_nav_menu_items( $menu_id );
+    if ( $existing_items ) {
+        foreach ( $existing_items as $item ) {
             wp_delete_post( $item->ID, true );
         }
     }
 
-    $menu_items = array(
+    $top_level_items = array(
         'home'     => 'Главная',
         'services' => 'Услуги и ремонт',
         'about'    => 'О нас',
@@ -1096,13 +1096,15 @@ function miauto_demo_create_menu( $pages ) {
         'contacts' => 'Контакты',
     );
 
-    $order = 1;
-    foreach ( $menu_items as $slug => $title ) {
+    $order        = 1;
+    $services_nav_id = 0;
+
+    foreach ( $top_level_items as $slug => $title ) {
         if ( empty( $pages[ $slug ] ) ) {
             continue;
         }
 
-        wp_update_nav_menu_item( $menu_id, 0, array(
+        $item_id = wp_update_nav_menu_item( $menu_id, 0, array(
             'menu-item-title'     => $title,
             'menu-item-object-id' => $pages[ $slug ],
             'menu-item-object'    => 'page',
@@ -1110,11 +1112,40 @@ function miauto_demo_create_menu( $pages ) {
             'menu-item-status'    => 'publish',
             'menu-item-position'  => $order++,
         ) );
+
+        if ( 'services' === $slug && ! is_wp_error( $item_id ) ) {
+            $services_nav_id = $item_id;
+        }
     }
 
-    // Assign to theme location.
-    $locations = get_theme_mod( 'nav_menu_locations', array() );
+    // Add service CPT posts as children of "Услуги и ремонт".
+    if ( $services_nav_id ) {
+        $service_posts = get_posts( array(
+            'post_type'      => 'miauto_service',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+            'fields'         => 'ids',
+        ) );
+
+        $sub_order = 1;
+        foreach ( $service_posts as $svc_id ) {
+            wp_update_nav_menu_item( $menu_id, 0, array(
+                'menu-item-title'     => get_the_title( $svc_id ),
+                'menu-item-object-id' => $svc_id,
+                'menu-item-object'    => 'miauto_service',
+                'menu-item-type'      => 'post_type',
+                'menu-item-status'    => 'publish',
+                'menu-item-position'  => $sub_order++,
+                'menu-item-parent-id' => $services_nav_id,
+            ) );
+        }
+    }
+
+    // Assign to primary and mobile theme locations.
+    $locations            = get_theme_mod( 'nav_menu_locations', array() );
     $locations['primary'] = $menu_id;
+    $locations['mobile']  = $menu_id;
     set_theme_mod( 'nav_menu_locations', $locations );
 }
 

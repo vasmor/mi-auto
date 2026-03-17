@@ -11,12 +11,7 @@ get_header();
 $miauto_args = array( 'post_id' => get_the_ID() );
 
 // Breadcrumbs.
-get_template_part( 'template-parts/sections/breadcrumbs', null, array(
-    'breadcrumbs' => array(
-        array( 'label' => 'Главная', 'url' => home_url( '/' ) ),
-        array( 'label' => get_the_title() ),
-    ),
-) );
+get_template_part( 'template-parts/sections/breadcrumbs' );
 
 // About Hero.
 get_template_part( 'template-parts/sections/about-hero', null, $miauto_args );

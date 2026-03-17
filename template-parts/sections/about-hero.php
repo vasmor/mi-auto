@@ -22,7 +22,7 @@ if ( empty( $title ) ) {
 ?>
 
 <section class="about-hero" aria-label="<?php echo esc_attr( $title ); ?>">
-    <div class="about-hero__container">
+    <div class="container">
         <div class="about-hero__content">
             <?php if ( ! empty( $badge ) ) : ?>
             <span class="about-hero__badge"><?php echo esc_html( $badge ); ?></span>

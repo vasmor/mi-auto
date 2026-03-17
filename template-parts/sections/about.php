@@ -34,7 +34,7 @@ $articles_query = new WP_Query( array(
 ?>
 
 <section class="about" aria-label="О нас">
-    <div class="about__container">
+    <div class="container">
 
         <!-- Left column — About -->
         <div class="about__main">
@@ -94,5 +94,5 @@ $articles_query = new WP_Query( array(
         </aside>
         <?php endif; ?>
 
-    </div><!-- /.about__container -->
+    </div><!-- /.container -->
 </section><!-- /.about -->

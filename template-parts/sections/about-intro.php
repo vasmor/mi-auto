@@ -20,7 +20,7 @@ if ( empty( $title ) ) {
 ?>
 
 <section class="about-intro" aria-label="<?php echo esc_attr( $title ); ?>">
-    <div class="about-intro__container">
+    <div class="container">
         <?php
         if ( ! empty( $image ) ) {
             echo wp_get_attachment_image( $image, 'large', false, array(

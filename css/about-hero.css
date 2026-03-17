@@ -10,11 +10,9 @@
   background-color: var(--color-bg);
 }
 
-.about-hero__container {
+.about-hero .container {
   display: flex;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .about-hero__content {
@@ -70,7 +68,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .about-hero__container {
+  .about-hero .container {
     flex-direction: column;
     gap: calc(20 / var(--vw-base) * 100vw);
   }

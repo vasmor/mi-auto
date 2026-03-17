@@ -20,7 +20,7 @@ if ( empty( $steps ) ) {
 ?>
 
 <section class="work-process" aria-label="<?php echo esc_attr( $title ); ?>">
-    <div class="work-process__container">
+    <div class="container">
 
         <div class="work-process__header">
             <?php if ( ! empty( $title ) ) : ?>

@@ -11,10 +11,8 @@
 }
 
 /* ── Desktop inner wrapper (1240px) ─────────────────────────── */
-.header__container {
-  padding-top:   calc(10 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
+.header .container {
+  padding-top: calc(10 / var(--vw-base) * 100vw);
 }
 
 /* ── Company-info row ───────────────────────────────────────── */
@@ -155,11 +153,29 @@
 .header__nav {
   display: flex;
   align-items: center;
-  gap: calc(20 / var(--vw-base) * 100vw);
   flex: 1;
 }
 
-.header__nav-link {
+/* ul.header__nav-list produced by wp_nav_menu */
+.header__nav-list {
+  display: flex;
+  align-items: center;
+  gap: calc(20 / var(--vw-base) * 100vw);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+/* Top-level menu items */
+.header__nav-list > li.menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Menu links */
+.header__nav-list > li.menu-item > a {
   font-size:   calc(14 / var(--vw-base) * 100vw);
   font-weight: 400;
   line-height: 1.14;
@@ -167,25 +183,69 @@
   white-space: nowrap;
   transition: color 0.2s;
 }
-.header__nav-link:hover,
-.header__nav-link.-active { color: var(--color-red); }
+.header__nav-list > li.menu-item > a:hover,
+.header__nav-list > li.current-menu-item > a,
+.header__nav-list > li.current-menu-ancestor > a { color: var(--color-red); }
 
-.header__nav-item {
-  position: relative;
+/* Chevron toggle button (next to link for items with children) */
+.header__nav-toggle {
   display: flex;
   align-items: center;
-  gap: calc(5 / var(--vw-base) * 100vw);
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: color 0.2s;
 }
+.header__nav-toggle:hover { color: var(--color-red); }
 
 .header__nav-arrow {
   width:  calc(7  / var(--vw-base) * 100vw);
   height: calc(4  / var(--vw-base) * 100vw);
   fill: none;
-  stroke: var(--color-text);
+  stroke: currentColor;
   stroke-width: 1.5;
   transition: transform 0.2s;
 }
-.header__nav-item.-open .header__nav-arrow { transform: rotate(180deg); }
+.header__nav-list > li.menu-item.-open .header__nav-arrow { transform: rotate(180deg); }
+
+/* ── Desktop submenu (hover) ────────────────────────────────────── */
+.header__submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  display: none;
+  min-width: calc(200 / var(--vw-base) * 100vw);
+  padding: calc(8 / var(--vw-base) * 100vw) 0;
+  background: var(--color-white);
+  border-radius: calc(12 / var(--vw-base) * 100vw);
+  box-shadow: 0 calc(4 / var(--vw-base) * 100vw) calc(20 / var(--vw-base) * 100vw) rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+}
+.header__nav-list > li.menu-item-has-children:hover > .header__submenu,
+.header__nav-list > li.menu-item-has-children.-open > .header__submenu {
+  display: block;
+}
+
+.header__submenu li { display: block; }
+
+.header__submenu li a {
+  display: block;
+  padding: calc(8 / var(--vw-base) * 100vw) calc(16 / var(--vw-base) * 100vw);
+  font-size:   calc(13 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-text);
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.header__submenu li a:hover,
+.header__submenu li.current-menu-item > a { color: var(--color-red); }
 
 /* Online status */
 .header__online {
@@ -352,19 +412,86 @@
 .header__drawer-nav {
   display: flex;
   flex-direction: column;
-  gap: calc(16 / var(--vw-base) * 100vw);
 }
 
-.header__drawer-link {
+/* ul.header__drawer-nav-list produced by wp_nav_menu */
+.header__drawer-nav-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Top-level drawer items */
+.header__drawer-nav-list > li.menu-item {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 1px solid rgba(71, 71, 71, 0.1);
+}
+
+.header__drawer-nav-list > li.menu-item > a {
+  flex: 1;
+  padding-top:    calc(16 / var(--vw-base) * 100vw);
   padding-bottom: calc(16 / var(--vw-base) * 100vw);
-  border-bottom: 1px solid rgba(71,71,71,0.1);
   font-size:   calc(16 / var(--vw-base) * 100vw);
   font-weight: 400;
   line-height: 1.4;
   color: var(--color-text);
   transition: color 0.2s;
 }
-.header__drawer-link:hover { color: var(--color-red); }
+.header__drawer-nav-list > li.menu-item > a:hover,
+.header__drawer-nav-list > li.current-menu-item > a,
+.header__drawer-nav-list > li.current-menu-ancestor > a { color: var(--color-red); }
+
+/* Chevron toggle in drawer */
+.header__drawer-nav-list .header__nav-toggle {
+  padding: calc(8 / var(--vw-base) * 100vw);
+  color: var(--color-text);
+}
+.header__drawer-nav-list .header__nav-arrow {
+  width:  calc(10 / var(--vw-base) * 100vw);
+  height: calc(6  / var(--vw-base) * 100vw);
+}
+.header__drawer-nav-list > li.-open > .header__nav-toggle .header__nav-arrow {
+  transform: rotate(180deg);
+}
+
+/* Mobile submenu — smooth grid-template-rows animation */
+.header__drawer .header__submenu {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.3s ease;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+}
+.header__drawer li.-open > .header__submenu {
+  grid-template-rows: 1fr;
+}
+.header__drawer .header__submenu > * {
+  min-height: 0;
+}
+
+.header__drawer .header__submenu li a {
+  display: block;
+  padding: calc(10 / var(--vw-base) * 100vw) calc(16 / var(--vw-base) * 100vw);
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-text);
+  transition: color 0.2s;
+  border-bottom: 1px solid rgba(71, 71, 71, 0.06);
+}
+.header__drawer .header__submenu li a:hover,
+.header__drawer .header__submenu li.current-menu-item > a { color: var(--color-red); }
 
 .header__drawer-phones {
   display: flex;
@@ -401,7 +528,7 @@
 
 /* ── Mobile breakpoint ──────────────────────────────────────── */
 @media (max-width: 767px) {
-  .header__container {
+  .header .container {
     padding-top: calc(15 / var(--vw-base) * 100vw);
   }
 

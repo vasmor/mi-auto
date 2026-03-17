@@ -52,7 +52,7 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
       // SC-HERO
       // ═══════════════════════════════════════════════════════════════ ?>
 <section class="sc-hero" aria-label="<?php echo esc_attr( get_the_title( $post_id ) ); ?>">
-	<div class="sc-hero__container">
+	<div class="container">
 		<div class="sc-hero__content">
 
 			<!-- Left text column -->
@@ -145,7 +145,7 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
       // ═══════════════════════════════════════════════════════════════ ?>
 <?php if ( ! empty( $sym_cards ) ) : ?>
 <section class="symptoms" aria-label="<?php echo esc_attr( $sym_title ); ?>">
-	<div class="symptoms__container">
+	<div class="container">
 
 		<div class="symptoms__header">
 			<?php if ( ! empty( $sym_title ) ) : ?>
@@ -201,7 +201,7 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
       // ═══════════════════════════════════════════════════════════════ ?>
 <?php if ( ! empty( $svc_items ) ) : ?>
 <section class="svc-list" aria-label="<?php echo esc_attr( $svc_title ); ?>">
-	<div class="svc-list__container">
+	<div class="container">
 
 		<?php if ( ! empty( $svc_title ) ) : ?>
 		<h2 class="svc-list__title"><?php echo esc_html( $svc_title ); ?></h2>
@@ -232,7 +232,7 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
       // ═══════════════════════════════════════════════════════════════ ?>
 <?php if ( ! empty( $pr_rows ) ) : ?>
 <section class="sc-prices" aria-label="<?php echo esc_attr( $pr_title ); ?>">
-	<div class="sc-prices__container">
+	<div class="container">
 
 		<div class="sc-prices__header">
 			<?php if ( ! empty( $pr_title ) ) : ?>
@@ -282,7 +282,7 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
       // ═══════════════════════════════════════════════════════════════ ?>
 <?php if ( ! empty( $wr_cards ) ) : ?>
 <section class="warranty" aria-label="<?php echo esc_attr( $wr_title ); ?>">
-	<div class="warranty__container">
+	<div class="container">
 
 		<div class="warranty__header">
 			<?php if ( ! empty( $wr_title ) ) : ?>

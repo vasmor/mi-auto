@@ -9,19 +9,8 @@ get_header();
 
 $miauto_args = array( 'post_id' => get_the_ID() );
 
-// Breadcrumbs with parent services page.
-$services_page = get_page_by_path( 'services' );
-$breadcrumbs   = array(
-	array( 'label' => 'Главная', 'url' => home_url( '/' ) ),
-);
-if ( $services_page ) {
-	$breadcrumbs[] = array( 'label' => get_the_title( $services_page ), 'url' => get_permalink( $services_page ) );
-}
-$breadcrumbs[] = array( 'label' => get_the_title() );
-
-get_template_part( 'template-parts/sections/breadcrumbs', null, array(
-	'breadcrumbs' => $breadcrumbs,
-) );
+// Breadcrumbs.
+get_template_part( 'template-parts/sections/breadcrumbs' );
 
 // Service Card — all unique sections (sc-hero, symptoms, svc-list, sc-prices, warranty).
 get_template_part( 'template-parts/sections/service-card', null, $miauto_args );

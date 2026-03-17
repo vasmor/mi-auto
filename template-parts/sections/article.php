@@ -11,7 +11,7 @@ if ( empty( $args['skip_styles'] ) ) {
 ?>
 
 <section class="article-page" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
-    <div class="article-page__container">
+    <div class="container">
 
         <div class="article-page__header">
             <?php
@@ -49,5 +49,5 @@ if ( empty( $args['skip_styles'] ) ) {
             Вернуться к статьям
         </a>
 
-    </div><!-- /.article-page__container -->
+    </div><!-- /.container -->
 </section><!-- /.article-page -->

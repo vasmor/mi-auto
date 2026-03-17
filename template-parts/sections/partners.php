@@ -18,7 +18,7 @@ if ( empty( $gallery ) ) {
 ?>
 
 <section class="partners" aria-label="Наши партнеры">
-    <div class="partners__container">
+    <div class="container">
 
         <?php if ( ! empty( $title ) ) : ?>
         <h2 class="partners__title"><?php echo esc_html( $title ); ?></h2>
@@ -37,5 +37,5 @@ if ( empty( $gallery ) ) {
             <?php endforeach; ?>
         </div>
 
-    </div><!-- /.partners__container -->
+    </div><!-- /.container -->
 </section><!-- /.partners -->

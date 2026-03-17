@@ -176,7 +176,8 @@
 ## 6. Структура классов в разметке
 
 - Корень секции: блок (например, `section-name`)
-- Контейнер: `section-name__container`
+- Контейнер: единый класс `.container` (определён в `css/base.css`), дополнительные стили задаются через `.section-name .container {}`
+- Исключение: если контейнер — это оформленная карточка с `margin-left/right` вместо padding (например, `form-section__container`, `top-bar__strip`) — сохранять BEM-имя
 - Элементы: `section-name__title`, `section-name__content` и т.д.
 - Модификаторы: отдельный класс с ведущим тире (` -open`, ` -variant`)
 

@@ -8,15 +8,7 @@
 get_header();
 
 // Breadcrumbs.
-$blog_page_id = get_option( 'page_for_posts' );
-$blog_url     = $blog_page_id ? get_permalink( $blog_page_id ) : home_url( '/blog/' );
-get_template_part( 'template-parts/sections/breadcrumbs', null, array(
-    'breadcrumbs' => array(
-        array( 'label' => 'Главная', 'url' => home_url( '/' ) ),
-        array( 'label' => 'Блог', 'url' => $blog_url ),
-        array( 'label' => get_the_title() ),
-    ),
-) );
+get_template_part( 'template-parts/sections/breadcrumbs' );
 
 // Article content.
 get_template_part( 'template-parts/sections/article' );

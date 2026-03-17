@@ -19,7 +19,7 @@ if ( empty( $cards ) ) {
 ?>
 
 <section class="advantages" aria-label="<?php echo esc_attr( $title ); ?>">
-    <div class="advantages__container">
+    <div class="container">
 
         <?php if ( ! empty( $title ) ) : ?>
         <h2 class="advantages__title"><?php echo esc_html( $title ); ?></h2>

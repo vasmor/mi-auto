@@ -23,7 +23,7 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
 </main>
 
 <footer class="footer">
-    <div class="footer__container">
+    <div class="container">
 
         <!-- Brand column -->
         <div class="footer__brand">
@@ -206,7 +206,7 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
             <span class="footer__bottom-text"><?php echo esc_html( $miauto_developer ); ?></span>
         </div>
 
-    </div><!-- /.footer__container -->
+    </div><!-- /.container -->
 </footer><!-- /.footer -->
 
 <!-- Scroll-to-top -->

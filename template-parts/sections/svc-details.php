@@ -20,7 +20,7 @@ if ( empty( $tabs ) ) {
 ?>
 
 <section class="svc-details" aria-label="Услуги СТО">
-    <div class="svc-details__container">
+    <div class="container">
 
         <?php if ( ! empty( $title ) ) : ?>
         <h2 class="svc-details__title"><?php echo esc_html( $title ); ?></h2>
@@ -95,5 +95,5 @@ if ( empty( $tabs ) ) {
 
         </div><!-- /.svc-details__content -->
 
-    </div><!-- /.svc-details__container -->
+    </div><!-- /.container -->
 </section><!-- /.svc-details -->

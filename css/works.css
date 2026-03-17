@@ -13,13 +13,11 @@
   background-color: var(--color-bg);
 }
 
-.works__container {
+.works .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .works__title {
@@ -308,7 +306,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .works__container {
+  .works .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 

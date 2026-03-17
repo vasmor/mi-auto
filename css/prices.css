@@ -13,12 +13,10 @@
   background-color: var(--color-bg);
 }
 
-.prices__container {
+.prices .container {
   display: flex;
   flex-direction: column;
   gap: calc(30 / var(--vw-base) * 100vw);
-  padding-left:  var(--content-padding-x);
-  padding-right: var(--content-padding-x);
 }
 
 .prices__header {
@@ -184,7 +182,7 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .prices__container {
+  .prices .container {
     gap: calc(20 / var(--vw-base) * 100vw);
   }
 

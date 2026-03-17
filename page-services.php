@@ -11,12 +11,7 @@ get_header();
 $miauto_args = array( 'post_id' => get_the_ID() );
 
 // Breadcrumbs.
-get_template_part( 'template-parts/sections/breadcrumbs', null, array(
-    'breadcrumbs' => array(
-        array( 'label' => 'Главная', 'url' => home_url( '/' ) ),
-        array( 'label' => get_the_title() ),
-    ),
-) );
+get_template_part( 'template-parts/sections/breadcrumbs' );
 
 // Services grid (reused from homepage, without "Смотреть еще" button).
 get_template_part( 'template-parts/sections/services', null, array_merge( $miauto_args, array(
