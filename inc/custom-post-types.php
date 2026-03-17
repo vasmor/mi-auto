@@ -10,27 +10,6 @@
  */
 function miauto_register_post_types() {
 
-    // Brand (e.g. Mitsubishi)
-    register_post_type( 'miauto_brand', array(
-        'labels' => array(
-            'name'               => 'Бренды',
-            'singular_name'      => 'Бренд',
-            'add_new'            => 'Добавить бренд',
-            'add_new_item'       => 'Добавить новый бренд',
-            'edit_item'          => 'Редактировать бренд',
-            'all_items'          => 'Все бренды',
-            'search_items'       => 'Искать бренды',
-            'not_found'          => 'Бренды не найдены',
-            'not_found_in_trash' => 'В корзине не найдено',
-        ),
-        'public'       => true,
-        'has_archive'  => false,
-        'menu_icon'    => 'dashicons-car',
-        'supports'     => array( 'title', 'thumbnail' ),
-        'rewrite'      => array( 'slug' => 'brand' ),
-        'show_in_rest' => true,
-    ) );
-
     // Car Model (e.g. Lancer, Outlander)
     register_post_type( 'miauto_model', array(
         'labels' => array(

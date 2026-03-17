@@ -47,6 +47,7 @@
 .svc-details__tab {
   display: flex;
   align-items: center;
+  gap: calc(15 / var(--vw-base) * 100vw);
   width: 100%;
   height: calc(50 / var(--vw-base) * 100vw);
   padding: 0 calc(20 / var(--vw-base) * 100vw);
@@ -67,6 +68,22 @@
 .svc-details__tab.-active {
   color: var(--color-white);
   background-color: var(--color-red);
+}
+
+.svc-details__tab-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width:  calc(18 / var(--vw-base) * 100vw);
+  height: calc(18 / var(--vw-base) * 100vw);
+}
+
+.svc-details__tab-icon svg {
+  display: block;
+  width:  100%;
+  height: 100%;
+  fill: currentColor;
 }
 
 /* ── Description panel (right side) ───────────────────────────── */
@@ -215,14 +232,21 @@
   }
 
   .svc-details__tab {
-    justify-content: space-between;
+    gap: calc(10 / var(--vw-base) * 100vw);
+    justify-content: flex-start;
     height: calc(45 / var(--vw-base) * 100vw);
+    padding: 0 calc(26 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
     font-size:   calc(14 / var(--vw-base) * 100vw);
     background-color: var(--color-bg);
+  }
+  .svc-details__tab.-active {
+    border-radius: calc(5 / var(--vw-base) * 100vw);
   }
   .svc-details__tab::after {
     content: '';
     flex-shrink: 0;
+    margin-left: auto;
     width:  calc(8 / var(--vw-base) * 100vw);
     height: calc(8 / var(--vw-base) * 100vw);
     border-right: 2px solid var(--color-text);

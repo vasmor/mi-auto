@@ -33,44 +33,65 @@ Container::make( 'post_meta', 'Главная: Hero-слайдер' )
             ->set_header_template( '<%- text %>' ),
     ) );
 
-// ── Секции главной страницы ──────────────────────────────────
+// ── Модели авто ───────────────────────────────────────────────
 
-Container::make( 'post_meta', 'Главная: Секции' )
+Container::make( 'post_meta', 'Главная: Модели авто' )
     ->where( 'post_template', '=', 'front-page.php' )
     ->add_fields( array(
-
-        // Car models
-        Field::make( 'text', 'miauto_car_models_title', 'Заголовок "Модели авто"' )
+        Field::make( 'text', 'miauto_car_models_title', 'Заголовок' )
             ->set_default_value( 'Модели авто' ),
+    ) );
 
-        // Services
-        Field::make( 'text', 'miauto_services_title', 'Заголовок "Категории услуг"' )
+// ── Категории услуг ───────────────────────────────────────────
+
+Container::make( 'post_meta', 'Главная: Категории услуг' )
+    ->where( 'post_template', '=', 'front-page.php' )
+    ->add_fields( array(
+        Field::make( 'text', 'miauto_services_title', 'Заголовок' )
             ->set_default_value( 'Категории услуг' ),
         Field::make( 'text', 'miauto_services_more_text', 'Текст кнопки "Смотреть ещё"' )
             ->set_default_value( 'Смотреть еще' ),
+    ) );
 
-        // About
-        Field::make( 'text', 'miauto_about_title', 'Заголовок "О нас"' )
+// ── О нас ─────────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'Главная: О нас' )
+    ->where( 'post_template', '=', 'front-page.php' )
+    ->add_fields( array(
+        Field::make( 'text', 'miauto_about_title', 'Заголовок' )
             ->set_default_value( 'О нас' ),
-        Field::make( 'image', 'miauto_about_image', 'Изображение "О нас"' ),
-        Field::make( 'rich_text', 'miauto_about_text', 'Текст "О нас"' ),
+        Field::make( 'image', 'miauto_about_image', 'Изображение' ),
+        Field::make( 'rich_text', 'miauto_about_text', 'Текст' ),
+    ) );
 
-        // Articles
-        Field::make( 'text', 'miauto_articles_title', 'Заголовок "Полезные статьи"' )
+// ── Полезные статьи ───────────────────────────────────────────
+
+Container::make( 'post_meta', 'Главная: Полезные статьи' )
+    ->where( 'post_template', '=', 'front-page.php' )
+    ->add_fields( array(
+        Field::make( 'text', 'miauto_articles_title', 'Заголовок' )
             ->set_default_value( 'Полезные статьи' ),
         Field::make( 'text', 'miauto_articles_link_text', 'Текст ссылки на блог' )
             ->set_default_value( 'Узнать больше' ),
         Field::make( 'text', 'miauto_articles_count', 'Количество статей' )
             ->set_attribute( 'type', 'number' )
             ->set_default_value( '2' ),
+    ) );
 
-        // Service details (tabs)
-        Field::make( 'text', 'miauto_svc_details_title', 'Заголовок "Услуги СТО"' )
+// ── Услуги СТО ────────────────────────────────────────────────
+
+Container::make( 'post_meta', 'Главная: Услуги СТО' )
+    ->where( 'post_template', '=', 'front-page.php' )
+    ->add_fields( array(
+        Field::make( 'text', 'miauto_svc_details_title', 'Заголовок' )
             ->set_default_value( 'Услуги CTO' ),
         Field::make( 'complex', 'miauto_svc_details_tabs', 'Табы услуг СТО' )
             ->add_fields( array(
                 Field::make( 'text', 'tab_id', 'ID таба (латиница)' )
                     ->set_help_text( 'Уникальный ID, например: to, suspension, engine' ),
+                Field::make( 'textarea', 'tab_icon', 'Иконка таба (SVG-код)' )
+                    ->set_help_text( 'Вставьте SVG-код иконки. fill="currentColor" — цвет наследуется от кнопки.' )
+                    ->set_rows( 3 ),
                 Field::make( 'text', 'tab_title', 'Название таба' ),
                 Field::make( 'text', 'badge', 'Бейдж' )
                     ->set_help_text( 'Пусто — не показывать' ),
@@ -88,11 +109,6 @@ Container::make( 'post_meta', 'Главная: Секции' )
                     ->set_default_value( 'Записаться на ремонт' ),
                 Field::make( 'text', 'cta_url', 'Ссылка кнопки' ),
             ) )
-            ->set_header_template( '<%- tab_title %>' ),
-
-        // Contacts section
-        Field::make( 'text', 'miauto_contacts_title', 'Заголовок "Наши контакты"' )
-            ->set_default_value( 'Наши контакты' ),
-        Field::make( 'image', 'miauto_contacts_decoration', 'Декоративное изображение' ),
-        Field::make( 'image', 'miauto_contacts_map', 'Изображение карты (заглушка)' ),
+            ->set_header_template( '<%- tab_title %>' )
+            ->set_layout( 'tabbed-horizontal' ),
     ) );

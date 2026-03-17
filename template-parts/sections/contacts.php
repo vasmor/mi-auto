@@ -9,10 +9,9 @@ if ( empty( $args['skip_styles'] ) ) {
     wp_enqueue_style( 'miauto-contacts' );
 }
 
-$post_id    = $args['post_id'] ?? get_the_ID();
-$title      = miauto_get_meta( 'miauto_contacts_title', $post_id );
-$decoration = miauto_get_meta( 'miauto_contacts_decoration', $post_id );
-$map_image  = miauto_get_meta( 'miauto_contacts_map', $post_id );
+$title      = miauto_get_option( 'miauto_contacts_section_title' );
+$decoration = miauto_get_option( 'miauto_contacts_decoration' );
+$map_embed  = miauto_get_option( 'miauto_contacts_map_embed' );
 
 $address = miauto_get_option( 'miauto_address' );
 $hours   = miauto_get_option( 'miauto_hours' );
@@ -20,6 +19,8 @@ $phones  = miauto_get_option( 'miauto_phones' );
 $email   = miauto_get_option( 'miauto_email' );
 $tg      = miauto_get_option( 'miauto_telegram_url' );
 $vk      = miauto_get_option( 'miauto_vk_url' );
+
+$heading_tag = is_page_template( 'page-contacts.php' ) ? 'h1' : 'h2';
 ?>
 
 <section class="contacts" aria-label="Наши контакты">
@@ -29,7 +30,7 @@ $vk      = miauto_get_option( 'miauto_vk_url' );
         <div class="contacts__info">
             <div class="contacts__info-inner">
                 <?php if ( ! empty( $title ) ) : ?>
-                <h2 class="contacts__title"><?php echo esc_html( $title ); ?></h2>
+                <<?php echo $heading_tag; ?> class="contacts__title"><?php echo esc_html( $title ); ?></<?php echo $heading_tag; ?>>
                 <?php endif; ?>
 
                 <div class="contacts__list">
@@ -104,15 +105,21 @@ $vk      = miauto_get_option( 'miauto_vk_url' );
         ?>
 
         <!-- Map -->
-        <?php
-        if ( ! empty( $map_image ) ) {
-            echo wp_get_attachment_image( $map_image, 'large', false, array(
-                'class'   => 'contacts__map',
-                'loading' => 'lazy',
-                'alt'     => 'Карта проезда к MI-AUTO',
-            ) );
-        }
-        ?>
+        <?php if ( ! empty( $map_embed ) ) : ?>
+        <div class="contacts__map">
+            <?php echo wp_kses( $map_embed, array(
+                'iframe' => array(
+                    'src'         => true,
+                    'width'       => true,
+                    'height'      => true,
+                    'frameborder' => true,
+                    'style'       => true,
+                    'allowfullscreen' => true,
+                    'loading'     => true,
+                ),
+            ) ); ?>
+        </div>
+        <?php endif; ?>
 
     </div><!-- /.container -->
 </section><!-- /.contacts -->

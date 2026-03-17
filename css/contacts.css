@@ -122,12 +122,19 @@
   object-fit: cover;
 }
 
-/* ── Map image ───────────────────────────────────────────────── */
+/* ── Map ─────────────────────────────────────────────────────── */
 .contacts__map {
   flex: 1;
   height: calc(405 / var(--vw-base) * 100vw);
   border-radius: calc(20 / var(--vw-base) * 100vw);
-  object-fit: cover;
+  overflow: hidden;
+}
+
+.contacts__map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 /* ============================================================

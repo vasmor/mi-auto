@@ -2,7 +2,7 @@
 
 # ===== Настройки =====
 REMOTE_HOST="u1791919@31.31.196.177"
-REMOTE_PATH="/var/www/u1791919/data/www/miaut.dev-dynamic.ru/wp-content/themes/mi-auto/"
+REMOTE_PATH="/var/www/u1791919/data/www/miauto.dev-dynamic.ru/wp-content/themes/mi-auto/"
 LOCAL_PATH="/mnt/c/projects/mi-auto/"
 
 # ===== Исключения =====

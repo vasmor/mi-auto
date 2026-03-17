@@ -32,8 +32,14 @@ if ( empty( $tabs ) ) {
             <div class="svc-details__tabs" role="tablist" aria-label="Категории услуг">
                 <?php foreach ( $tabs as $index => $tab ) :
                     $is_active = ( 0 === $index );
+                    $tab_icon  = $tab['tab_icon'] ?? '';
                 ?>
-                <button class="svc-details__tab<?php echo $is_active ? ' -active' : ''; ?>" role="tab" aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>" data-tab="<?php echo esc_attr( $tab['tab_id'] ); ?>" type="button"><?php echo esc_html( $tab['tab_title'] ); ?></button>
+                <button class="svc-details__tab<?php echo $is_active ? ' -active' : ''; ?>" role="tab" aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>" data-tab="<?php echo esc_attr( $tab['tab_id'] ); ?>" type="button">
+                    <?php if ( ! empty( $tab_icon ) ) : ?>
+                    <span class="svc-details__tab-icon" aria-hidden="true"><?php echo wp_kses( $tab_icon, array( 'svg' => array( 'xmlns' => true, 'viewBox' => true, 'fill' => true, 'width' => true, 'height' => true, 'class' => true, 'aria-hidden' => true ), 'path' => array( 'd' => true, 'fill' => true, 'fill-rule' => true, 'clip-rule' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-miterlimit' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true ), 'rect' => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'fill' => true ), 'circle' => array( 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true ), 'g' => array( 'fill' => true ) ) ); ?></span>
+                    <?php endif; ?>
+                    <?php echo esc_html( $tab['tab_title'] ); ?>
+                </button>
                 <?php endforeach; ?>
             </div>
 
@@ -60,7 +66,7 @@ if ( empty( $tabs ) ) {
                 <?php endif; ?>
 
                 <?php if ( ! empty( $panel_text ) ) : ?>
-                <div class="svc-details__panel-text"><?php echo wp_kses_post( wpautop( $panel_text ) ); ?></div>
+                <div class="svc-details__panel-text"><?php echo apply_filters( 'the_content', $panel_text ); ?></div>
                 <?php endif; ?>
 
                 <?php if ( ! empty( $features ) ) : ?>

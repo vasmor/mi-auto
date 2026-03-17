@@ -58,6 +58,11 @@ $miauto_options = Container::make( 'theme_options', 'Опции темы' )
     ) )
 
     ->add_tab( 'Контакты', array(
+        Field::make( 'text', 'miauto_contacts_section_title', 'Заголовок секции "Наши контакты"' )
+            ->set_default_value( 'Наши контакты' ),
+        Field::make( 'image', 'miauto_contacts_decoration', 'Декоративное изображение секции контактов' ),
+        Field::make( 'textarea', 'miauto_contacts_map_embed', 'Код карты (iframe)' )
+            ->set_help_text( 'Вставьте iframe-код карты, например от Яндекс.Карт' ),
         Field::make( 'text', 'miauto_address', 'Адрес' )
             ->set_default_value( 'г. Москва, ул. Остаповский проезд 1, д. 10, стр. 1' ),
         Field::make( 'text', 'miauto_hours', 'Время работы' )

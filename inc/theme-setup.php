@@ -32,3 +32,26 @@ function miauto_setup() {
     ) );
 }
 add_action( 'after_setup_theme', 'miauto_setup' );
+
+/**
+ * Notify admin if required plugins are missing.
+ */
+function miauto_check_required_plugins() {
+    if ( ! current_user_can( 'activate_plugins' ) ) {
+        return;
+    }
+    $missing = array();
+    if ( ! function_exists( 'yoast_breadcrumb' ) ) {
+        $missing[] = 'Yoast SEO (требуется для хлебных крошек)';
+    }
+    if ( ! class_exists( 'WPCF7_ContactForm' ) ) {
+        $missing[] = 'Contact Form 7 (требуется для формы записи)';
+    }
+    if ( empty( $missing ) ) {
+        return;
+    }
+    add_action( 'admin_notices', function () use ( $missing ) {
+        echo '<div class="notice notice-warning"><p><strong>MI-AUTO:</strong> Не установлены плагины: ' . esc_html( implode( ', ', $missing ) ) . '</p></div>';
+    } );
+}
+add_action( 'admin_init', 'miauto_check_required_plugins' );
