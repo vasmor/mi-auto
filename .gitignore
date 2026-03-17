@@ -29,3 +29,6 @@ uploads/
 
 # Build artifacts
 *.map
+
+# Static HTML mockups (reference designs, not part of theme)
+html/
