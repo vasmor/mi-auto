@@ -18,7 +18,7 @@ Container::make( 'post_meta', 'Главная: Hero-слайдер' )
                 Field::make( 'image', 'image', 'Фоновое изображение' ),
                 Field::make( 'text', 'image_alt', 'Alt изображения' ),
                 Field::make( 'text', 'title', 'Заголовок' ),
-                Field::make( 'textarea', 'description', 'Описание' ),
+                Field::make( 'textarea', 'slide_desc', 'Описание' ),
                 Field::make( 'text', 'cta_text', 'Текст кнопки' ),
                 Field::make( 'text', 'cta_url', 'Ссылка кнопки' ),
             ) )
@@ -97,17 +97,17 @@ Container::make( 'post_meta', 'Главная: Услуги СТО' )
                     ->set_help_text( 'Пусто — не показывать' ),
                 Field::make( 'text', 'panel_title', 'Заголовок панели' ),
                 Field::make( 'rich_text', 'panel_text', 'Описание' ),
-                Field::make( 'complex', 'features', 'Список работ' )
+                Field::make( 'complex', 'tab_features', 'Список работ' )
                     ->add_fields( array(
-                        Field::make( 'text', 'text', 'Название работы' ),
+                        Field::make( 'text', 'item', 'Название работы' ),
                     ) )
-                    ->set_header_template( '<%- text %>' ),
+                    ->set_header_template( '<%- item %>' ),
                 Field::make( 'text', 'price_label', 'Метка цены' )
                     ->set_default_value( 'Стоимость работ от' ),
                 Field::make( 'text', 'price_value', 'Цена' ),
-                Field::make( 'text', 'cta_text', 'Текст кнопки' )
+                Field::make( 'text', 'tab_cta_text', 'Текст кнопки' )
                     ->set_default_value( 'Записаться на ремонт' ),
-                Field::make( 'text', 'cta_url', 'Ссылка кнопки' ),
+                Field::make( 'text', 'tab_cta_url', 'Ссылка кнопки' ),
             ) )
             ->set_header_template( '<%- tab_title %>' )
             ->set_layout( 'tabbed-horizontal' ),

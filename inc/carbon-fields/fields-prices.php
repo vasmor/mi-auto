@@ -18,18 +18,18 @@ Container::make( 'post_meta', 'miauto_prices', 'Прайс-лист' )
             ->set_layout( 'tabbed-vertical' )
             ->setup_labels( array( 'singular_name' => 'Модель', 'plural_name' => 'Модели' ) )
             ->add_fields( array(
-                Field::make( 'text', 'name', 'Название модели' )
+                Field::make( 'text', 'model_name', 'Название модели' )
                     ->set_required( true ),
-                Field::make( 'complex', 'categories', 'Категории услуг' )
+                Field::make( 'complex', 'price_cats', 'Категории услуг' )
                     ->set_layout( 'tabbed-horizontal' )
                     ->setup_labels( array( 'singular_name' => 'Категория', 'plural_name' => 'Категории' ) )
                     ->add_fields( array(
-                        Field::make( 'text', 'name', 'Название категории' )
+                        Field::make( 'text', 'cat_name', 'Название категории' )
                             ->set_required( true ),
-                        Field::make( 'complex', 'rows', 'Строки прайса' )
+                        Field::make( 'complex', 'price_rows', 'Строки прайса' )
                             ->set_layout( 'tabbed-vertical' )
                             ->add_fields( array(
-                                Field::make( 'text', 'name', 'Наименование услуги' ),
+                                Field::make( 'text', 'row_name', 'Наименование услуги' ),
                                 Field::make( 'text', 'price', 'Стоимость' ),
                             ) ),
                     ) ),

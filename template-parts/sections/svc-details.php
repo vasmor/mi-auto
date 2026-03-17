@@ -49,11 +49,11 @@ if ( empty( $tabs ) ) {
                 $badge       = $tab['badge'] ?? '';
                 $panel_title = $tab['panel_title'] ?? '';
                 $panel_text  = $tab['panel_text'] ?? '';
-                $features    = $tab['features'] ?? array();
+                $features    = $tab['tab_features'] ?? array();
                 $price_label = $tab['price_label'] ?? '';
                 $price_value = $tab['price_value'] ?? '';
-                $cta_text    = $tab['cta_text'] ?? '';
-                $cta_url     = $tab['cta_url'] ?? '';
+                $cta_text    = $tab['tab_cta_text'] ?? '';
+                $cta_url     = $tab['tab_cta_url'] ?? '';
             ?>
             <div class="svc-details__panel<?php echo $is_active ? ' -active' : ''; ?>" role="tabpanel" data-panel="<?php echo esc_attr( $tab['tab_id'] ); ?>">
 
@@ -76,7 +76,7 @@ if ( empty( $tabs ) ) {
                         <svg class="svc-details__feature-icon" viewBox="0 0 14 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M1 5L5 9L13 1" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <span class="svc-details__feature-text"><?php echo esc_html( $feat['text'] ); ?></span>
+                        <span class="svc-details__feature-text"><?php echo esc_html( $feat['item'] ); ?></span>
                     </div>
                     <?php endforeach; ?>
                 </div>

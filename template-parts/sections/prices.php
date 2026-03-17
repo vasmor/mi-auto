@@ -35,7 +35,7 @@ if ( empty( $models ) ) {
         <!-- Model tabs -->
         <div class="prices__model-tabs" role="tablist" aria-label="Выбор модели">
             <?php foreach ( $models as $i => $model ) : ?>
-            <button class="prices__model-tab<?php echo 0 === $i ? ' -active' : ''; ?>" type="button" data-model="<?php echo esc_attr( sanitize_title( $model['name'] ) ); ?>"><?php echo esc_html( $model['name'] ); ?></button>
+            <button class="prices__model-tab<?php echo 0 === $i ? ' -active' : ''; ?>" type="button" data-model="<?php echo esc_attr( sanitize_title( $model['model_name'] ) ); ?>"><?php echo esc_html( $model['model_name'] ); ?></button>
             <?php endforeach; ?>
         </div>
 
@@ -43,11 +43,11 @@ if ( empty( $models ) ) {
         <?php
         $service_tabs = array();
         foreach ( $models as $model ) {
-            if ( ! empty( $model['categories'] ) ) {
-                foreach ( $model['categories'] as $cat ) {
-                    $slug = sanitize_title( $cat['name'] );
+            if ( ! empty( $model['price_cats'] ) ) {
+                foreach ( $model['price_cats'] as $cat ) {
+                    $slug = sanitize_title( $cat['cat_name'] );
                     if ( ! isset( $service_tabs[ $slug ] ) ) {
-                        $service_tabs[ $slug ] = $cat['name'];
+                        $service_tabs[ $slug ] = $cat['cat_name'];
                     }
                 }
             }
@@ -67,9 +67,9 @@ if ( empty( $models ) ) {
         <div class="prices__tables">
             <?php $first_table = true; ?>
             <?php foreach ( $models as $model ) : ?>
-                <?php if ( ! empty( $model['categories'] ) ) : ?>
-                    <?php foreach ( $model['categories'] as $cat ) : ?>
-                    <div class="prices__table-wrap<?php echo ! $first_table ? ' -hidden' : ''; ?>" data-model="<?php echo esc_attr( sanitize_title( $model['name'] ) ); ?>" data-service="<?php echo esc_attr( sanitize_title( $cat['name'] ) ); ?>">
+                <?php if ( ! empty( $model['price_cats'] ) ) : ?>
+                    <?php foreach ( $model['price_cats'] as $cat ) : ?>
+                    <div class="prices__table-wrap<?php echo ! $first_table ? ' -hidden' : ''; ?>" data-model="<?php echo esc_attr( sanitize_title( $model['model_name'] ) ); ?>" data-service="<?php echo esc_attr( sanitize_title( $cat['cat_name'] ) ); ?>">
                         <table class="prices__table">
                             <thead>
                                 <tr>
@@ -78,10 +78,10 @@ if ( empty( $models ) ) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ( ! empty( $cat['rows'] ) ) : ?>
-                                    <?php foreach ( $cat['rows'] as $row ) : ?>
+                                <?php if ( ! empty( $cat['price_rows'] ) ) : ?>
+                                    <?php foreach ( $cat['price_rows'] as $row ) : ?>
                                     <tr>
-                                        <td><?php echo esc_html( $row['name'] ); ?></td>
+                                        <td><?php echo esc_html( $row['row_name'] ); ?></td>
                                         <td><?php echo esc_html( $row['price'] ); ?></td>
                                     </tr>
                                     <?php endforeach; ?>
