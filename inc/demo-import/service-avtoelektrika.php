@@ -13,6 +13,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Set Yoast SEO meta tags for a post if not already set.
+ *
+ * @param int    $post_id     Post ID.
+ * @param string $title       SEO title (plain text, no %%variables%%).
+ * @param string $description Meta description (max ~155 chars).
+ * @param string $focus_kw    Focus keyphrase.
+ */
+function miauto_set_yoast_meta_if_empty( $post_id, $title, $description, $focus_kw = '' ) {
+	if ( ! get_post_meta( $post_id, '_yoast_wpseo_title', true ) ) {
+		update_post_meta( $post_id, '_yoast_wpseo_title', $title );
+	}
+	if ( ! get_post_meta( $post_id, '_yoast_wpseo_metadesc', true ) ) {
+		update_post_meta( $post_id, '_yoast_wpseo_metadesc', $description );
+	}
+	if ( $focus_kw && ! get_post_meta( $post_id, '_yoast_wpseo_focuskw', true ) ) {
+		update_post_meta( $post_id, '_yoast_wpseo_focuskw', $focus_kw );
+	}
+}
+
+/**
  * Hook into admin_init to check for the GET parameter.
  */
 function miauto_avtoelektrika_init() {
@@ -76,6 +96,13 @@ function miauto_run_fill_avtoelektrika() {
 			'post_content' => miauto_avtoelektrika_seo_text(),
 		) );
 	}
+
+	// 5. Set Yoast SEO meta tags if empty.
+	miauto_set_yoast_meta_if_empty( $post_id,
+		'Автоэлектрика Mitsubishi в Москве — диагностика и ремонт | MI-AUTO',
+		'Профессиональный ремонт автоэлектрики Mitsubishi: компьютерная диагностика, ремонт стартера, генератора, ABS, SRS, проводки. Гарантия 1 год. Запись онлайн.',
+		'автоэлектрика mitsubishi'
+	);
 
 	return true;
 }
