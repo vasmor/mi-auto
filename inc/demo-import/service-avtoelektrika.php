@@ -54,7 +54,8 @@ add_action( 'admin_init', 'miauto_avtoelektrika_init' );
  * @return true|WP_Error
  */
 function miauto_run_fill_avtoelektrika() {
-	set_time_limit( 120 );
+	set_time_limit( 300 );
+	wp_raise_memory_limit( 'admin' );
 
 	// 1. Find the service post.
 	$post_id = miauto_avtoelektrika_get_post_id();
@@ -62,11 +63,11 @@ function miauto_run_fill_avtoelektrika() {
 		return $post_id;
 	}
 
-	// 2. Get hero image ID (already uploaded by demo-import).
-	$image_id = miauto_avtoelektrika_get_image_id( 'svc-auto-electric.png' );
+	// 2. Upload AI-generated images to media library.
+	$imgs = miauto_avtoelektrika_upload_images();
 
 	// 3. Fill all Carbon Fields.
-	miauto_avtoelektrika_fill_fields( $post_id, $image_id );
+	miauto_avtoelektrika_fill_fields( $post_id, $imgs );
 
 	// 4. Set SEO post_content if empty.
 	if ( '' === get_post_field( 'post_content', $post_id ) ) {
@@ -109,7 +110,94 @@ function miauto_avtoelektrika_get_post_id() {
 	return new WP_Error( 'post_not_found', 'Запись «Автоэлектрика» не найдена. Сначала запустите demo-import.' );
 }
 
-// ─── Helper: find image attachment ID ────────────────────────────────
+// ─── Helper: upload all avtoelektrika images ─────────────────────────
+
+/**
+ * Upload images from img/avtoelektrika/ to the media library.
+ * Uses _miauto_source meta key to skip already-uploaded files.
+ *
+ * @return array Map of key => attachment_id.
+ */
+function miauto_avtoelektrika_upload_images() {
+	$files = array(
+		'hero'         => 'hero-main.jpg',
+		'sym_check'    => 'sym-check-engine.jpg',
+		'sym_start'    => 'sym-engine-start.jpg',
+		'sym_battery'  => 'sym-battery.jpg',
+		'sym_abs'      => 'sym-abs-srs.jpg',
+		'sym_ac'       => 'sym-ac.jpg',
+		'sym_alarm'    => 'sym-alarm.jpg',
+		'ex_diag'      => 'example-diagnostics.jpg',
+		'ex_wiring'    => 'example-wiring.jpg',
+		'ex_starter'   => 'example-starter.jpg',
+		'ex_ecu'       => 'example-ecu.jpg',
+	);
+
+	$ids = array();
+
+	foreach ( $files as $key => $filename ) {
+		$ids[ $key ] = miauto_avtoelektrika_upload_single( $filename );
+	}
+
+	return $ids;
+}
+
+/**
+ * Upload a single file from img/avtoelektrika/ if not already in media library.
+ *
+ * @param string $filename
+ * @return int Attachment ID (0 on failure).
+ */
+function miauto_avtoelektrika_upload_single( $filename ) {
+	$source_key = 'avtoelektrika/' . $filename;
+
+	// Already uploaded?
+	$existing = get_posts( array(
+		'post_type'   => 'attachment',
+		'meta_key'    => '_miauto_source',
+		'meta_value'  => $source_key,
+		'numberposts' => 1,
+		'fields'      => 'ids',
+	) );
+
+	if ( ! empty( $existing ) ) {
+		return $existing[0];
+	}
+
+	$file_path = get_template_directory() . '/img/avtoelektrika/' . $filename;
+
+	if ( ! file_exists( $file_path ) ) {
+		return 0;
+	}
+
+	$upload_dir = wp_upload_dir();
+	$target     = $upload_dir['path'] . '/' . $filename;
+
+	if ( ! copy( $file_path, $target ) ) {
+		return 0;
+	}
+
+	$filetype   = wp_check_filetype( $filename );
+	$attach_id  = wp_insert_attachment( array(
+		'guid'           => $upload_dir['url'] . '/' . $filename,
+		'post_mime_type' => $filetype['type'],
+		'post_title'     => pathinfo( $filename, PATHINFO_FILENAME ),
+		'post_content'   => '',
+		'post_status'    => 'inherit',
+	), $target );
+
+	if ( is_wp_error( $attach_id ) ) {
+		return 0;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	wp_update_attachment_metadata( $attach_id, wp_generate_attachment_metadata( $attach_id, $target ) );
+	update_post_meta( $attach_id, '_miauto_source', $source_key );
+
+	return $attach_id;
+}
+
+// ─── Helper: find image attachment ID (legacy, demo-import images) ───
 
 function miauto_avtoelektrika_get_image_id( $filename ) {
 	$existing = get_posts( array(
@@ -125,7 +213,17 @@ function miauto_avtoelektrika_get_image_id( $filename ) {
 
 // ─── Fill all Carbon Fields ──────────────────────────────────────────
 
-function miauto_avtoelektrika_fill_fields( $post_id, $image_id ) {
+function miauto_avtoelektrika_fill_fields( $post_id, $imgs ) {
+	// Fallback: если картинка не загрузилась — используем svc-auto-electric из demo-import.
+	$fallback = miauto_avtoelektrika_get_image_id( 'svc-auto-electric.png' );
+
+	$hero        = $imgs['hero']        ?: $fallback;
+	$sym_check   = $imgs['sym_check']   ?: $fallback;
+	$sym_start   = $imgs['sym_start']   ?: $fallback;
+	$sym_battery = $imgs['sym_battery'] ?: $fallback;
+	$sym_abs     = $imgs['sym_abs']     ?: $fallback;
+	$sym_ac      = $imgs['sym_ac']      ?: $fallback;
+	$sym_alarm   = $imgs['sym_alarm']   ?: $fallback;
 
 	// ── SC-HERO ──────────────────────────────────────────────────────
 
@@ -143,8 +241,8 @@ function miauto_avtoelektrika_fill_fields( $post_id, $image_id ) {
 	miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_cta_primary_text',   'Записаться на диагностику' );
 	miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_cta_secondary_text', 'Рассчитать стоимость' );
 
-	if ( $image_id ) {
-		miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_image', $image_id );
+	if ( $hero ) {
+		miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_image', $hero );
 	}
 
 	miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_stats', array(
@@ -163,32 +261,32 @@ function miauto_avtoelektrika_fill_fields( $post_id, $image_id ) {
 
 	miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_symptoms_cards', array(
 		array(
-			'sym_image'     => $image_id,
+			'sym_image'     => $sym_check,
 			'symptom_title' => 'Горит Check Engine',
 			'symptom_desc'  => 'Индикатор не гаснет после перезапуска — блок управления зафиксировал ошибку в одной из систем.',
 		),
 		array(
-			'sym_image'     => $image_id,
+			'sym_image'     => $sym_start,
 			'symptom_title' => 'Не запускается двигатель',
 			'symptom_desc'  => 'Стартер крутит медленно или двигатель не схватывает — возможен отказ стартера, реле или АКБ.',
 		),
 		array(
-			'sym_image'     => $image_id,
+			'sym_image'     => $sym_battery,
 			'symptom_title' => 'Аккумулятор быстро разряжается',
 			'symptom_desc'  => 'Авто не заводится после стоянки — признак неисправного генератора или утечки тока в бортовой сети.',
 		),
 		array(
-			'sym_image'     => $image_id,
+			'sym_image'     => $sym_abs,
 			'symptom_title' => 'Не работают ABS или подушки',
 			'symptom_desc'  => 'Загорелись индикаторы ABS / SRS — критические системы безопасности требуют немедленной проверки.',
 		),
 		array(
-			'sym_image'     => $image_id,
+			'sym_image'     => $sym_ac,
 			'symptom_title' => 'Проблемы с кондиционером',
 			'symptom_desc'  => 'Не охлаждает, вентилятор работает на одной скорости — часто причина в электрической части системы.',
 		),
 		array(
-			'sym_image'     => $image_id,
+			'sym_image'     => $sym_alarm,
 			'symptom_title' => 'Сбои сигнализации',
 			'symptom_desc'  => 'Ложные срабатывания или замок не реагирует на брелок — повреждение проводки или блока управления.',
 		),
