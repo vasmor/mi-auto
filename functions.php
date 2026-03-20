@@ -19,3 +19,4 @@ require_once get_template_directory() . '/inc/enqueue/enqueue.php';
 require_once get_template_directory() . '/inc/custom-post-types.php';
 require_once get_template_directory() . '/inc/carbon-fields/fields-init.php';
 require_once get_template_directory() . '/inc/demo-import/demo-import.php';
+require_once get_template_directory() . '/inc/demo-import/service-avtoelektrika.php';
