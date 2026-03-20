@@ -111,31 +111,6 @@
   right: calc(10 / var(--vw-base) * 100vw);
 }
 
-.works__carousel-dots {
-  position: absolute;
-  bottom: calc(8 / var(--vw-base) * 100vw);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: calc(6 / var(--vw-base) * 100vw);
-  z-index: 2;
-}
-
-.works__carousel-dot {
-  width:  calc(6 / var(--vw-base) * 100vw);
-  height: calc(6 / var(--vw-base) * 100vw);
-  border-radius: 50%;
-  border: none;
-  padding: 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.works__carousel-dot.-active {
-  background-color: var(--color-white);
-}
-
 /* ── Card content ───────────────────────────────────────────── */
 .works__card-content {
   display: flex;

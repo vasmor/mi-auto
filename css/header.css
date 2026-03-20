@@ -82,15 +82,21 @@
 .header__rating-row {
   display: flex;
   align-items: center;
-  gap: calc(4 / var(--vw-base) * 100vw);
+  gap: calc(2 / var(--vw-base) * 100vw);
+}
+
+.header__rating-icon {
+  flex-shrink: 0;
+  width:  calc(15 / var(--vw-base) * 100vw);
+  height: calc(15 / var(--vw-base) * 100vw);
 }
 
 .header__stars {
   display: flex;
-  gap: calc(2 / var(--vw-base) * 100vw);
 }
 
 .header__star {
+	flex-shrink: 0;
   width:  calc(17 / var(--vw-base) * 100vw);
   height: calc(17 / var(--vw-base) * 100vw);
   fill: var(--color-star);
@@ -461,6 +467,7 @@
 
 /* Mobile submenu — smooth grid-template-rows animation */
 .header__drawer .header__submenu {
+  position: static;
   display: grid;
   grid-template-rows: 0fr;
   overflow: hidden;

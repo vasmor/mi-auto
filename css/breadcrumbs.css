@@ -43,13 +43,6 @@
   color: var(--color-text);
 }
 
-/* Separator between items (the " / " text node is output by Yoast,
-   we simply style its color) */
-.breadcrumbs > span > span + span::before {
-  content: '/';
-  opacity: 0.4;
-}
-
 /* ── Link ────────────────────────────────────────────────────── */
 .breadcrumbs a {
   font-size:   calc(14 / var(--vw-base) * 100vw);

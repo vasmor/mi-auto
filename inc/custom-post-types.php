@@ -47,7 +47,7 @@ function miauto_register_post_types() {
         'public'       => true,
         'has_archive'  => true,
         'menu_icon'    => 'dashicons-admin-tools',
-        'supports'     => array( 'title', 'thumbnail' ),
+        'supports'     => array( 'title', 'thumbnail', 'editor' ),
         'rewrite'      => array( 'slug' => 'services' ),
         'show_in_rest' => false,
     ) );

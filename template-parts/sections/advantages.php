@@ -28,18 +28,18 @@ if ( empty( $cards ) ) {
         <div class="advantages__grid">
             <?php foreach ( $cards as $card ) : ?>
             <div class="advantages__card">
-                <?php if ( ! empty( $card['svg'] ) ) : ?>
+                <?php if ( ! empty( $card['adv_svg'] ) ) : ?>
                 <div class="advantages__icon">
-                    <?php echo miauto_kses_svg( $card['svg'] ); ?>
+                    <?php echo miauto_kses_svg( $card['adv_svg'] ); ?>
                 </div>
                 <?php endif; ?>
 
-                <?php if ( ! empty( $card['title'] ) ) : ?>
-                <h3 class="advantages__card-title"><?php echo esc_html( $card['title'] ); ?></h3>
+                <?php if ( ! empty( $card['adv_title'] ) ) : ?>
+                <h3 class="advantages__card-title"><?php echo esc_html( $card['adv_title'] ); ?></h3>
                 <?php endif; ?>
 
-                <?php if ( ! empty( $card['text'] ) ) : ?>
-                <p class="advantages__card-text"><?php echo esc_html( $card['text'] ); ?></p>
+                <?php if ( ! empty( $card['adv_text'] ) ) : ?>
+                <p class="advantages__card-text"><?php echo esc_html( $card['adv_text'] ); ?></p>
                 <?php endif; ?>
             </div>
             <?php endforeach; ?>

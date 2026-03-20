@@ -82,7 +82,7 @@ if ( empty( $models ) ) {
                                     <?php foreach ( $cat['price_rows'] as $row ) : ?>
                                     <tr>
                                         <td><?php echo esc_html( $row['row_name'] ); ?></td>
-                                        <td><?php echo esc_html( $row['price'] ); ?></td>
+                                        <td><?php echo esc_html( $row['row_price'] ); ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>

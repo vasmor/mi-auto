@@ -111,46 +111,6 @@
 }
 .hero__cta:hover { opacity: 0.9; }
 
-/* ── Service menu card (268×360, hidden by default, shown via JS/nav hover) */
-.hero__service-menu {
-  position: absolute;
-  top:  calc(-15 / var(--vw-base) * 100vw);
-  left: 0;
-  z-index: 10;
-  width:  calc(268 / var(--vw-base) * 100vw);
-  min-height: calc(360 / var(--vw-base) * 100vw);
-  padding: calc(20 / var(--vw-base) * 100vw);
-  border-radius:   calc(15 / var(--vw-base) * 100vw);
-  background-color: var(--color-white);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(calc(10 / var(--vw-base) * 100vw));
-  transition: opacity 0.25s, transform 0.25s;
-}
-.hero__service-menu.-visible {
-  opacity: 1;
-  pointer-events: all;
-  transform: translateY(0);
-}
-
-.hero__service-list {
-  display: flex;
-  flex-direction: column;
-  gap: calc(10 / var(--vw-base) * 100vw);
-}
-
-.hero__service-link {
-  padding-bottom: calc(10 / var(--vw-base) * 100vw);
-  border-bottom: 1px solid rgba(71, 71, 71, 0.08);
-  font-size:   calc(14 / var(--vw-base) * 100vw);
-  font-weight: 400;
-  line-height: 1.43;
-  color: var(--color-text);
-  transition: color 0.2s;
-}
-.hero__service-link:last-child { border-bottom: none; }
-.hero__service-link:hover { color: var(--color-red); }
-
 /* ── Shelf overlay (bg-colored shape, bottom-right of bg image) ── */
 .hero__overlay {
   position: absolute;
@@ -184,7 +144,7 @@
   background-color: var(--color-white);
 }
 
-.hero__feature-icon {
+.hero__feature-icon, .hero__feature-item svg {
   flex-shrink: 0;
   width:  calc(14 / var(--vw-base) * 100vw);
   height: calc(14 / var(--vw-base) * 100vw);

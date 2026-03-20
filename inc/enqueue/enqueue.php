@@ -46,6 +46,8 @@ function miauto_register_assets() {
         'miauto-blog'          => 'blog.css',
         'miauto-article'       => 'article.css',
         'miauto-service-card'  => 'service-card.css',
+        'miauto-reviews'       => 'reviews.css',
+        'miauto-faq'           => 'faq.css',
     );
 
     foreach ( $sections_css as $handle => $path ) {
@@ -72,6 +74,8 @@ function miauto_register_assets() {
         'miauto-prices'        => 'prices.js',
         'miauto-blog'          => 'blog.js',
         'miauto-service-card'  => 'service-card.js',
+        'miauto-reviews'       => 'reviews.js',
+        'miauto-faq'           => 'faq.js',
     );
 
     foreach ( $sections_js as $handle => $path ) {
@@ -105,3 +109,16 @@ function miauto_register_assets() {
     ) );
 }
 add_action( 'wp_enqueue_scripts', 'miauto_register_assets' );
+
+function miauto_admin_styles() {
+    ?>
+    <style>
+        .cf-container__tabs-list .cf-container__tabs-item.cf-container__tabs-item--current button,
+        .cf-complex__tabs-item--tabbed-horizontal.cf-complex__tabs-item--current,
+        .cf-complex__tabs-item--current {
+            background: #ddd !important;
+        }
+    </style>
+    <?php
+}
+add_action( 'admin_head', 'miauto_admin_styles' );

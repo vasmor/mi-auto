@@ -76,6 +76,12 @@ function miauto_kses_svg( $svg ) {
             'aria-hidden' => true,
             'width'       => true,
             'height'      => true,
+			'style'       => true,
+			'role'        => true,
+			'aria-hidden' => true,
+			'aria-labelledby' => true,
+			'aria-describedby' => true,
+			'aria-labelledby' => true,
         ),
         'path'   => array(
             'd'               => true,
@@ -133,3 +139,18 @@ function miauto_kses_svg( $svg ) {
 
     return wp_kses( $svg, $allowed );
 }
+
+/**
+ * Разрешаем SVG CSS свойства в style
+ */
+function miauto_allow_svg_css_properties( $styles ) {
+
+	$styles[] = 'fill';
+	$styles[] = 'stroke';
+	$styles[] = 'stroke-width';
+	$styles[] = 'stroke-linecap';
+	$styles[] = 'stroke-linejoin';
+
+	return $styles;
+}
+add_filter( 'safe_style_css', 'miauto_allow_svg_css_properties' );

@@ -1,0 +1,135 @@
+/* ============================================================
+   faq.css
+   Desktop 1440px / Mobile 370px
+   Styles for FAQ accordion section
+   ============================================================ */
+
+.faq {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.faq__container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  padding-left:  var(--content-padding-x);
+  padding-right: var(--content-padding-x);
+}
+
+.faq__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: calc(40 / 35);
+  color: var(--color-text);
+}
+
+.faq__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: calc(30 / var(--vw-base) * 100vw);
+}
+
+.faq__column {
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 / var(--vw-base) * 100vw);
+}
+
+.faq__item {
+  background-color: var(--color-white);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  overflow: hidden;
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(15 / var(--vw-base) * 100vw);
+  width: 100%;
+  padding: calc(25 / var(--vw-base) * 100vw) calc(20 / var(--vw-base) * 100vw);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  font-size:   calc(16 / var(--vw-base) * 100vw);
+  font-weight: 500;
+  line-height: calc(20 / 16);
+  color: var(--color-text);
+}
+
+.faq__icon {
+  flex-shrink: 0;
+  width:  calc(14 / var(--vw-base) * 100vw);
+  height: calc(14 / var(--vw-base) * 100vw);
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: transform 0.3s;
+}
+
+.faq__item.-open .faq__icon {
+  transform: rotate(45deg);
+}
+
+.faq__answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq__answer-content {
+  padding: 0 calc(20 / var(--vw-base) * 100vw) calc(25 / var(--vw-base) * 100vw);
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: calc(20 / 14);
+  color: var(--color-text);
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+
+@media (max-width: 767px) {
+  .faq {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .faq__container {
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .faq__title {
+    font-size: calc(26 / var(--vw-base) * 100vw);
+    line-height: calc(30 / 26);
+  }
+
+  .faq__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .faq__column {
+    gap: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .faq__column + .faq__column {
+    margin-top: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .faq__item {
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .faq__question {
+    padding: calc(15 / var(--vw-base) * 100vw);
+    font-size: calc(14 / var(--vw-base) * 100vw);
+  }
+
+  .faq__answer-content {
+    padding: 0 calc(15 / var(--vw-base) * 100vw) calc(15 / var(--vw-base) * 100vw);
+  }
+}

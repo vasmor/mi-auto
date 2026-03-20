@@ -1,0 +1,240 @@
+/* ============================================================
+   reviews.css
+   Desktop 1440px: 4 cards visible, prev/next nav in header
+   Mobile  370px:  1 card, dots + swipe, no nav buttons
+   ============================================================ */
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION
+   ═══════════════════════════════════════════════════════════════ */
+.reviews {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.reviews .container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(30 / var(--vw-base) * 100vw);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.reviews__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviews__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+/* ── Nav buttons ─────────────────────────────────────────────── */
+.reviews__nav {
+  display: flex;
+  gap: calc(10 / var(--vw-base) * 100vw);
+}
+
+.reviews__nav-btn {
+  width:  calc(30 / var(--vw-base) * 100vw);
+  height: calc(30 / var(--vw-base) * 100vw);
+  border-radius: calc(6 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.reviews__nav-btn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.reviews__nav-btn svg {
+  width:  calc(30 / var(--vw-base) * 100vw);
+  height: calc(30 / var(--vw-base) * 100vw);
+}
+
+.reviews__nav-btn.-prev svg path { stroke: var(--color-text); }
+.reviews__nav-btn.-next svg path { stroke: var(--color-red); }
+
+/* ── Viewport + track ────────────────────────────────────────── */
+.reviews__viewport {
+  overflow: hidden;
+}
+
+.reviews__track {
+  display: flex;
+  gap: calc(30 / var(--vw-base) * 100vw);
+  transition: transform 0.3s ease;
+}
+
+/* ── Card ────────────────────────────────────────────────────── */
+.reviews__card {
+  flex-shrink: 0;
+  /* 4 cards with 3 gaps of 30px */
+  width: calc((100% - calc(90 / var(--vw-base) * 100vw)) / 4);
+  display: flex;
+  flex-direction: column;
+  gap: calc(15 / var(--vw-base) * 100vw);
+  padding: calc(20 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+}
+
+/* ── Author ──────────────────────────────────────────────────── */
+.reviews__author {
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 / var(--vw-base) * 100vw);
+}
+
+.reviews__author-name {
+  font-size:   calc(18 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.11;
+  color: var(--color-text);
+}
+
+.reviews__author-car {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 500;
+  line-height: 1.43;
+  color: #9b9b9b;
+}
+
+/* ── Review text ─────────────────────────────────────────────── */
+.reviews__text {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.43;
+  color: var(--color-text);
+  flex-grow: 1;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.reviews__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.reviews__source {
+  display: flex;
+  align-items: center;
+  gap: calc(5 / var(--vw-base) * 100vw);
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-red);
+  text-decoration: underline;
+}
+
+.reviews__source-icon {
+  width:  calc(8 / var(--vw-base) * 100vw);
+  height: calc(8 / var(--vw-base) * 100vw);
+  fill: none;
+  stroke: var(--color-red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reviews__rating {
+  display: flex;
+  align-items: center;
+  gap: calc(5 / var(--vw-base) * 100vw);
+}
+
+.reviews__star {
+  width:  calc(14 / var(--vw-base) * 100vw);
+  height: calc(14 / var(--vw-base) * 100vw);
+  fill: var(--color-text); /* Figma: #484848 — NOT --color-star (yellow) */
+}
+
+.reviews__rating-value {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+/* ── Dots — hidden on desktop ────────────────────────────────── */
+.reviews__dots {
+  display: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE  (max-width: 767px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  .reviews {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .reviews .container {
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .reviews__title {
+    font-size:   calc(26 / var(--vw-base) * 100vw);
+    line-height: 1.15;
+  }
+
+  /* Nav buttons — hidden on mobile */
+  .reviews__nav {
+    display: none;
+  }
+
+  /* Track — no gap (1 card at a time) */
+  .reviews__track {
+    gap: 0;
+  }
+
+  /* Card */
+  .reviews__card {
+    width: 100%;
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+    padding: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .reviews__author-name {
+    font-size: calc(16 / var(--vw-base) * 100vw);
+  }
+
+  /* Dots */
+  .reviews__dots {
+    display: flex;
+    justify-content: center;
+    gap: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .reviews__dot {
+    width:  calc(10 / var(--vw-base) * 100vw);
+    height: calc(10 / var(--vw-base) * 100vw);
+    border-radius: calc(20 / var(--vw-base) * 100vw);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background-color: rgba(234, 51, 35, 0.2);
+    transition: width 0.3s, background-color 0.3s;
+  }
+
+  .reviews__dot.-active {
+    width: calc(60 / var(--vw-base) * 100vw);
+    background-color: var(--color-red);
+  }
+}

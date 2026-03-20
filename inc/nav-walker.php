@@ -24,14 +24,14 @@ class Miauto_Nav_Walker extends Walker_Nav_Menu {
      * Opens submenu wrapper.
      */
     public function start_lvl( &$output, $depth = 0, $args = null ) {
-        $output .= '<ul class="header__submenu">';
+        $output .= '<ul class="header__submenu"><div>';
     }
 
     /**
      * Closes submenu wrapper.
      */
     public function end_lvl( &$output, $depth = 0, $args = null ) {
-        $output .= '</ul>';
+        $output .= '</div></ul>';
     }
 
     /**

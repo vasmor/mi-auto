@@ -32,14 +32,9 @@ function miauto_demo_import_init() {
         return;
     }
 
-    if ( get_option( 'miauto_demo_imported' ) ) {
-        add_action( 'admin_notices', function () {
-            echo '<div class="notice notice-warning"><p>MI-AUTO: Демо-контент уже был установлен ранее. Для повторной установки удалите опцию <code>miauto_demo_imported</code> из БД.</p></div>';
-        } );
-        return;
-    }
+    $already_imported = get_option( 'miauto_demo_imported' );
 
-    // Run the import.
+    // Run the import (safe: заполняет только пустые поля).
     $result = miauto_run_demo_import();
 
     if ( is_wp_error( $result ) ) {
@@ -50,10 +45,16 @@ function miauto_demo_import_init() {
         return;
     }
 
-    update_option( 'miauto_demo_imported', true );
+    if ( ! $already_imported ) {
+        update_option( 'miauto_demo_imported', true );
+    }
 
-    add_action( 'admin_notices', function () {
-        echo '<div class="notice notice-success"><p>MI-AUTO: Демо-контент успешно установлен! Все страницы, записи, CPT и настройки созданы.</p></div>';
+    $notice_text = $already_imported
+        ? 'MI-AUTO: Повторный импорт завершён. Заполнены только пустые поля, существующие данные сохранены.'
+        : 'MI-AUTO: Демо-контент успешно установлен! Все страницы, записи, CPT и настройки созданы.';
+
+    add_action( 'admin_notices', function () use ( $notice_text ) {
+        echo '<div class="notice notice-success"><p>' . esc_html( $notice_text ) . '</p></div>';
     } );
 }
 add_action( 'admin_init', 'miauto_demo_import_init' );
@@ -101,7 +102,47 @@ function miauto_run_demo_import() {
     // 10. Set permalinks.
     miauto_demo_set_permalinks();
 
+    // 11. Fill reviews demo data.
+    miauto_demo_fill_reviews( $cpt );
+
     return true;
+}
+
+// ─── Helper: Safe setters (skip if value already exists) ────────────
+
+/**
+ * Установить Carbon Fields post meta только если поле пустое.
+ *
+ * @param int    $post_id ID записи.
+ * @param string $key     Ключ поля CF.
+ * @param mixed  $value   Значение для установки.
+ */
+function miauto_demo_set_post_meta_if_empty( $post_id, $key, $value ) {
+    if ( ! function_exists( 'carbon_get_post_meta' ) ) {
+        return;
+    }
+    $current = carbon_get_post_meta( $post_id, $key );
+    if ( ! empty( $current ) ) {
+        return;
+    }
+    carbon_set_post_meta( $post_id, $key, $value );
+}
+
+/**
+ * Установить Carbon Fields theme option только если опция пустая.
+ *
+ * @param string $key   Ключ опции CF.
+ * @param mixed  $value Значение для установки.
+ */
+function miauto_demo_set_theme_option_if_empty( $key, $value ) {
+    if ( ! function_exists( 'carbon_get_theme_option' ) ) {
+        return;
+    }
+    $current = carbon_get_theme_option( $key );
+    if ( ! empty( $current ) ) {
+        return;
+    }
+    carbon_set_theme_option( $key, $value );
 }
 
 // ─── Helper: Upload a single image ──────────────────────────────────
@@ -263,76 +304,110 @@ function miauto_demo_create_cf7_form() {
 // ─── 3. Theme Options ───────────────────────────────────────────────
 
 function miauto_demo_set_theme_options( $images, $cf7_id ) {
-    if ( ! function_exists( 'carbon_set_theme_option' ) ) {
-        return;
-    }
-
     // Top Bar.
-    carbon_set_theme_option( 'miauto_top_bar_enabled', true );
-    carbon_set_theme_option( 'miauto_top_bar_label', 'Только до 24 февраля' );
-    carbon_set_theme_option( 'miauto_top_bar_text', 'Скидка -50% на Сход-развал. Записывайтесь прямо сейчас по телефону и получите скидку!' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_top_bar_enabled', true );
+    miauto_demo_set_theme_option_if_empty( 'miauto_top_bar_label', 'Только до 24 февраля' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_top_bar_text', 'Скидка -50% на Сход-развал. Записывайтесь прямо сейчас по телефону и получите скидку!' );
 
     // Header.
-    carbon_set_theme_option( 'miauto_logo_text', 'MI-AUTO.ru' );
-    carbon_set_theme_option( 'miauto_slogan', 'Ремонт Mitsubishi всех моделей в одном центре' );
-    carbon_set_theme_option( 'miauto_online_text', 'Задайте вопрос, мы сейчас онлайн' );
-    carbon_set_theme_option( 'miauto_callback_text', 'Обратный звонок' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_logo_text', 'MI-AUTO.ru' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_slogan', 'Ремонт Mitsubishi всех моделей в одном центре' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_online_text', 'Задайте вопрос, мы сейчас онлайн' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_callback_text', 'Обратный звонок' );
 
     // Contacts.
-    carbon_set_theme_option( 'miauto_contacts_section_title', 'Наши контакты' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_contacts_section_title', 'Наши контакты' );
     if ( ! empty( $images['contacts-decoration'] ) ) {
-        carbon_set_theme_option( 'miauto_contacts_decoration', $images['contacts-decoration'] );
+        miauto_demo_set_theme_option_if_empty( 'miauto_contacts_decoration', $images['contacts-decoration'] );
     }
-    carbon_set_theme_option( 'miauto_contacts_map_embed', '<iframe src="https://api-maps.yandex.ru/frame/v1/-/CZwJQDL7" width="100%" height="100%" frameborder="0" style="width: 100%; height: 100%;"></iframe>' );
-    carbon_set_theme_option( 'miauto_address', 'г. Москва, ул. Остаповский проезд 1, д. 10, стр. 1' );
-    carbon_set_theme_option( 'miauto_hours', 'Понедельник-Воскресенье с 10:00 до 21:00' );
-    carbon_set_theme_option( 'miauto_hours_short', 'Пн-Вс с 10:00 до 21:00' );
-    carbon_set_theme_option( 'miauto_email', 'info@mi-auto.ru' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_contacts_map_embed', '<iframe src="https://api-maps.yandex.ru/frame/v1/-/CZwJQDL7" width="100%" height="100%" frameborder="0" style="width: 100%; height: 100%;"></iframe>' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_address', 'г. Москва, ул. Остаповский проезд 1, д. 10, стр. 1' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_hours', 'Понедельник-Воскресенье с 10:00 до 21:00' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_hours_short', 'Пн-Вс с 10:00 до 21:00' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_email', 'info@mi-auto.ru' );
 
-    carbon_set_theme_option( 'miauto_phones', array(
+    miauto_demo_set_theme_option_if_empty( 'miauto_phones', array(
         array(
-            'number' => '+7 (926) 338-39-29',
-            'raw'    => '+79263383929',
+            'phone_number' => '+7 (926) 338-39-29',
+            'phone_raw'    => '+79263383929',
         ),
         array(
-            'number' => '+7 (495) 632-73-68',
-            'raw'    => '+74956327368',
+            'phone_number' => '+7 (495) 632-73-68',
+            'phone_raw'    => '+74956327368',
         ),
     ) );
 
-    carbon_set_theme_option( 'miauto_telegram_url', 'https://t.me/miauto' );
-    carbon_set_theme_option( 'miauto_vk_url', 'https://vk.com/miauto' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_telegram_url', 'https://t.me/miauto' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_vk_url', 'https://vk.com/miauto' );
 
     // Rating.
-    carbon_set_theme_option( 'miauto_rating_stars', 5 );
-    carbon_set_theme_option( 'miauto_rating_reviews', '(500+ отзывов)' );
-    carbon_set_theme_option( 'miauto_rating_source', 'Рейтинг организации в Яндексе' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_rating_stars', 5 );
+    miauto_demo_set_theme_option_if_empty( 'miauto_rating_reviews', '(500+ отзывов)' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_rating_source', 'Рейтинг организации в Яндексе' );
 
     // Footer.
-    carbon_set_theme_option( 'miauto_footer_privacy_text', 'Политика конфиденциальности данных' );
-    carbon_set_theme_option( 'miauto_footer_privacy_url', '/privacy/' );
-    carbon_set_theme_option( 'miauto_footer_developer_text', 'Разработка сайта Dynamic IT' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_footer_privacy_text', 'Политика конфиденциальности данных' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_footer_privacy_url', '/privacy/' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_footer_developer_text', 'Разработка сайта Dynamic IT' );
 
     // Form.
-    carbon_set_theme_option( 'miauto_form_title', 'Запишитесь на ТО или бесплатный осмотр!' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_form_title', 'Запишитесь на ТО или бесплатный осмотр!' );
     if ( $cf7_id ) {
-        carbon_set_theme_option( 'miauto_form_cf7_id', (string) $cf7_id );
+        miauto_demo_set_theme_option_if_empty( 'miauto_form_cf7_id', (string) $cf7_id );
     }
     if ( ! empty( $images['hero-bg'] ) ) {
-        carbon_set_theme_option( 'miauto_form_bg', $images['hero-bg'] );
+        miauto_demo_set_theme_option_if_empty( 'miauto_form_bg', $images['hero-bg'] );
     }
 
     // Partners.
-    carbon_set_theme_option( 'miauto_partners_title', 'Наши партнеры' );
-    $partners_gallery = array_filter( array(
-        $images['partner-1'] ?? 0,
-        $images['partner-2'] ?? 0,
-        $images['partner-3'] ?? 0,
-        $images['partner-4'] ?? 0,
+    miauto_demo_set_theme_option_if_empty( 'miauto_partners_title', 'Наши партнеры' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_partners_items', array(
+        array( 'pitem_image' => $images['partner-1'] ?? 0, 'pitem_title' => 'Клуб Mitsubishi ASX', 'pitem_url' => 'http://www.mitsubishi-asx.net/' ),
+        array( 'pitem_image' => $images['partner-2'] ?? 0, 'pitem_title' => 'Pajero4-club',         'pitem_url' => 'http://www.pajero4-club.ru/' ),
+        array( 'pitem_image' => $images['partner-3'] ?? 0, 'pitem_title' => 'Pajero 4x4 Club',      'pitem_url' => 'http://www.pajeroclub.ru/' ),
+        array( 'pitem_image' => $images['partner-4'] ?? 0, 'pitem_title' => 'Club-L200.ru',          'pitem_url' => 'http://club-l200.ru/forum/index.php' ),
     ) );
-    if ( ! empty( $partners_gallery ) ) {
-        carbon_set_theme_option( 'miauto_partners_gallery', array_values( $partners_gallery ) );
-    }
+
+    // Work Process.
+    miauto_demo_set_theme_option_if_empty( 'miauto_work_process_title', 'Как мы работаем' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_work_process_subtitle', 'Вы не платите за лишнее — только согласованные работы' );
+    miauto_demo_set_theme_option_if_empty( 'miauto_work_process_steps', array(
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.82812 0.76529C3.09057 0.503212 3.40572 0.299907 3.75268 0.168848C4.09965 0.0377897 4.4705 -0.0180293 4.84066 0.00509005C5.21083 0.0282094 5.57185 0.129739 5.89982 0.302951C6.22778 0.476164 6.51519 0.717103 6.743 1.0098L9.43541 4.46896C9.9289 5.10349 10.1029 5.93003 9.9079 6.71006L9.08742 9.99521C9.0453 10.1654 9.04774 10.3435 9.0945 10.5125C9.14127 10.6814 9.23079 10.8355 9.35441 10.9598L13.0398 14.6454C13.1642 14.7693 13.3185 14.859 13.4877 14.9058C13.657 14.9525 13.8354 14.9548 14.0058 14.9124L17.2892 14.0919C17.6741 13.9962 18.0757 13.989 18.4639 14.0709C18.852 14.1527 19.2165 14.3214 19.5301 14.5644L22.989 17.2555C24.2324 18.2231 24.3464 20.0607 23.2335 21.1722L21.6825 22.7233C20.5726 23.8333 18.9136 24.3209 17.3672 23.7763C13.4083 22.3852 9.81421 20.1188 6.85249 17.146C3.88014 14.1845 1.61398 10.5907 0.222699 6.63206C-0.320284 5.08699 0.167201 3.42641 1.27717 2.31636L2.82812 0.76529Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Заявка или звонок',
+            'step_text'  => 'Свяжитесь с нами для консультации по проблеме.',
+        ),
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.85935 0.895962C6.85935 0.658338 6.76377 0.430446 6.59365 0.262421C6.42352 0.0943957 6.19278 0 5.95219 0C5.71159 0 5.48085 0.0943957 5.31073 0.262421C5.1406 0.430446 5.04503 0.658338 5.04503 0.895962V2.78345C3.30328 2.92083 2.16146 3.25772 1.32204 4.08797C0.4814 4.91704 0.140308 6.04595 0 7.765H23.9999C23.8595 6.04475 23.5185 4.91704 22.6778 4.08797C21.8384 3.25772 20.6954 2.92083 18.9548 2.78226V0.895962C18.9548 0.658338 18.8593 0.430446 18.6891 0.262421C18.519 0.0943957 18.2883 0 18.0477 0C17.8071 0 17.5763 0.0943957 17.4062 0.262421C17.2361 0.430446 17.1405 0.658338 17.1405 0.895962V2.70341C16.3362 2.68788 15.4338 2.68788 14.419 2.68788H9.58083C8.56602 2.68788 7.6637 2.68788 6.85935 2.70341V0.895962ZM0 9.765C0 10.4327 0 11.1327 0 11.1327V18.1327C0 19.4327 0.448616 20.6 1.24716 21.4587C2.0457 22.3173 3.12876 22.7659 4.25806 22.7659H19.7419C20.8712 22.7659 21.9543 22.3173 22.7528 21.4587C23.5514 20.6 24 19.4327 24 18.1327V11.1327C24 11.1327 24 9.765 23.9844 9.765H0.0156Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Запись',
+            'step_text'  => 'Подберем удобные дату и время для визита.',
+        ),
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.7568 1.6104C0 3.223 0 5.8146 0 11C0 16.1854 0 18.7781 1.7568 20.3885C3.516 22 6.3432 22 12 22C17.6568 22 20.4852 22 22.242 20.3885C24 18.7792 24 16.1854 24 11C24 5.8146 24 3.2219 22.242 1.6104C20.4864 0 17.6568 0 12 0C6.3432 0 3.5148 0 1.7568 1.6104ZM15.7188 11.1034C15.498 10.7712 15.2808 10.4467 15.0696 10.2157C14.8452 9.9693 14.4516 9.6305 13.8492 9.6525C13.2468 9.6745 12.8844 10.0408 12.6816 10.3026C12.4908 10.5501 12.3036 10.8878 12.1116 11.2354L9.726 15.5474C9.638 15.7087 9.5608 15.847 9.4944 15.9621L9.2088 15.576L8.9976 15.2834C8.78874 14.9856 8.56573 14.6964 8.3292 14.4166C8.10821 14.1508 7.82956 13.9298 7.5108 13.7676C7.18644 13.6144 6.83096 13.5245 6.4668 13.5036C6.1404 13.475 5.7504 13.475 5.31 13.475H3.6C3.36131 13.475 3.13239 13.5619 2.9636 13.7166C2.79482 13.8714 2.7 14.0812 2.7 14.3C2.7 14.5188 2.79482 14.7286 2.9636 14.8834C3.13239 15.0381 3.36131 15.125 3.6 15.125H5.2728C5.7612 15.125 6.066 15.125 6.3 15.1459C6.516 15.1646 6.6048 15.1943 6.6612 15.2229C6.7176 15.2504 6.7944 15.2999 6.9312 15.455C7.0788 15.6222 7.2492 15.8543 7.5192 16.2272L7.7436 16.5341C7.9692 16.8454 8.1912 17.1501 8.4072 17.369C8.6376 17.6033 9.0336 17.9157 9.6192 17.8838C10.2024 17.8519 10.5552 17.4988 10.7556 17.2414C10.9404 17.0005 11.1216 16.6727 11.3064 16.3394L13.6908 12.0296C13.7844 11.8609 13.8656 11.7161 13.9344 11.5951C14.0144 11.711 14.1076 11.8492 14.214 12.0098L14.9988 13.1846C15.2388 13.5443 15.4524 13.8622 15.6588 14.113C15.882 14.3847 16.1376 14.6289 16.4892 14.8093C16.8408 14.9897 17.2008 15.0623 17.5704 15.0953C17.9112 15.125 18.318 15.125 18.7776 15.125H20.4C20.6387 15.125 20.8676 15.0381 21.0364 14.8834C21.2052 14.7286 21.3 14.5188 21.3 14.3C21.3 14.0812 21.2052 13.8714 21.0364 13.7166C20.8676 13.5619 20.6387 13.475 20.4 13.475H18.816C18.3072 13.475 17.988 13.475 17.7432 13.453C17.5176 13.4321 17.4264 13.3991 17.3688 13.3694C17.31 13.3397 17.232 13.2858 17.0964 13.1197C16.9476 12.9404 16.7808 12.6907 16.5144 12.2925L15.7188 11.1034Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Диагностика',
+            'step_text'  => 'Полная дефектовка и выявление неисправностей.',
+        ),
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.4839 0.307692C15.4839 0.226087 15.4431 0.147825 15.3705 0.0901211C15.2979 0.0324176 15.1994 0 15.0968 0H4.25806C3.12876 0 2.0457 0.356592 1.24716 0.991331C0.448616 1.62607 0 2.48696 0 3.38462V20.6154C0 21.513 0.448616 22.3739 1.24716 23.0087C2.0457 23.6434 3.12876 24 4.25806 24H19.7419C20.8712 24 21.9543 23.6434 22.7528 23.0087C23.5514 22.3739 24 21.513 24 20.6154V8.48862C24 8.40701 23.9592 8.32875 23.8866 8.27104C23.814 8.21334 23.7156 8.18092 23.6129 8.18092H16.6452C16.3372 8.18092 16.0418 8.08367 15.824 7.91056C15.6062 7.73745 15.4839 7.50266 15.4839 7.25785V0.307692ZM16.6452 12.3077C16.9532 12.3077 17.2485 12.4049 17.4663 12.5781C17.6841 12.7512 17.8065 12.986 17.8065 13.2308C17.8065 13.4756 17.6841 13.7104 17.4663 13.8835C17.2485 14.0566 16.9532 14.1538 16.6452 14.1538H7.35484C7.04684 14.1538 6.75147 14.0566 6.53368 13.8835C6.3159 13.7104 6.19355 13.4756 6.19355 13.2308C6.19355 12.986 6.3159 12.7512 6.53368 12.5781C6.75147 12.4049 7.04684 12.3077 7.35484 12.3077H16.6452ZM16.6452 17.2308C16.9532 17.2308 17.2485 17.328 17.4663 17.5011C17.6841 17.6742 17.8065 17.909 17.8065 18.1538C17.8065 18.3987 17.6841 18.6335 17.4663 18.8066C17.2485 18.9797 16.9532 19.0769 16.6452 19.0769H7.35484C7.04684 19.0769 6.75147 18.9797 6.53368 18.8066C6.3159 18.6335 6.19355 18.3987 6.19355 18.1538C6.19355 17.909 6.3159 17.6742 6.53368 17.5011C6.75147 17.328 7.04684 17.2308 7.35484 17.2308H16.6452Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Согласование',
+            'step_text'  => 'Утверждаем смету и варианты решения проблемы.',
+        ),
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.6 0H2.4C1.2 0 0 1.08 0 2.4V6.012C0 6.876 0.516 7.62 1.2 8.04V21.6C1.2 22.92 2.52 24 3.6 24H20.4C21.48 24 22.8 22.92 22.8 21.6V8.04C23.484 7.62 24 6.876 24 6.012V2.4C24 1.08 22.8 0 21.6 0ZM15.6 14.4H8.4V12H15.6V14.4ZM21.6 6H2.4V2.4L21.6 2.376V6Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Ремонт',
+            'step_text'  => 'Заказ запчастей и выполнение ремонтных работ.',
+        ),
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.376 0 0 5.376 0 12C0 18.624 5.376 24 12 24C18.624 24 24 18.624 24 12C24 5.376 18.624 0 12 0ZM9.6 18L3.6 12L5.292 10.308L9.6 14.604L18.708 5.496L20.4 7.2L9.6 18Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Тест и выдача',
+            'step_text'  => 'Проверка исправности и возврат авто.',
+        ),
+        array(
+            'step_svg'   => '<svg viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0L0 4.90909V12.2727C0 19.0841 5.12 25.4536 12 27C18.88 25.4536 24 19.0841 24 12.2727V4.90909L12 0ZM9.33333 19.6364L4.79935 15.463C4.369 15.0669 4.369 14.3876 4.79935 13.9915L5.20407 13.619C5.58629 13.2672 6.17423 13.2666 6.55713 13.6177L9.33333 16.1632L17.4404 8.70103C17.8241 8.3478 18.4149 8.34884 18.7974 8.70342L19.2061 9.08221C19.634 9.47889 19.6328 10.1562 19.2035 10.5514L9.33333 19.6364Z" fill="#EA3423"/></svg>',
+            'step_title' => 'Гарантия',
+            'step_text'  => 'Выдаем гарантийный талон и консультируем.',
+        ),
+    ) );
 }
 
 // ─── 4. Create pages ────────────────────────────────────────────────
@@ -355,7 +430,10 @@ function miauto_demo_create_pages() {
         if ( $existing ) {
             $pages[ $slug ] = $existing->ID;
             if ( ! empty( $data['template'] ) ) {
-                update_post_meta( $existing->ID, '_wp_page_template', $data['template'] );
+                $current_tpl = get_post_meta( $existing->ID, '_wp_page_template', true );
+                if ( empty( $current_tpl ) || 'default' === $current_tpl ) {
+                    update_post_meta( $existing->ID, '_wp_page_template', $data['template'] );
+                }
             }
             continue;
         }
@@ -381,12 +459,14 @@ function miauto_demo_create_pages() {
 // ─── 5. Reading settings ────────────────────────────────────────────
 
 function miauto_demo_set_reading_settings( $pages ) {
-    update_option( 'show_on_front', 'page' );
+    if ( 'page' !== get_option( 'show_on_front' ) ) {
+        update_option( 'show_on_front', 'page' );
+    }
 
-    if ( ! empty( $pages['home'] ) ) {
+    if ( ! empty( $pages['home'] ) && ! get_option( 'page_on_front' ) ) {
         update_option( 'page_on_front', $pages['home'] );
     }
-    if ( ! empty( $pages['blog'] ) ) {
+    if ( ! empty( $pages['blog'] ) && ! get_option( 'page_for_posts' ) ) {
         update_option( 'page_for_posts', $pages['blog'] );
     }
 }
@@ -410,7 +490,7 @@ function miauto_demo_create_cpt_posts( $images ) {
 
     foreach ( $models as $title => $thumb ) {
         $id = miauto_demo_get_or_create_post( 'miauto_model', $title );
-        if ( $thumb ) {
+        if ( $thumb && ! has_post_thumbnail( $id ) ) {
             set_post_thumbnail( $id, $thumb );
         }
         $result['models'][] = $id;
@@ -435,22 +515,33 @@ function miauto_demo_create_cpt_posts( $images ) {
     foreach ( $services as $title => $svc ) {
         $id    = miauto_demo_get_or_create_post( 'miauto_service', $title );
         $thumb = $images[ $svc['img'] ] ?? 0;
-        if ( $thumb ) {
+        if ( $thumb && ! has_post_thumbnail( $id ) ) {
             set_post_thumbnail( $id, $thumb );
         }
-        wp_update_post( array( 'ID' => $id, 'menu_order' => $svc_order++ ) );
 
-        if ( function_exists( 'carbon_set_post_meta' ) ) {
-            carbon_set_post_meta( $id, 'miauto_service_price', $svc['price'] );
+        $current_order = (int) get_post_field( 'menu_order', $id );
+        if ( 0 === $current_order ) {
+            wp_update_post( array( 'ID' => $id, 'menu_order' => $svc_order ) );
         }
+        $svc_order++;
+
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_service_price', $svc['price'] );
 
         $result['services'][ $title ] = $id;
     }
 
     // Fill detailed fields for "Ремонт двигателя" (demo service).
-    if ( function_exists( 'carbon_set_post_meta' ) && ! empty( $result['services']['Ремонт двигателя'] ) ) {
+    if ( ! empty( $result['services']['Ремонт двигателя'] ) ) {
         $sid = $result['services']['Ремонт двигателя'];
         miauto_demo_fill_service_fields( $sid, $images );
+
+        // SEO text (post_content) — only if empty.
+        if ( '' === get_post_field( 'post_content', $sid ) ) {
+            wp_update_post( array(
+                'ID'           => $sid,
+                'post_content' => '<p>Технический центр МИ АВТО специализируется на ремонте и техническом обслуживании всего модельного ряда автомобилей Mitsubishi, в Москве и Московской области. Все работы проводятся в соответствии с техническими требованиями заводов изготовителей, с применением специального инструмента и оборудования, а также технической документации. Многолетний опыт, высокая квалификация сотрудников, наличие большой ремонтной базы, склада оригинальных, аналоговых и бывших в употреблении запчастей. Послегарантийное обслуживание и ремонт Mitsubishi — это наша специализация.</p>',
+            ) );
+        }
     }
 
     // --- Works ---
@@ -487,30 +578,63 @@ function miauto_demo_create_cpt_posts( $images ) {
         ),
     );
 
+    // Gallery image mapping per work post.
+    $work_galleries = array(
+        'Капитальный ремонт ДВС Outlander XL' => array( 'car-outlander-xl', 'car-outlander-3', 'car-outlander-new' ),
+        'Замена цепи ГРМ Pajero IV'            => array( 'car-pajero-sport-3', 'car-pajero-sport-2', 'car-lancer-10' ),
+        'Ремонт ГБЦ ASX'                       => array( 'car-asx', 'car-lancer-10', 'car-outlander-3' ),
+    );
+
     foreach ( $works as $w ) {
         $id = miauto_demo_get_or_create_post( 'miauto_work', $w['title'] );
 
-        if ( function_exists( 'carbon_set_post_meta' ) ) {
-            carbon_set_post_meta( $id, 'miauto_work_model', $w['model'] );
-            carbon_set_post_meta( $id, 'miauto_work_mileage', $w['mileage'] );
-            carbon_set_post_meta( $id, 'miauto_work_issue', $w['issue'] );
-            carbon_set_post_meta( $id, 'miauto_work_price', $w['price'] );
-            carbon_set_post_meta( $id, 'miauto_work_duration', $w['duration'] );
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_model', $w['model'] );
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_mileage', $w['mileage'] );
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_issue', $w['issue'] );
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_price', $w['price'] );
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_duration', $w['duration'] );
 
-            $defects = array();
-            foreach ( $w['defects'] as $d ) {
-                $defects[] = array( 'text' => $d );
-            }
-            carbon_set_post_meta( $id, 'miauto_work_defects', $defects );
+        $defects = array();
+        foreach ( $w['defects'] as $d ) {
+            $defects[] = array( 'defect_text' => $d );
+        }
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_defects', $defects );
 
-            $done = array();
-            foreach ( $w['done'] as $d ) {
-                $done[] = array( 'text' => $d );
+        $done = array();
+        foreach ( $w['done'] as $d ) {
+            $done[] = array( 'done_text' => $d );
+        }
+        miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_done', $done );
+
+        // Gallery images.
+        if ( isset( $work_galleries[ $w['title'] ] ) ) {
+            $gallery_ids = array();
+            foreach ( $work_galleries[ $w['title'] ] as $img_key ) {
+                if ( ! empty( $images[ $img_key ] ) ) {
+                    $gallery_ids[] = $images[ $img_key ];
+                }
             }
-            carbon_set_post_meta( $id, 'miauto_work_done', $done );
+            if ( ! empty( $gallery_ids ) ) {
+                miauto_demo_set_post_meta_if_empty( $id, 'miauto_work_gallery', $gallery_ids );
+            }
         }
 
         $result['works'][] = $id;
+    }
+
+    // Associate all works with "Ремонт двигателя" service.
+    if ( ! empty( $result['services']['Ремонт двигателя'] ) ) {
+        $engine_svc_id = $result['services']['Ремонт двигателя'];
+        foreach ( $result['works'] as $work_id ) {
+            miauto_demo_set_post_meta_if_empty( $work_id, 'miauto_work_services', array(
+                array(
+                    'id'      => $engine_svc_id,
+                    'type'    => 'post',
+                    'subtype' => 'miauto_service',
+                    'value'   => 'post:miauto_service:' . $engine_svc_id,
+                ),
+            ) );
+        }
     }
 
     return $result;
@@ -520,86 +644,140 @@ function miauto_demo_create_cpt_posts( $images ) {
 
 function miauto_demo_fill_service_fields( $post_id, $images ) {
     // SC Hero.
-    carbon_set_post_meta( $post_id, 'miauto_sc_hero_subtitle', 'Капремонт / замена / устранение масложора / стук / перегрев — с гарантией по договору' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_hero_features', array(
-        array( 'text' => 'Честная дефектовка и согласование работ до начала' ),
-        array( 'text' => 'Фото/видео отчёт по этапам (по запросу)' ),
-        array( 'text' => 'Сроки от 1 дня (в зависимости от поломки)' ),
-        array( 'text' => 'Гарантия на работы и запчасти' ),
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_subtitle', 'Капремонт / замена / устранение масложора / стук / перегрев — с гарантией по договору' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_features', array(
+        array( 'feature_text' => 'Честная дефектовка и согласование работ до начала' ),
+        array( 'feature_text' => 'Фото/видео отчёт по этапам (по запросу)' ),
+        array( 'feature_text' => 'Сроки от 1 дня (в зависимости от поломки)' ),
+        array( 'feature_text' => 'Гарантия на работы и запчасти' ),
     ) );
-    carbon_set_post_meta( $post_id, 'miauto_sc_hero_cta_primary_text', 'Записаться на диагностику' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_hero_cta_secondary_text', 'Рассчитать стоимость' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_cta_primary_text', 'Записаться на диагностику' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_cta_secondary_text', 'Рассчитать стоимость' );
 
     if ( ! empty( $images['svc-engine'] ) ) {
-        carbon_set_post_meta( $post_id, 'miauto_sc_hero_image', $images['svc-engine'] );
+        miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_image', $images['svc-engine'] );
     }
 
-    carbon_set_post_meta( $post_id, 'miauto_sc_hero_stats', array(
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_hero_stats', array(
         array( 'stat_value' => '5,0',    'stat_label' => 'Рейтинг на картах' ),
         array( 'stat_value' => '500+',   'stat_label' => 'Отзывов на картах' ),
         array( 'stat_value' => 'с 2005', 'stat_label' => 'Опыт работы' ),
     ) );
 
+    // SC-Examples title.
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_examples_title', 'Примеры ремонта двигателя' );
+
     // Symptoms.
-    carbon_set_post_meta( $post_id, 'miauto_sc_symptoms_title', 'Когда нужен ремонт двигателя' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_symptoms_subtitle', 'Вы не платите за лишнее — только согласованные работы' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_symptoms_cards', array(
-        array( 'image' => '', 'title' => 'Дым из выхлопной',        'desc' => 'Синий, белый или черный дым — признак серьезных неисправностей.' ),
-        array( 'image' => '', 'title' => 'Масложор/подтеки масла',   'desc' => 'Постоянное доливание масла, лужи под машиной или следы потеков.' ),
-        array( 'image' => '', 'title' => 'Потеря мощности/троение',  'desc' => 'Двигатель не тянет, машина дергается, плохо разгоняется.' ),
-        array( 'image' => '', 'title' => 'Стук/шум/вибрации',        'desc' => 'Постоянные звуки при работе двигателя или повышенная вибрация.' ),
-        array( 'image' => '', 'title' => 'Перегрев/эмульсия',        'desc' => 'Стрелка температуры выше нормы, «пена» на крышке маслозаливной горловины.' ),
-        array( 'image' => '', 'title' => 'Ошибки Check Engine',      'desc' => 'Горящий индикатор «Check Engine» на приборной панели.' ),
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_symptoms_title', 'Когда нужен ремонт двигателя' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_symptoms_subtitle', 'Вы не платите за лишнее — только согласованные работы' );
+    $sym_img = $images['hero-bg'] ?? '';
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_symptoms_cards', array(
+        array( 'sym_image' => $sym_img, 'symptom_title' => 'Дым из выхлопной',        'symptom_desc' => 'Синий, белый или черный дым — признак серьезных неисправностей.' ),
+        array( 'sym_image' => $sym_img, 'symptom_title' => 'Масложор/подтеки масла',   'symptom_desc' => 'Постоянное доливание масла, лужи под машиной или следы потеков.' ),
+        array( 'sym_image' => $sym_img, 'symptom_title' => 'Потеря мощности/троение',  'symptom_desc' => 'Двигатель не тянет, машина дергается, плохо разгоняется.' ),
+        array( 'sym_image' => $sym_img, 'symptom_title' => 'Стук/шум/вибрации',        'symptom_desc' => 'Постоянные звуки при работе двигателя или повышенная вибрация.' ),
+        array( 'sym_image' => $sym_img, 'symptom_title' => 'Перегрев/эмульсия',        'symptom_desc' => 'Стрелка температуры выше нормы, «пена» на крышке маслозаливной горловины.' ),
+        array( 'sym_image' => $sym_img, 'symptom_title' => 'Ошибки Check Engine',      'symptom_desc' => 'Горящий индикатор «Check Engine» на приборной панели.' ),
     ) );
-    carbon_set_post_meta( $post_id, 'miauto_sc_symptoms_cta_text', 'Запишитесь — проверим причину и предложим варианты решения' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_symptoms_cta_btn_text', 'Записаться на диагностику' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_symptoms_cta_text', 'Запишитесь — проверим причину и предложим варианты решения' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_symptoms_cta_btn_text', 'Записаться на диагностику' );
 
     // Svc List.
-    carbon_set_post_meta( $post_id, 'miauto_sc_svc_list_title', 'Какие работы выполняем' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_svc_list_items', array(
-        array( 'title' => 'Компьютерная диагностика, эндоскопия цилиндров', 'desc' => 'Считывание кодов ошибок сканером и осмотр состояния цилиндров через эндоскоп без разборки двигателя.' ),
-        array( 'title' => 'Замер компрессии/давления масла',                'desc' => 'Инструментальная проверка давления в цилиндрах и масляной системе для оценки износа деталей.' ),
-        array( 'title' => 'Дефектовка двигателя',                          'desc' => 'Разборка, чистка и выявление всех скрытых дефектов с составлением точной ведомости.' ),
-        array( 'title' => 'Замена прокладок/сальников',                     'desc' => 'Восстановление герметичности двигателя, устранение течей масла и технических жидкостей.' ),
-        array( 'title' => 'Замена цепи/ремня ГРМ',                         'desc' => 'Обслуживание механизма газораспределения: замена цепи или ремня с комплектующими.' ),
-        array( 'title' => 'Шлифовка ГБЦ, притирка клапанов',               'desc' => 'Механическая обработка головки блока, восстановление плотности прилегания клапанов.' ),
-        array( 'title' => 'Замена вкладышей/колец/поршней',                 'desc' => 'Капитальный ремонт цилиндро-поршневой группы для восстановления компрессии и устранения масложора.' ),
-        array( 'title' => 'Сборка, запуск и настройка ЭБУ',                'desc' => 'Окончательная сборка двигателя с соблюдением моментов затяжки, первый запуск, контрольная диагностика и программные настройки.' ),
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_svc_list_title', 'Какие работы выполняем' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_svc_list_items', array(
+        array( 'svc_title' => 'Компьютерная диагностика, эндоскопия цилиндров', 'svc_desc' => 'Считывание кодов ошибок сканером и осмотр состояния цилиндров через эндоскоп без разборки двигателя.' ),
+        array( 'svc_title' => 'Замер компрессии/давления масла',                'svc_desc' => 'Инструментальная проверка давления в цилиндрах и масляной системе для оценки износа деталей.' ),
+        array( 'svc_title' => 'Дефектовка двигателя',                          'svc_desc' => 'Разборка, чистка и выявление всех скрытых дефектов с составлением точной ведомости.' ),
+        array( 'svc_title' => 'Замена прокладок/сальников',                     'svc_desc' => 'Восстановление герметичности двигателя, устранение течей масла и технических жидкостей.' ),
+        array( 'svc_title' => 'Замена цепи/ремня ГРМ',                         'svc_desc' => 'Обслуживание механизма газораспределения: замена цепи или ремня с комплектующими.' ),
+        array( 'svc_title' => 'Шлифовка ГБЦ, притирка клапанов',               'svc_desc' => 'Механическая обработка головки блока, восстановление плотности прилегания клапанов.' ),
+        array( 'svc_title' => 'Замена вкладышей/колец/поршней',                 'svc_desc' => 'Капитальный ремонт цилиндро-поршневой группы для восстановления компрессии и устранения масложора.' ),
+        array( 'svc_title' => 'Сборка, запуск и настройка ЭБУ',                'svc_desc' => 'Окончательная сборка двигателя с соблюдением моментов затяжки, первый запуск, контрольная диагностика и программные настройки.' ),
     ) );
 
     // SC Prices.
-    carbon_set_post_meta( $post_id, 'miauto_sc_prices_title', 'Стоимость ремонта двигателя' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_prices_subtitle', 'Вы не платите за лишнее — только согласованные работы' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_prices_rows', array(
-        array( 'name' => 'Диагностика двигателя',  'price' => 'от 5 000 ₽' ),
-        array( 'name' => 'Эндоскопия цилиндров',   'price' => 'от 4 000 ₽' ),
-        array( 'name' => 'Замена прокладки ГБЦ',    'price' => 'от 8 000 ₽' ),
-        array( 'name' => 'Замена цепи ГРМ',         'price' => 'от 14 000 ₽' ),
-        array( 'name' => 'Капитальный ремонт',      'price' => 'от 40 000 ₽' ),
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_prices_title', 'Стоимость ремонта двигателя' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_prices_subtitle', 'Вы не платите за лишнее — только согласованные работы' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_prices_rows', array(
+        array( 'service_name' => 'Диагностика двигателя',  'sc_service_price' => 'от 5 000 ₽' ),
+        array( 'service_name' => 'Эндоскопия цилиндров',   'sc_service_price' => 'от 4 000 ₽' ),
+        array( 'service_name' => 'Замена прокладки ГБЦ',    'sc_service_price' => 'от 8 000 ₽' ),
+        array( 'service_name' => 'Замена цепи ГРМ',         'sc_service_price' => 'от 14 000 ₽' ),
+        array( 'service_name' => 'Капитальный ремонт',      'sc_service_price' => 'от 40 000 ₽' ),
     ) );
-    carbon_set_post_meta( $post_id, 'miauto_sc_prices_footer_heading', 'Получите точную смету после дефектовки' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_prices_footer_desc', 'До начала работ всё согласуем' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_prices_footer_btn_text', 'Записаться на диагностику' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_prices_footer_heading', 'Получите точную смету после дефектовки' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_prices_footer_desc', 'До начала работ всё согласуем' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_prices_footer_btn_text', 'Записаться на диагностику' );
 
     // Warranty.
-    carbon_set_post_meta( $post_id, 'miauto_sc_warranty_title', 'Гарантия и ответственность' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_warranty_subtitle', 'Если выявим, что ремонт нецелесообразен — предложим альтернативы' );
-    carbon_set_post_meta( $post_id, 'miauto_sc_warranty_cards', array(
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_warranty_title', 'Гарантия и ответственность' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_warranty_subtitle', 'Если выявим, что ремонт нецелесообразен — предложим альтернативы' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_warranty_cards', array(
         array(
-            'svg'  => '<svg viewBox="0 0 18 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 0L0 3.636V9.091C0 14.136 3.84 18.855 9 20c5.16-1.145 9-5.864 9-10.909V3.636L9 0zM7 14.546L3.773 11.611a.82.82 0 010-1.404.826.826 0 011.275-.002L7 11.973l5.948-5.407a.826.826 0 011.282.003.82.82 0 01-.003 1.406L7 14.546z" fill="white"/></svg>',
-            'text' => 'Гарантия на работы — 1 год',
+            'war_svg'          => '<svg viewBox="0 0 18 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 0L0 3.636V9.091C0 14.136 3.84 18.855 9 20c5.16-1.145 9-5.864 9-10.909V3.636L9 0zM7 14.546L3.773 11.611a.82.82 0 010-1.404.826.826 0 011.275-.002L7 11.973l5.948-5.407a.826.826 0 011.282.003.82.82 0 01-.003 1.406L7 14.546z" fill="white"/></svg>',
+            'warranty_text' => 'Гарантия на работы — 1 год',
         ),
         array(
-            'svg'  => '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18 0H2C1 0 0 .9 0 2v3.01c0 .72.43 1.34 1 1.69V18c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V6.7c.57-.35 1-.97 1-1.69V2c0-1.1-1-.9-2 0zM13 12H7v-2h6v2zM18 5H2V2l16-.02V5z" fill="white"/></svg>',
-            'text' => 'Запчасти — по условиям поставщика',
+            'war_svg'          => '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18 0H2C1 0 0 .9 0 2v3.01c0 .72.43 1.34 1 1.69V18c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V6.7c.57-.35 1-.97 1-1.69V2c0-1.1-1-.9-2 0zM13 12H7v-2h6v2zM18 5H2V2l16-.02V5z" fill="white"/></svg>',
+            'warranty_text' => 'Запчасти — по условиям поставщика',
         ),
         array(
-            'svg'  => '<svg viewBox="0 0 18 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.613.256a.29.29 0 00-.29-.256H3.194C2.347 0 1.534.297.935.826.336 1.355 0 2.072 0 2.82v14.36c0 .748.336 1.465.935 1.994.6.529 1.412.826 2.259.826h11.612c.847 0 1.66-.297 2.258-.826.6-.529.936-1.246.936-1.994V7.074a.29.29 0 00-.29-.257h-5.226a.87.87 0 01-.612-.226.77.77 0 01-.259-.543V.256zM12.484 10.256c.231 0 .452.081.616.226a.77.77 0 01.255.543.77.77 0 01-.255.544.87.87 0 01-.616.226H5.516a.87.87 0 01-.616-.226.77.77 0 01-.255-.544c0-.208.092-.404.255-.543a.87.87 0 01.616-.226h6.968zm0 4.103c.231 0 .452.081.616.225a.77.77 0 01.255.544.77.77 0 01-.255.544.87.87 0 01-.616.225H5.516a.87.87 0 01-.616-.225.77.77 0 01-.255-.544c0-.208.092-.404.255-.544a.87.87 0 01.616-.225h6.968z" fill="white"/><path d="M13.356.59c0-.19.224-.31.39-.192.14.1.266.217.375.35l3.499 4.305c.079.098-.007.226-.144.226h-3.83a.29.29 0 01-.29-.257V.59z" fill="white"/></svg>',
-            'text' => 'Документы: заказ-наряд, акт выполненных работ',
+            'war_svg'          => '<svg viewBox="0 0 18 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.613.256a.29.29 0 00-.29-.256H3.194C2.347 0 1.534.297.935.826.336 1.355 0 2.072 0 2.82v14.36c0 .748.336 1.465.935 1.994.6.529 1.412.826 2.259.826h11.612c.847 0 1.66-.297 2.258-.826.6-.529.936-1.246.936-1.994V7.074a.29.29 0 00-.29-.257h-5.226a.87.87 0 01-.612-.226.77.77 0 01-.259-.543V.256zM12.484 10.256c.231 0 .452.081.616.226a.77.77 0 01.255.543.77.77 0 01-.255.544.87.87 0 01-.616.226H5.516a.87.87 0 01-.616-.226.77.77 0 01-.255-.544c0-.208.092-.404.255-.543a.87.87 0 01.616-.226h6.968zm0 4.103c.231 0 .452.081.616.225a.77.77 0 01.255.544.77.77 0 01-.255.544.87.87 0 01-.616.225H5.516a.87.87 0 01-.616-.225.77.77 0 01-.255-.544c0-.208.092-.404.255-.544a.87.87 0 01.616-.225h6.968z" fill="white"/><path d="M13.356.59c0-.19.224-.31.39-.192.14.1.266.217.375.35l3.499 4.305c.079.098-.007.226-.144.226h-3.83a.29.29 0 01-.29-.257V.59z" fill="white"/></svg>',
+            'warranty_text' => 'Документы: заказ-наряд, акт выполненных работ',
         ),
         array(
-            'svg'  => '<svg viewBox="0 0 20 18" xmlns="http://www.w3.org/2000/svg"><path d="M10 13.2c1.77 0 3.2-1.43 3.2-3.2 0-1.77-1.43-3.2-3.2-3.2-1.77 0-3.2 1.43-3.2 3.2 0 1.77 1.43 3.2 3.2 3.2zM7 0L5.17 2H2C.9 2 0 2.9 0 4v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2h-3.17L13 0H7zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="white"/></svg>',
-            'text' => 'Фото/видео дефектовки (по запросу)',
+            'war_svg'          => '<svg viewBox="0 0 20 18" xmlns="http://www.w3.org/2000/svg"><path d="M10 13.2c1.77 0 3.2-1.43 3.2-3.2 0-1.77-1.43-3.2-3.2-3.2-1.77 0-3.2 1.43-3.2 3.2 0 1.77 1.43 3.2 3.2 3.2zM7 0L5.17 2H2C.9 2 0 2.9 0 4v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2h-3.17L13 0H7zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="white"/></svg>',
+            'warranty_text' => 'Фото/видео дефектовки (по запросу)',
+        ),
+    ) );
+
+    // FAQ.
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_faq_heading', 'FAQ' );
+    miauto_demo_set_post_meta_if_empty( $post_id, 'miauto_sc_faq_entries', array(
+        array(
+            'faq_entry_active'   => true,
+            'faq_entry_question' => 'Сколько занимает ремонт двигателя?',
+            'faq_entry_answer'   => 'Сроки зависят от сложности работ. Замена цепи ГРМ — от 1 до 3 дней. Капитальный ремонт двигателя — от 5 до 10 рабочих дней. Точные сроки сообщим после диагностики.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Можно ли ездить с этой проблемой?',
+            'faq_entry_answer'   => 'Это зависит от типа поломки. Если проблема серьезная и может привести к дальнейшему повреждению двигателя, не рекомендуется ездить на автомобиле. Мы советуем проконсультироваться с нашими специалистами для оценки состояния двигателя.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Как понять, нужен капремонт или можно ограничиться заменой?',
+            'faq_entry_answer'   => 'Решение принимается по результатам дефектовки. Мы разбираем двигатель, проводим замеры износа деталей и составляем ведомость. После этого предлагаем оптимальный вариант ремонта.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Что если после вскрытия цена изменится?',
+            'faq_entry_answer'   => 'Все работы согласуются с вами до начала выполнения. Если при дефектовке выявятся дополнительные неисправности, мы обязательно свяжемся с вами и согласуем изменения в смете.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Какие запчасти ставите?',
+            'faq_entry_answer'   => 'Используем оригинальные запчасти и проверенные аналоги от ведущих производителей. Выбор всегда согласуется с клиентом по цене и качеству.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Даете ли гарантию?',
+            'faq_entry_answer'   => 'Да, на все выполненные работы предоставляется гарантия 1 год. На запчасти — гарантия по условиям поставщика. Выдаём гарантийный талон.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Можно ли привезти свои запчасти?',
+            'faq_entry_answer'   => 'Да, вы можете привезти свои запчасти. Однако в этом случае гарантия на запчасти не распространяется. Гарантия на выполненные работы сохраняется.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Как происходит согласование?',
+            'faq_entry_answer'   => 'После диагностики составляем смету с перечнем работ и стоимостью. Отправляем её вам. Работы начинаем только после вашего согласия.',
+        ),
+        array(
+            'faq_entry_active'   => false,
+            'faq_entry_question' => 'Какие причины могут привести к поломке двигателя?',
+            'faq_entry_answer'   => 'Основные причины: несвоевременная замена масла, перегрев двигателя, использование некачественного топлива, естественный износ деталей, пробег свыше 100 000 км без обслуживания.',
         ),
     ) );
 }
@@ -607,84 +785,80 @@ function miauto_demo_fill_service_fields( $post_id, $images ) {
 // ─── 7. Set page meta fields ────────────────────────────────────────
 
 function miauto_demo_set_page_meta( $pages, $images ) {
-    if ( ! function_exists( 'carbon_set_post_meta' ) ) {
-        return;
-    }
-
     // --- Homepage ---
     $home_id = $pages['home'] ?? 0;
     if ( $home_id ) {
         // Hero slides.
-        carbon_set_post_meta( $home_id, 'miauto_hero_slides', array(
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_hero_slides', array(
             array(
-                'image'       => $images['hero-bg'] ?? '',
-                'image_alt'   => 'Ремонт Mitsubishi',
-                'title'       => 'Ремонт автомобилей Mitsubishi с гарантией качества',
+                'slide_image'      => $images['hero-bg'] ?? '',
+                'slide_image_alt'  => 'Ремонт Mitsubishi',
+                'slide_title'      => 'Ремонт автомобилей Mitsubishi с гарантией качества',
                 'slide_desc' => 'Надежность и точность в каждой детали. Ремонт автомобилей Mitsubishi с использованием оригинальных запчастей и лучших технологий. Доверяйте профессионалам!',
-                'cta_text'    => 'Записаться на ремонт',
-                'cta_url'     => '#form-section',
+                'slide_cta_text'   => 'Записаться на ремонт',
+                'slide_cta_url'    => '#form-section',
             ),
             array(
-                'image'       => $images['hero-bg'] ?? '',
-                'image_alt'   => 'Диагностика Mitsubishi',
-                'title'       => 'Компьютерная диагностика всех систем автомобиля',
+                'slide_image'      => $images['hero-bg'] ?? '',
+                'slide_image_alt'  => 'Диагностика Mitsubishi',
+                'slide_title'      => 'Компьютерная диагностика всех систем автомобиля',
                 'slide_desc' => 'Выявим любую неисправность с помощью дилерского оборудования Mitsubishi. Точная диагностика — залог качественного ремонта.',
-                'cta_text'    => 'Записаться на диагностику',
-                'cta_url'     => '#form-section',
+                'slide_cta_text'   => 'Записаться на диагностику',
+                'slide_cta_url'    => '#form-section',
             ),
             array(
-                'image'       => $images['hero-bg'] ?? '',
-                'image_alt'   => 'ТО Mitsubishi',
-                'title'       => 'Техническое обслуживание по регламенту производителя',
+                'slide_image'      => $images['hero-bg'] ?? '',
+                'slide_image_alt'  => 'ТО Mitsubishi',
+                'slide_title'      => 'Техническое обслуживание по регламенту производителя',
                 'slide_desc' => 'Проводим ТО в полном соответствии с рекомендациями Mitsubishi. Сохраняем гарантию дилера и продлеваем ресурс вашего автомобиля.',
-                'cta_text'    => 'Подробнее об услугах',
-                'cta_url'     => '/services/',
+                'slide_cta_text'   => 'Подробнее об услугах',
+                'slide_cta_url'    => '/services/',
             ),
             array(
-                'image'       => $images['hero-bg'] ?? '',
-                'image_alt'   => 'Акция сход-развал',
-                'title'       => 'Скидка 50% на сход-развал до конца февраля',
+                'slide_image'      => $images['hero-bg'] ?? '',
+                'slide_image_alt'  => 'Акция сход-развал',
+                'slide_title'      => 'Скидка 50% на сход-развал до конца февраля',
                 'slide_desc' => 'Успейте записаться по акции! Профессиональный сход-развал на стенде Hunter с гарантией точности. Звоните прямо сейчас.',
-                'cta_text'    => 'Позвонить нам',
-                'cta_url'     => 'tel:+79263383929',
+                'slide_cta_text'   => 'Позвонить нам',
+                'slide_cta_url'    => 'tel:+79263383929',
             ),
         ) );
 
         // Hero features.
-        carbon_set_post_meta( $home_id, 'miauto_hero_features', array(
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_hero_features', array(
             array(
-                'text' => 'Работаем с 10:00 до 21:00',
-                'svg'  => '<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 4V7.5L9.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
+                'feat_text' => 'Работаем с 10:00 до 21:00',
+                'feat_svg'  => '<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M7 4V7.5L9.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>',
             ),
             array(
-                'text' => 'Оригинальные запчасти',
-                'svg'  => '<svg viewBox="0 0 14 14"><path d="M7 1L8.5 3.5H11.5L10 6L11.5 8.5H8.5L7 11L5.5 8.5H2.5L4 6L2.5 3.5H5.5L7 1Z" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="7" cy="6" r="1.5" fill="currentColor"/></svg>',
+                'feat_text' => 'Оригинальные запчасти',
+                'feat_svg'  => '<svg viewBox="0 0 14 14"><path d="M7 1L8.5 3.5H11.5L10 6L11.5 8.5H8.5L7 11L5.5 8.5H2.5L4 6L2.5 3.5H5.5L7 1Z" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="7" cy="6" r="1.5" fill="currentColor"/></svg>',
             ),
             array(
-                'text' => 'Бесплатная консультация',
-                'svg'  => '<svg viewBox="0 0 14 14"><path d="M2 2H12C12.55 2 13 2.45 13 3V9C13 9.55 12.55 10 12 10H8L5 13V10H2C1.45 10 1 9.55 1 9V3C1 2.45 1.45 2 2 2Z" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>',
+                'feat_text' => 'Бесплатная консультация',
+                'feat_svg'  => '<svg viewBox="0 0 14 14"><path d="M2 2H12C12.55 2 13 2.45 13 3V9C13 9.55 12.55 10 12 10H8L5 13V10H2C1.45 10 1 9.55 1 9V3C1 2.45 1.45 2 2 2Z" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>',
             ),
         ) );
 
         // Homepage sections.
-        carbon_set_post_meta( $home_id, 'miauto_car_models_title', 'Модели авто' );
-        carbon_set_post_meta( $home_id, 'miauto_services_title', 'Категории услуг' );
-        carbon_set_post_meta( $home_id, 'miauto_services_more_text', 'Смотреть еще' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_car_models_title', 'Модели авто' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_services_title', 'Категории услуг' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_services_more_text', 'Смотреть еще' );
 
-        carbon_set_post_meta( $home_id, 'miauto_about_title', 'О нас' );
-        carbon_set_post_meta( $home_id, 'miauto_about_text', 'Все работы в Техническом центре "Ми-Авто" проводятся в соответствии с техническими требованиями заводов изготовителей с применением специального инструмента и оборудования, а также технической документации.<br><br>Сотрудники технического центра имеют высокую квалификацию и специальную подготовку, для проведения обслуживания и ремонта автомобилей Мицубиси (Mitsubishi), выполняют слесарный и агрегатный ремонт автомобилей Мицубиси (Mitsubishi).' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_about_title', 'О нас' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_about_text', 'Все работы в Техническом центре "Ми-Авто" проводятся в соответствии с техническими требованиями заводов изготовителей с применением специального инструмента и оборудования, а также технической документации.<br><br>Сотрудники технического центра имеют высокую квалификацию и специальную подготовку, для проведения обслуживания и ремонта автомобилей Мицубиси (Mitsubishi), выполняют слесарный и агрегатный ремонт автомобилей Мицубиси (Mitsubishi).' );
 
         if ( ! empty( $images['about-us'] ) ) {
-            carbon_set_post_meta( $home_id, 'miauto_about_image', $images['about-us'] );
+            miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_about_image', $images['about-us'] );
         }
 
-        carbon_set_post_meta( $home_id, 'miauto_articles_title', 'Полезные статьи' );
-        carbon_set_post_meta( $home_id, 'miauto_articles_link_text', 'Узнать больше' );
-        carbon_set_post_meta( $home_id, 'miauto_articles_count', 2 );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_articles_title', 'Полезные статьи' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_articles_link_text', 'Узнать больше' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_articles_count', 2 );
 
         // Service details tabs.
-        carbon_set_post_meta( $home_id, 'miauto_svc_details_title', 'Услуги СТО' );
-        carbon_set_post_meta( $home_id, 'miauto_svc_details_tabs', array(
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_svc_details_title', 'Услуги СТО' );
+        miauto_demo_set_post_meta_if_empty( $home_id, 'miauto_svc_details_tabs', array(
             array(
                 'tab_id'      => 'to',
                 'tab_icon'    => '<svg viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.8766 9.882C15.9136 9.594 15.9414 9.306 15.9414 9C15.9414 8.694 15.9136 8.406 15.8766 8.118L17.8289 6.633C18.0047 6.498 18.051 6.255 17.9399 6.057L16.0894 2.943C15.9784 2.745 15.7286 2.673 15.525 2.745L13.2212 3.645C12.74 3.285 12.2219 2.988 11.6575 2.763L11.3059 0.378C11.2782 0.162 11.0839 0 10.8525 0H7.15155C6.92024 0 6.72593 0.162 6.69818 0.378L6.34658 2.763C5.78218 2.988 5.26404 3.294 4.78291 3.645L2.47905 2.745C2.26624 2.664 2.02567 2.745 1.91464 2.943L0.0641489 6.057C-0.0561333 6.255 -0.000618345 6.498 0.175179 6.633L2.12745 8.118C2.09044 8.406 2.06268 8.703 2.06268 9C2.06268 9.297 2.09044 9.594 2.12745 9.882L0.175179 11.367C-0.000618345 11.502 -0.0468809 11.745 0.0641489 11.943L1.91464 15.057C2.02567 15.255 2.27549 15.327 2.47905 15.255L4.78291 14.355C5.26404 14.715 5.78218 15.012 6.34658 15.237L6.69818 17.622C6.72593 17.838 6.92024 18 7.15155 18H10.8525C11.0839 18 11.2782 17.838 11.3059 17.622L11.6575 15.237C12.2219 15.012 12.74 14.706 13.2212 14.355L15.525 15.255C15.7378 15.336 15.9784 15.255 16.0894 15.057L17.9399 11.943C18.051 11.745 18.0047 11.502 17.8289 11.367L15.8766 9.882ZM9.00204 12.15C7.21632 12.15 5.76368 10.737 5.76368 9C5.76368 7.263 7.21632 5.85 9.00204 5.85C10.7878 5.85 12.2404 7.263 12.2404 9C12.2404 10.737 10.7878 12.15 9.00204 12.15Z" fill="currentColor"/></svg>',
@@ -693,16 +867,16 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Техническое обслуживание Mitsubishi',
                 'panel_text'  => '<p>Проводим полное <strong>регламентное и техническое обслуживание</strong> автомобилей марки <strong>MITSUBISHI</strong>.</p><p>Используем как оригинальные так и аналоговые расходные материалы и запчасти, по желанию клиента.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Замена ГРМ' ),
-                    array( 'item' => 'Замена масел и жидкостей' ),
-                    array( 'item' => 'Замена масляного/воздушного/топливного фильтров' ),
-                    array( 'item' => 'Замена фильтра салона' ),
-                    array( 'item' => 'Замена тормозной жидкости' ),
-                    array( 'item' => 'Замена масла в АКПП/МКПП' ),
-                    array( 'item' => 'Замена свечей зажигания' ),
-                    array( 'item' => 'Замена жидкости в ГУР' ),
-                    array( 'item' => 'Проверка и смазка шарниров в.т.ч карданных' ),
-                    array( 'item' => 'Проверка пыльников' ),
+                    array( 'tabfeat_item' => 'Замена ГРМ' ),
+                    array( 'tabfeat_item' => 'Замена масел и жидкостей' ),
+                    array( 'tabfeat_item' => 'Замена масляного/воздушного/топливного фильтров' ),
+                    array( 'tabfeat_item' => 'Замена фильтра салона' ),
+                    array( 'tabfeat_item' => 'Замена тормозной жидкости' ),
+                    array( 'tabfeat_item' => 'Замена масла в АКПП/МКПП' ),
+                    array( 'tabfeat_item' => 'Замена свечей зажигания' ),
+                    array( 'tabfeat_item' => 'Замена жидкости в ГУР' ),
+                    array( 'tabfeat_item' => 'Проверка и смазка шарниров в.т.ч карданных' ),
+                    array( 'tabfeat_item' => 'Проверка пыльников' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 3 500 ₽',
@@ -717,11 +891,11 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт подвески Mitsubishi',
                 'panel_text'  => '<p>Производим полный перечень работ по <strong>ремонту и диагностике подвески MITSUBISHI</strong>.</p><p>Опытные мастера проведут осмотр и дефектовку, все работы согласовываются предварительно с клиентом.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Замена амортизаторов' ),
-                    array( 'item' => 'Замена рычагов' ),
-                    array( 'item' => 'Замена сайлентблоков' ),
-                    array( 'item' => 'Замена ступичных подшипников' ),
-                    array( 'item' => 'Замена шаровых опор' ),
+                    array( 'tabfeat_item' => 'Замена амортизаторов' ),
+                    array( 'tabfeat_item' => 'Замена рычагов' ),
+                    array( 'tabfeat_item' => 'Замена сайлентблоков' ),
+                    array( 'tabfeat_item' => 'Замена ступичных подшипников' ),
+                    array( 'tabfeat_item' => 'Замена шаровых опор' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 3 500 ₽',
@@ -736,12 +910,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт двигателя Mitsubishi',
                 'panel_text'  => '<p>Производим <strong>ремонт и диагностику бензиновых и дизельных двигателей</strong> автомобилей <strong>MITSUBISHI</strong>.</p><p>Капитальный ремонт, замена ГРМ, устранение масложора — любой сложности.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Замена ГРМ' ),
-                    array( 'item' => 'Замена приводных ремней' ),
-                    array( 'item' => 'Замена двигателя' ),
-                    array( 'item' => 'Капитальный ремонт двигателя' ),
-                    array( 'item' => 'Замена прокладки ГБЦ' ),
-                    array( 'item' => 'Диагностика двигателя' ),
+                    array( 'tabfeat_item' => 'Замена ГРМ' ),
+                    array( 'tabfeat_item' => 'Замена приводных ремней' ),
+                    array( 'tabfeat_item' => 'Замена двигателя' ),
+                    array( 'tabfeat_item' => 'Капитальный ремонт двигателя' ),
+                    array( 'tabfeat_item' => 'Замена прокладки ГБЦ' ),
+                    array( 'tabfeat_item' => 'Диагностика двигателя' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 5 000 ₽',
@@ -756,12 +930,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт и обслуживание АКПП Mitsubishi',
                 'panel_text'  => '<p><strong>Обслуживание, диагностика и ремонт автоматических коробок передач MITSUBISHI</strong> — одна из наших специализаций.</p><p>Многолетний опыт, большая ремонтная база и умеренные цены.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика АКПП' ),
-                    array( 'item' => 'Замена масла в АКПП' ),
-                    array( 'item' => 'Ремонт гидроблока' ),
-                    array( 'item' => 'Замена гидротрансформатора' ),
-                    array( 'item' => 'Ремонт мехатроника' ),
-                    array( 'item' => 'Замена фрикционов' ),
+                    array( 'tabfeat_item' => 'Диагностика АКПП' ),
+                    array( 'tabfeat_item' => 'Замена масла в АКПП' ),
+                    array( 'tabfeat_item' => 'Ремонт гидроблока' ),
+                    array( 'tabfeat_item' => 'Замена гидротрансформатора' ),
+                    array( 'tabfeat_item' => 'Ремонт мехатроника' ),
+                    array( 'tabfeat_item' => 'Замена фрикционов' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 5 000 ₽',
@@ -776,12 +950,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт и обслуживание МКПП Mitsubishi',
                 'panel_text'  => '<p><strong>Обслуживание, диагностика и ремонт механических коробок передач MITSUBISHI</strong> — одна из наших специализаций.</p><p>Опытные мастера помогут в самых сложных случаях — от замены сальников до полного восстановления.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика МКПП' ),
-                    array( 'item' => 'Замена масла в МКПП' ),
-                    array( 'item' => 'Замена сцепления' ),
-                    array( 'item' => 'Замена подшипников' ),
-                    array( 'item' => 'Ремонт кулисы переключения' ),
-                    array( 'item' => 'Замена сальников КПП' ),
+                    array( 'tabfeat_item' => 'Диагностика МКПП' ),
+                    array( 'tabfeat_item' => 'Замена масла в МКПП' ),
+                    array( 'tabfeat_item' => 'Замена сцепления' ),
+                    array( 'tabfeat_item' => 'Замена подшипников' ),
+                    array( 'tabfeat_item' => 'Ремонт кулисы переключения' ),
+                    array( 'tabfeat_item' => 'Замена сальников КПП' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 3 500 ₽',
@@ -796,11 +970,11 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Диагностика и ремонт автоэлектрики Mitsubishi',
                 'panel_text'  => '<p>Профессиональная <strong>диагностика и ремонт электрооборудования</strong> автомобилей <strong>MITSUBISHI</strong>.</p><p>Работаем с оригинальным сканером <strong>MUT III</strong> для точного считывания и сброса ошибок.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика MUT III' ),
-                    array( 'item' => 'Установка электрооборудования' ),
-                    array( 'item' => 'Демонтаж электрооборудования' ),
-                    array( 'item' => 'Ремонт электрооборудования' ),
-                    array( 'item' => 'Чтение/сброс ошибок' ),
+                    array( 'tabfeat_item' => 'Диагностика MUT III' ),
+                    array( 'tabfeat_item' => 'Установка электрооборудования' ),
+                    array( 'tabfeat_item' => 'Демонтаж электрооборудования' ),
+                    array( 'tabfeat_item' => 'Ремонт электрооборудования' ),
+                    array( 'tabfeat_item' => 'Чтение/сброс ошибок' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 500 ₽',
@@ -815,11 +989,11 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Шиномонтаж для Mitsubishi',
                 'panel_text'  => '<p>Предоставляем полный спектр <strong>услуг шиномонтажа</strong> для автомобилей <strong>MITSUBISHI</strong>.</p><p>Балансировка колёс, замена шин и дисков — быстро и профессионально.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Снятие/установка колёс' ),
-                    array( 'item' => 'Монтаж/демонтаж шин' ),
-                    array( 'item' => 'Балансировка колёс' ),
-                    array( 'item' => 'Подкачка шин азотом' ),
-                    array( 'item' => 'Ремонт проколов' ),
+                    array( 'tabfeat_item' => 'Снятие/установка колёс' ),
+                    array( 'tabfeat_item' => 'Монтаж/демонтаж шин' ),
+                    array( 'tabfeat_item' => 'Балансировка колёс' ),
+                    array( 'tabfeat_item' => 'Подкачка шин азотом' ),
+                    array( 'tabfeat_item' => 'Ремонт проколов' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 500 ₽',
@@ -834,15 +1008,15 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт тормозной системы Mitsubishi',
                 'panel_text'  => '<p>Полный спектр работ по <strong>обслуживанию и ремонту тормозной системы MITSUBISHI</strong>.</p><p>Гарантируем надёжность и безопасность торможения.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Замена тормозных колодок' ),
-                    array( 'item' => 'Замена тормозных дисков' ),
-                    array( 'item' => 'Проточка тормозных дисков' ),
-                    array( 'item' => 'Ремонт суппортов' ),
-                    array( 'item' => 'Замена тормозных шлангов' ),
-                    array( 'item' => 'Замена датчиков ABS' ),
-                    array( 'item' => 'Замена тормозных цилиндров' ),
-                    array( 'item' => 'Прокачка тормозной системы' ),
-                    array( 'item' => 'Замена тормозной жидкости' ),
+                    array( 'tabfeat_item' => 'Замена тормозных колодок' ),
+                    array( 'tabfeat_item' => 'Замена тормозных дисков' ),
+                    array( 'tabfeat_item' => 'Проточка тормозных дисков' ),
+                    array( 'tabfeat_item' => 'Ремонт суппортов' ),
+                    array( 'tabfeat_item' => 'Замена тормозных шлангов' ),
+                    array( 'tabfeat_item' => 'Замена датчиков ABS' ),
+                    array( 'tabfeat_item' => 'Замена тормозных цилиндров' ),
+                    array( 'tabfeat_item' => 'Прокачка тормозной системы' ),
+                    array( 'tabfeat_item' => 'Замена тормозной жидкости' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 1 500 ₽',
@@ -857,11 +1031,11 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Регулировка развала-схождения Mitsubishi',
                 'panel_text'  => '<p>Регулировка <strong>развала-схождения (сход-развал)</strong> для всех моделей <strong>MITSUBISHI</strong>.</p><p>Работы ведутся строго по регламенту завода-изготовителя на профессиональном оборудовании.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика углов установки колёс' ),
-                    array( 'item' => 'Регулировка схождения' ),
-                    array( 'item' => 'Регулировка развала' ),
-                    array( 'item' => 'Проверка и регулировка кастора' ),
-                    array( 'item' => 'Контрольный замер после регулировки' ),
+                    array( 'tabfeat_item' => 'Диагностика углов установки колёс' ),
+                    array( 'tabfeat_item' => 'Регулировка схождения' ),
+                    array( 'tabfeat_item' => 'Регулировка развала' ),
+                    array( 'tabfeat_item' => 'Проверка и регулировка кастора' ),
+                    array( 'tabfeat_item' => 'Контрольный замер после регулировки' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 2 000 ₽',
@@ -876,12 +1050,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт топливной системы Mitsubishi',
                 'panel_text'  => '<p>Диагностика и <strong>ремонт топливной системы</strong> автомобилей <strong>MITSUBISHI</strong>: форсунки, топливный насос, регулятор давления.</p><p>Восстанавливаем исправную работу двигателя и снижаем расход топлива.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика топливной системы' ),
-                    array( 'item' => 'Чистка и замена форсунок' ),
-                    array( 'item' => 'Замена топливного насоса' ),
-                    array( 'item' => 'Замена топливного фильтра' ),
-                    array( 'item' => 'Ремонт топливной рампы' ),
-                    array( 'item' => 'Проверка давления топлива' ),
+                    array( 'tabfeat_item' => 'Диагностика топливной системы' ),
+                    array( 'tabfeat_item' => 'Чистка и замена форсунок' ),
+                    array( 'tabfeat_item' => 'Замена топливного насоса' ),
+                    array( 'tabfeat_item' => 'Замена топливного фильтра' ),
+                    array( 'tabfeat_item' => 'Ремонт топливной рампы' ),
+                    array( 'tabfeat_item' => 'Проверка давления топлива' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 2 000 ₽',
@@ -896,12 +1070,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт рулевого управления Mitsubishi',
                 'panel_text'  => '<p>Диагностика и <strong>ремонт рулевого управления MITSUBISHI</strong>: рейка, насос ГУР, рулевые тяги и наконечники.</p><p>Устраняем люфт, стуки и тяжёлое управление рулём.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика рулевого управления' ),
-                    array( 'item' => 'Ремонт рулевой рейки' ),
-                    array( 'item' => 'Замена рулевых наконечников' ),
-                    array( 'item' => 'Замена рулевых тяг' ),
-                    array( 'item' => 'Ремонт/замена насоса ГУР' ),
-                    array( 'item' => 'Замена жидкости ГУР' ),
+                    array( 'tabfeat_item' => 'Диагностика рулевого управления' ),
+                    array( 'tabfeat_item' => 'Ремонт рулевой рейки' ),
+                    array( 'tabfeat_item' => 'Замена рулевых наконечников' ),
+                    array( 'tabfeat_item' => 'Замена рулевых тяг' ),
+                    array( 'tabfeat_item' => 'Ремонт/замена насоса ГУР' ),
+                    array( 'tabfeat_item' => 'Замена жидкости ГУР' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 2 500 ₽',
@@ -916,12 +1090,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт системы охлаждения Mitsubishi',
                 'panel_text'  => '<p>Диагностика и <strong>ремонт системы охлаждения MITSUBISHI</strong>: устраняем перегрев двигателя, течи антифриза и неисправности термостата.</p><p>Промывка и замена охлаждающей жидкости по регламенту.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика системы охлаждения' ),
-                    array( 'item' => 'Замена охлаждающей жидкости' ),
-                    array( 'item' => 'Замена термостата' ),
-                    array( 'item' => 'Замена водяного насоса' ),
-                    array( 'item' => 'Ремонт/замена радиатора' ),
-                    array( 'item' => 'Замена патрубков и шлангов' ),
+                    array( 'tabfeat_item' => 'Диагностика системы охлаждения' ),
+                    array( 'tabfeat_item' => 'Замена охлаждающей жидкости' ),
+                    array( 'tabfeat_item' => 'Замена термостата' ),
+                    array( 'tabfeat_item' => 'Замена водяного насоса' ),
+                    array( 'tabfeat_item' => 'Ремонт/замена радиатора' ),
+                    array( 'tabfeat_item' => 'Замена патрубков и шлангов' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 2 000 ₽',
@@ -936,12 +1110,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Компьютерная диагностика Mitsubishi',
                 'panel_text'  => '<p>Профессиональная <strong>компьютерная диагностика</strong> всех систем <strong>MITSUBISHI</strong> на оригинальном сканере <strong>MUT III</strong>.</p><p>Точно определяем неисправности, считываем и сбрасываем ошибки ЭБУ.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика MUT III' ),
-                    array( 'item' => 'Считывание кодов ошибок' ),
-                    array( 'item' => 'Диагностика двигателя' ),
-                    array( 'item' => 'Диагностика АКПП/МКПП' ),
-                    array( 'item' => 'Диагностика ABS и ESP' ),
-                    array( 'item' => 'Диагностика подушек безопасности' ),
+                    array( 'tabfeat_item' => 'Диагностика MUT III' ),
+                    array( 'tabfeat_item' => 'Считывание кодов ошибок' ),
+                    array( 'tabfeat_item' => 'Диагностика двигателя' ),
+                    array( 'tabfeat_item' => 'Диагностика АКПП/МКПП' ),
+                    array( 'tabfeat_item' => 'Диагностика ABS и ESP' ),
+                    array( 'tabfeat_item' => 'Диагностика подушек безопасности' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 500 ₽',
@@ -956,12 +1130,12 @@ function miauto_demo_set_page_meta( $pages, $images ) {
                 'panel_title' => 'Ремонт трансмиссии Mitsubishi',
                 'panel_text'  => '<p>Диагностика и <strong>ремонт трансмиссии</strong> полноприводных и переднеприводных <strong>MITSUBISHI</strong>: карданный вал, раздаточная коробка, приводные валы (ШРУСы).</p><p>Специализируемся на полном приводе <strong>4WD/AWD</strong>.</p>',
                 'tab_features' => array(
-                    array( 'item' => 'Диагностика трансмиссии' ),
-                    array( 'item' => 'Ремонт/замена карданного вала' ),
-                    array( 'item' => 'Ремонт раздаточной коробки' ),
-                    array( 'item' => 'Замена ШРУСов и пыльников' ),
-                    array( 'item' => 'Замена масла в раздатке' ),
-                    array( 'item' => 'Ремонт муфты подключения 4WD' ),
+                    array( 'tabfeat_item' => 'Диагностика трансмиссии' ),
+                    array( 'tabfeat_item' => 'Ремонт/замена карданного вала' ),
+                    array( 'tabfeat_item' => 'Ремонт раздаточной коробки' ),
+                    array( 'tabfeat_item' => 'Замена ШРУСов и пыльников' ),
+                    array( 'tabfeat_item' => 'Замена масла в раздатке' ),
+                    array( 'tabfeat_item' => 'Ремонт муфты подключения 4WD' ),
                 ),
                 'price_label' => 'Стоимость работ от',
                 'price_value' => 'от 3 000 ₽',
@@ -975,99 +1149,58 @@ function miauto_demo_set_page_meta( $pages, $images ) {
     // --- About page ---
     $about_id = $pages['about'] ?? 0;
     if ( $about_id ) {
-        carbon_set_post_meta( $about_id, 'miauto_about_hero_badge', 'Официальный сервис' );
-        carbon_set_post_meta( $about_id, 'miauto_about_hero_title', 'Технический центр МИ АВТО' );
-        carbon_set_post_meta( $about_id, 'miauto_about_hero_accent', 'МИ АВТО' );
-        carbon_set_post_meta( $about_id, 'miauto_about_hero_texts', array(
-            array( 'text' => 'Технический центр «МИ АВТО» — это специализированный сервис по ремонту и обслуживанию автомобилей Mitsubishi в Москве. Мы работаем с 2005 года и за это время накопили огромный опыт в диагностике и ремонте всех моделей Mitsubishi.' ),
-            array( 'text' => 'Наша команда — это квалифицированные специалисты, прошедшие обучение и сертификацию. Мы используем только оригинальные запчасти и современное диагностическое оборудование, что позволяет выполнять работы любой сложности в кратчайшие сроки.' ),
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_hero_badge', 'Официальный сервис' );
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_hero_title', 'Технический центр МИ АВТО' );
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_hero_accent', 'МИ АВТО' );
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_hero_texts', array(
+            array( 'hero_text' => 'Технический центр «МИ АВТО» — это специализированный сервис по ремонту и обслуживанию автомобилей Mitsubishi в Москве. Мы работаем с 2005 года и за это время накопили огромный опыт в диагностике и ремонте всех моделей Mitsubishi.' ),
+            array( 'hero_text' => 'Наша команда — это квалифицированные специалисты, прошедшие обучение и сертификацию. Мы используем только оригинальные запчасти и современное диагностическое оборудование, что позволяет выполнять работы любой сложности в кратчайшие сроки.' ),
         ) );
         if ( ! empty( $images['about-us'] ) ) {
-            carbon_set_post_meta( $about_id, 'miauto_about_hero_image', $images['about-us'] );
+            miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_hero_image', $images['about-us'] );
         }
 
-        carbon_set_post_meta( $about_id, 'miauto_about_intro_title', 'Профессионализм и опыт' );
-        carbon_set_post_meta( $about_id, 'miauto_about_intro_texts', array(
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_intro_title', 'Профессионализм и опыт' );
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_intro_texts', array(
             array( 'text' => 'Мы стремимся предоставить каждому клиенту максимально качественный сервис. Наш подход основан на честности, прозрачности и профессионализме. Мы всегда подробно объясняем, какие работы необходимы, и согласовываем стоимость до начала ремонта.' ),
             array( 'text' => 'Технический центр оснащён современным оборудованием, которое позволяет выполнять диагностику и ремонт любой сложности. Мы постоянно инвестируем в обучение персонала и обновление технической базы, чтобы соответствовать самым высоким стандартам обслуживания.' ),
         ) );
         if ( ! empty( $images['about-us'] ) ) {
-            carbon_set_post_meta( $about_id, 'miauto_about_intro_image', $images['about-us'] );
+            miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_about_intro_image', $images['about-us'] );
         }
 
-        // Work Process.
-        carbon_set_post_meta( $about_id, 'miauto_work_process_title', 'Как мы работаем' );
-        carbon_set_post_meta( $about_id, 'miauto_work_process_subtitle', 'Вы не платите за лишнее — только согласованные работы' );
-        carbon_set_post_meta( $about_id, 'miauto_work_process_steps', array(
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>',
-                'title' => 'Заявка или звонок',
-                'text'  => 'Свяжитесь с нами для консультации по проблеме.',
-            ),
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-                'title' => 'Запись',
-                'text'  => 'Подберем удобные дату и время для визита.',
-            ),
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8v6l4 2"/></svg>',
-                'title' => 'Диагностика',
-                'text'  => 'Полная дефектовка и выявление неисправностей.',
-            ),
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>',
-                'title' => 'Согласование',
-                'text'  => 'Утверждаем смету и варианты решения проблемы.',
-            ),
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>',
-                'title' => 'Ремонт',
-                'text'  => 'Заказ запчастей и выполнение ремонтных работ.',
-            ),
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
-                'title' => 'Тест и выдача',
-                'text'  => 'Проверка исправности и возврат авто.',
-            ),
-            array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
-                'title' => 'Гарантия',
-                'text'  => 'Выдаем гарантийный талон и консультируем.',
-            ),
-        ) );
-
         // Advantages.
-        carbon_set_post_meta( $about_id, 'miauto_advantages_title', 'Наши преимущества' );
-        carbon_set_post_meta( $about_id, 'miauto_advantages_cards', array(
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_advantages_title', 'Наши преимущества' );
+        miauto_demo_set_post_meta_if_empty( $about_id, 'miauto_advantages_cards', array(
             array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title' => 'Специализация',
-                'text'  => 'Работаем только с автомобилями Mitsubishi, что позволяет глубоко разбираться в каждой модели.',
+                'adv_svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                'adv_title' => 'Специализация',
+                'adv_text'  => 'Работаем только с автомобилями Mitsubishi, что позволяет глубоко разбираться в каждой модели.',
             ),
             array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title' => 'Оригинальные запчасти',
-                'text'  => 'Используем только оригинальные и сертифицированные запасные части для ремонта.',
+                'adv_svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                'adv_title' => 'Оригинальные запчасти',
+                'adv_text'  => 'Используем только оригинальные и сертифицированные запасные части для ремонта.',
             ),
             array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M12 15l-2 5 2-1 2 1-2-5z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title' => 'Гарантия',
-                'text'  => 'Предоставляем гарантию на все виды выполненных работ и установленные запчасти.',
+                'adv_svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M12 15l-2 5 2-1 2 1-2-5z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                'adv_title' => 'Гарантия',
+                'adv_text'  => 'Предоставляем гарантию на все виды выполненных работ и установленные запчасти.',
             ),
             array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="9" y="9" width="6" height="6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title' => 'Современное оборудование',
-                'text'  => 'Используем профессиональное диагностическое и ремонтное оборудование.',
+                'adv_svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="16" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="9" y="9" width="6" height="6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                'adv_title' => 'Современное оборудование',
+                'adv_text'  => 'Используем профессиональное диагностическое и ремонтное оборудование.',
             ),
             array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title' => 'Опытные мастера',
-                'text'  => 'Наши специалисты имеют высокую квалификацию и регулярно проходят обучение.',
+                'adv_svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                'adv_title' => 'Опытные мастера',
+                'adv_text'  => 'Наши специалисты имеют высокую квалификацию и регулярно проходят обучение.',
             ),
             array(
-                'svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                'title' => 'Прозрачные цены',
-                'text'  => 'Составляем подробную смету до начала работ. Никаких скрытых доплат.',
+                'adv_svg'   => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                'adv_title' => 'Прозрачные цены',
+                'adv_text'  => 'Составляем подробную смету до начала работ. Никаких скрытых доплат.',
             ),
         ) );
     }
@@ -1078,8 +1211,8 @@ function miauto_demo_set_page_meta( $pages, $images ) {
     // --- Prices page ---
     $prices_id = $pages['prices'] ?? 0;
     if ( $prices_id ) {
-        carbon_set_post_meta( $prices_id, 'miauto_prices_title', 'Прайс-лист' );
-        carbon_set_post_meta( $prices_id, 'miauto_prices_subtitle', 'Актуальные цены на обслуживание и ремонт автомобилей Mitsubishi' );
+        miauto_demo_set_post_meta_if_empty( $prices_id, 'miauto_prices_title', 'Прайс-лист' );
+        miauto_demo_set_post_meta_if_empty( $prices_id, 'miauto_prices_subtitle', 'Актуальные цены на обслуживание и ремонт автомобилей Mitsubishi' );
 
         $outlander_cats = array(
             array(
@@ -1163,7 +1296,7 @@ function miauto_demo_set_page_meta( $pages, $images ) {
             );
         }
 
-        carbon_set_post_meta( $prices_id, 'miauto_prices_models', $models_data );
+        miauto_demo_set_post_meta_if_empty( $prices_id, 'miauto_prices_models', $models_data );
     }
 }
 
@@ -1270,7 +1403,7 @@ function miauto_demo_create_blog_posts( $images ) {
             'post_category' => $cat_id ? array( $cat_id ) : array(),
         ) );
 
-        if ( $post_id && ! is_wp_error( $post_id ) && $p['thumb'] ) {
+        if ( $post_id && ! is_wp_error( $post_id ) && $p['thumb'] && ! has_post_thumbnail( $post_id ) ) {
             set_post_thumbnail( $post_id, $p['thumb'] );
         }
     }
@@ -1284,20 +1417,22 @@ function miauto_demo_create_menu( $pages ) {
 
     if ( $menu_exists ) {
         $menu_id = $menu_exists->term_id;
+
+        // Если меню уже содержит пункты — не пересоздаём, только привязываем локации.
+        $existing_items = wp_get_nav_menu_items( $menu_id );
+        if ( ! empty( $existing_items ) ) {
+            $locations            = get_theme_mod( 'nav_menu_locations', array() );
+            $locations['primary'] = $menu_id;
+            $locations['mobile']  = $menu_id;
+            set_theme_mod( 'nav_menu_locations', $locations );
+            return;
+        }
     } else {
         $menu_id = wp_create_nav_menu( $menu_name );
     }
 
     if ( is_wp_error( $menu_id ) ) {
         return;
-    }
-
-    // Clear existing items.
-    $existing_items = wp_get_nav_menu_items( $menu_id );
-    if ( $existing_items ) {
-        foreach ( $existing_items as $item ) {
-            wp_delete_post( $item->ID, true );
-        }
     }
 
     $top_level_items = array(
@@ -1366,6 +1501,10 @@ function miauto_demo_create_menu( $pages ) {
 // ─── 10. Permalinks ─────────────────────────────────────────────────
 
 function miauto_demo_set_permalinks() {
+    if ( '/%postname%/' === get_option( 'permalink_structure' ) ) {
+        return;
+    }
+
     global $wp_rewrite;
     $wp_rewrite->set_permalink_structure( '/%postname%/' );
     $wp_rewrite->flush_rules();
@@ -1389,5 +1528,78 @@ function miauto_demo_get_or_create_post( $post_type, $title ) {
         'post_title'  => $title,
         'post_status' => 'publish',
         'post_type'   => $post_type,
+    ) );
+}
+
+// ─── 11. Fill reviews demo data ─────────────────────────────────────
+
+/**
+ * Заполнить демо-отзывы в теме (Общие блоки → Отзывы).
+ * Все 5 отзывов привязаны к услуге «Ремонт двигателя».
+ *
+ * @param array $cpt Результат miauto_demo_create_cpt_posts().
+ */
+function miauto_demo_fill_reviews( $cpt ) {
+    $engine_svc_id = ! empty( $cpt['services']['Ремонт двигателя'] )
+        ? (int) $cpt['services']['Ремонт двигателя']
+        : 0;
+
+    $svc_assoc = $engine_svc_id
+        ? array(
+            array(
+                'id'      => $engine_svc_id,
+                'type'    => 'post',
+                'subtype' => 'miauto_service',
+                'value'   => 'post:miauto_service:' . $engine_svc_id,
+            ),
+        )
+        : array();
+
+    miauto_demo_set_theme_option_if_empty( 'miauto_reviews', array(
+        array(
+            'review_author_name'  => 'Андрей Козлов',
+            'review_author_car'   => 'Mitsubishi ASX',
+            'review_text'         => 'Обратился с проблемой масложора. Сделали диагностику, объяснили причину, согласовали работы. Капиталка прошла быстро, машина после ремонта работает отлично. Рекомендую!',
+            'review_source_label' => 'Яндекс.Карты',
+            'review_source_url'   => 'https://yandex.ru/maps/',
+            'review_rating'       => '5,0',
+            'review_services'     => $svc_assoc,
+        ),
+        array(
+            'review_author_name'  => 'Дмитрий Волков',
+            'review_author_car'   => 'Mitsubishi Outlander XL',
+            'review_text'         => 'Заменили цепь ГРМ и попутно выявили износ натяжителя. Всё согласовали заранее, уложились в срок. Цена адекватная, мастера знают своё дело.',
+            'review_source_label' => 'Google Карты',
+            'review_source_url'   => 'https://maps.google.com/',
+            'review_rating'       => '5,0',
+            'review_services'     => $svc_assoc,
+        ),
+        array(
+            'review_author_name'  => 'Сергей Иванов',
+            'review_author_car'   => 'Mitsubishi Pajero IV',
+            'review_text'         => 'Двигатель троил, горел Check Engine. Провели полную диагностику, нашли пробой прокладки ГБЦ. Сделали шлифовку, заменили прокладку. Результат отличный, ошибок нет.',
+            'review_source_label' => 'Google Карты',
+            'review_source_url'   => 'https://maps.google.com/',
+            'review_rating'       => '5,0',
+            'review_services'     => $svc_assoc,
+        ),
+        array(
+            'review_author_name'  => 'Алексей Петров',
+            'review_author_car'   => 'Mitsubishi Lancer X',
+            'review_text'         => 'Стук в двигателе оказался проблемой вкладышей. Ребята сделали всё по уму, дали гарантию на год. Очень доволен качеством и отношением к клиенту.',
+            'review_source_label' => 'Яндекс.Карты',
+            'review_source_url'   => 'https://yandex.ru/maps/',
+            'review_rating'       => '5,0',
+            'review_services'     => $svc_assoc,
+        ),
+        array(
+            'review_author_name'  => 'Михаил Кузнецов',
+            'review_author_car'   => 'Mitsubishi L200',
+            'review_text'         => 'Перегрев двигателя, эмульсия в масле. Приехал на эвакуаторе. Диагностика показала трещину в ГБЦ. Сделали замену, объяснили причины, дали подробные рекомендации.',
+            'review_source_label' => 'Яндекс.Карты',
+            'review_source_url'   => 'https://yandex.ru/maps/',
+            'review_rating'       => '5,0',
+            'review_services'     => $svc_assoc,
+        ),
     ) );
 }

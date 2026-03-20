@@ -95,6 +95,25 @@
 }
 .footer__partner-link:hover { opacity: 0.7; }
 
+/* WP nav menu links in footer columns */
+.footer__column-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(12 / var(--vw-base) * 100vw);
+}
+.footer__column-list .menu-item a {
+  display: block;
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.14;
+  color: var(--color-text);
+  transition: opacity 0.2s;
+}
+.footer__column-list .menu-item a:hover { opacity: 0.7; }
+
 /* ── Contacts column ─────────────────────────────────────────── */
 .footer__contacts-list {
   display: flex;

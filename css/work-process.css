@@ -7,7 +7,7 @@
 .work-process {
   padding-top:    calc(40 / var(--vw-base) * 100vw);
   padding-bottom: calc(40 / var(--vw-base) * 100vw);
-  background-color: var(--color-bg);
+  background-color: #F4EFEF;
 }
 
 .work-process .container {
@@ -19,7 +19,7 @@
 .work-process__header {
   display: flex;
   flex-direction: column;
-  gap: calc(10 / var(--vw-base) * 100vw);
+  gap: calc(20 / var(--vw-base) * 100vw);
 }
 
 .work-process__title {
@@ -30,27 +30,27 @@
 }
 
 .work-process__subtitle {
-  font-size:   calc(18 / var(--vw-base) * 100vw);
+  font-size:   calc(16 / var(--vw-base) * 100vw);
   font-weight: 400;
-  line-height: 1.56;
+  line-height: 1.25;
   color: var(--color-text);
 }
 
 .work-process__grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: calc(15 / var(--vw-base) * 100vw);
+  gap: calc(50 / var(--vw-base) * 100vw);
   position: relative;
 }
 
 .work-process__grid::before {
   content: "";
   position: absolute;
-  top: calc(35 / var(--vw-base) * 100vw);
-  left: calc(35 / var(--vw-base) * 100vw);
-  right: calc(35 / var(--vw-base) * 100vw);
-  height: calc(2 / var(--vw-base) * 100vw);
-  background-color: #d9d9d9;
+  top: calc(27 / var(--vw-base) * 100vw);
+  left: 0;
+  right: 0;
+  height: calc(1.5 / var(--vw-base) * 100vw);
+  background-color: #d2d2d2;
 }
 
 .work-process__step {
@@ -58,52 +58,49 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: calc(12 / var(--vw-base) * 100vw);
+  gap: calc(10 / var(--vw-base) * 100vw);
   position: relative;
 }
 
 .work-process__icon {
+	position: relative;
+	z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  width:  calc(70 / var(--vw-base) * 100vw);
-  height: calc(70 / var(--vw-base) * 100vw);
+  width:  calc(55 / var(--vw-base) * 100vw);
+  height: calc(55 / var(--vw-base) * 100vw);
+  margin-bottom: calc(5 / var(--vw-base) * 100vw);
   border-radius: 50%;
   background-color: var(--color-white);
-  box-shadow: 0 calc(2 / var(--vw-base) * 100vw) calc(8 / var(--vw-base) * 100vw) rgba(0, 0, 0, 0.08);
-  position: relative;
-  z-index: 1;
 }
 
 .work-process__icon svg {
-  width:  calc(28 / var(--vw-base) * 100vw);
-  height: calc(28 / var(--vw-base) * 100vw);
-  fill: none;
-  stroke: var(--color-red);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  width:  calc(24 / var(--vw-base) * 100vw);
+  height: calc(24 / var(--vw-base) * 100vw);
+  fill: var(--color-red);
+  stroke: none;
 }
 
 .work-process__step-title {
   font-size:   calc(14 / var(--vw-base) * 100vw);
   font-weight: 600;
-  line-height: 1.29;
+  line-height: 1.43;
   color: var(--color-text);
 }
 
 .work-process__step-text {
-  font-size:   calc(13 / var(--vw-base) * 100vw);
+  font-size:   calc(12 / var(--vw-base) * 100vw);
   font-weight: 400;
-  line-height: 1.38;
+  line-height: 1.17;
   color: var(--color-text);
 }
 
 /* ── MOBILE ─────────────────────────────────────────────────── */
 @media (max-width: 767px) {
   .work-process {
-    padding-top:    calc(15 / var(--vw-base) * 100vw);
-    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+    padding-top:    calc(20 / var(--vw-base) * 100vw);
+    padding-bottom: calc(20 / var(--vw-base) * 100vw);
   }
 
   .work-process .container {
@@ -123,41 +120,20 @@
   .work-process__grid {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: calc(15 / var(--vw-base) * 100vw);
     position: relative;
     align-items: center;
   }
 
   .work-process__grid::before {
-    top: calc(25 / var(--vw-base) * 100vw);
-    bottom: calc(25 / var(--vw-base) * 100vw);
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: calc(2 / var(--vw-base) * 100vw);
-    height: auto;
-  }
-
-  .work-process__step {
-    gap: calc(8 / var(--vw-base) * 100vw);
-    padding: calc(12 / var(--vw-base) * 100vw) 0;
-  }
-
-  .work-process__icon {
-    width:  calc(50 / var(--vw-base) * 100vw);
-    height: calc(50 / var(--vw-base) * 100vw);
-  }
-
-  .work-process__icon svg {
-    width:  calc(22 / var(--vw-base) * 100vw);
-    height: calc(22 / var(--vw-base) * 100vw);
+    display: none;
   }
 
   .work-process__step-title {
-    font-size: calc(14 / var(--vw-base) * 100vw);
+    font-size: calc(16 / var(--vw-base) * 100vw);
   }
 
   .work-process__step-text {
-    font-size: calc(12 / var(--vw-base) * 100vw);
+    font-size: calc(14 / var(--vw-base) * 100vw);
   }
 }

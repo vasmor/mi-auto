@@ -15,22 +15,20 @@ Container::make( 'post_meta', 'miauto_prices', 'Прайс-лист' )
             ->set_default_value( 'Прайс-лист' ),
         Field::make( 'text', 'miauto_prices_subtitle', 'Подзаголовок' ),
         Field::make( 'complex', 'miauto_prices_models', 'Модели' )
-            ->set_layout( 'tabbed-vertical' )
+            ->set_layout( 'tabbed-horizontal' )
             ->setup_labels( array( 'singular_name' => 'Модель', 'plural_name' => 'Модели' ) )
             ->add_fields( array(
-                Field::make( 'text', 'model_name', 'Название модели' )
-                    ->set_required( true ),
+                Field::make( 'text', 'model_name', 'Название модели' ),
                 Field::make( 'complex', 'price_cats', 'Категории услуг' )
                     ->set_layout( 'tabbed-horizontal' )
                     ->setup_labels( array( 'singular_name' => 'Категория', 'plural_name' => 'Категории' ) )
                     ->add_fields( array(
-                        Field::make( 'text', 'cat_name', 'Название категории' )
-                            ->set_required( true ),
+                        Field::make( 'text', 'cat_name', 'Название категории' ),
                         Field::make( 'complex', 'price_rows', 'Строки прайса' )
-                            ->set_layout( 'tabbed-vertical' )
+                            ->set_layout( 'tabbed-horizontal' )
                             ->add_fields( array(
                                 Field::make( 'text', 'row_name', 'Наименование услуги' ),
-                                Field::make( 'text', 'price', 'Стоимость' ),
+                                Field::make( 'text', 'row_price', 'Стоимость' ),
                             ) ),
                     ) ),
             ) ),

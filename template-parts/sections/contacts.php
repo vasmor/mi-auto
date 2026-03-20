@@ -58,7 +58,7 @@ $heading_tag = is_page_template( 'page-contacts.php' ) ? 'h1' : 'h2';
                             <svg class="contacts__icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M1.885.51A1.8 1.8 0 013.227.003c.494.031.966.271 1.268.67l1.795 2.306a1.544 1.544 0 01.315 1.494l-.547 2.19a.534.534 0 00.178.643l2.457 2.457a.534.534 0 00.644.178l2.189-.547a1.544 1.544 0 011.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702A16.1 16.1 0 014.568 11.43 16.1 16.1 0 01.148 4.421c-.362-1.03-.036-2.137.704-2.877L1.885.51z" fill="#EA3323"/>
                             </svg>
-                            <a class="contacts__phone-text" href="tel:<?php echo esc_attr( $phone['raw'] ); ?>"><?php echo esc_html( $phone['number'] ); ?></a>
+                            <a class="contacts__phone-text" href="tel:<?php echo esc_attr( $phone['phone_raw'] ); ?>"><?php echo esc_html( $phone['phone_number'] ); ?></a>
                         </div>
                         <?php endforeach; ?>
                     </div>

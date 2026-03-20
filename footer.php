@@ -13,8 +13,7 @@ $miauto_email           = miauto_get_option( 'miauto_email' );
 $miauto_phones          = miauto_get_option( 'miauto_phones' );
 $miauto_vk              = miauto_get_option( 'miauto_vk_url' );
 $miauto_tg              = miauto_get_option( 'miauto_telegram_url' );
-$miauto_footer_partners = miauto_get_option( 'miauto_footer_partners' );
-$miauto_footer_adv      = miauto_get_option( 'miauto_footer_advantages' );
+$miauto_footer_partners = miauto_get_option( 'miauto_partners_items' );
 $miauto_privacy_text    = miauto_get_option( 'miauto_footer_privacy_text' );
 $miauto_privacy_url     = miauto_get_option( 'miauto_footer_privacy_url' );
 $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
@@ -36,7 +35,7 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
                 <span class="footer__column-title">Наши партнеры</span>
                 <div class="footer__column-list">
                     <?php foreach ( $miauto_footer_partners as $partner ) : ?>
-                    <a class="footer__partner-link" href="<?php echo esc_url( $partner['url'] ); ?>"><?php echo esc_html( $partner['title'] ); ?></a>
+                    <a class="footer__partner-link" href="<?php echo esc_url( $partner['pitem_url'] ); ?>"><?php echo esc_html( $partner['pitem_title'] ); ?></a>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -56,7 +55,7 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
                 wp_nav_menu( array(
                     'theme_location' => 'footer',
                     'container'      => false,
-                    'items_wrap'     => '%3$s',
+                    'items_wrap'     => '<ul>%3$s</ul>',
                     'fallback_cb'    => false,
                 ) );
                 ?>
@@ -94,23 +93,6 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
         </div>
         <hr class="footer__separator">
 
-        <!-- Advantages column -->
-        <?php if ( ! empty( $miauto_footer_adv ) ) : ?>
-        <div class="footer__column" data-accordion>
-            <span class="footer__column-title">
-                Преимущества
-                <svg class="footer__toggle" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M2 4L6 8L10 4" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </span>
-            <div class="footer__column-list">
-                <?php foreach ( $miauto_footer_adv as $adv ) : ?>
-                <a class="footer__column-link" href="<?php echo esc_url( $adv['url'] ); ?>"><?php echo esc_html( $adv['title'] ); ?></a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-        <hr class="footer__separator">
-        <?php endif; ?>
 
         <!-- Contacts column -->
         <div class="footer__column" data-accordion>
@@ -143,7 +125,7 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
                         <svg class="footer__contact-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M1.885.51A1.8 1.8 0 013.227.003c.494.031.966.271 1.268.67l1.795 2.306a1.544 1.544 0 01.315 1.494l-.547 2.19a.534.534 0 00.178.643l2.457 2.457a.534.534 0 00.644.178l2.189-.547a1.544 1.544 0 011.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702A16.1 16.1 0 014.568 11.43 16.1 16.1 0 01.148 4.421c-.362-1.03-.036-2.137.704-2.877L1.885.51z" fill="#EA3323"/>
                         </svg>
-                        <a class="footer__phone-text" href="tel:<?php echo esc_attr( $phone['raw'] ); ?>"><?php echo esc_html( $phone['number'] ); ?></a>
+                        <a class="footer__phone-text" href="tel:<?php echo esc_attr( $phone['phone_raw'] ); ?>"><?php echo esc_html( $phone['phone_number'] ); ?></a>
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -187,7 +169,7 @@ $miauto_developer       = miauto_get_option( 'miauto_footer_developer_text' );
             </span>
             <div class="footer__column-list">
                 <?php foreach ( $miauto_footer_partners as $partner ) : ?>
-                <a class="footer__partner-link" href="<?php echo esc_url( $partner['url'] ); ?>"><?php echo esc_html( $partner['title'] ); ?></a>
+                <a class="footer__partner-link" href="<?php echo esc_url( $partner['pitem_url'] ); ?>"><?php echo esc_html( $partner['pitem_title'] ); ?></a>
                 <?php endforeach; ?>
             </div>
         </div>

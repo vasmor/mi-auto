@@ -83,6 +83,7 @@
   display: flex;
   flex-direction: column;
   gap: calc(10 / var(--vw-base) * 100vw);
+  margin-top: auto;
 }
 
 .sc-hero__btn {
@@ -141,8 +142,9 @@
 
 .sc-hero__stats-grid {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: calc(45 / var(--vw-base) * 100vw);
+  gap: calc(7 / var(--vw-base) * 100vw);
 }
 
 .sc-hero__stat {
@@ -269,6 +271,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  overflow: hidden;
 }
 
 .symptoms__card-image {
@@ -313,7 +317,7 @@
   gap: calc(20 / var(--vw-base) * 100vw);
   padding: calc(20 / var(--vw-base) * 100vw) calc(320 / var(--vw-base) * 100vw);
   background-color: var(--color-white);
-  border: calc(1 / var(--vw-base) * 100vw) solid rgb(210, 210, 210);
+  border: calc(2 / var(--vw-base) * 100vw) dashed rgb(210, 210, 210);
   border-radius: calc(20 / var(--vw-base) * 100vw);
   text-align: center;
 }
@@ -481,7 +485,11 @@
 .sc-prices__divider {
   width: 100%;
   height: calc(1.5 / var(--vw-base) * 100vw);
-  background-color: rgb(210, 210, 210);
+	background: repeating-linear-gradient(to right,
+		#d2d2d2,
+		#d2d2d2 calc(5 / var(--vw-base) * 100vw),
+		transparent calc(5 / var(--vw-base) * 100vw),
+		transparent calc(10 / var(--vw-base) * 100vw));
   border: none;
 }
 
@@ -491,7 +499,7 @@
   justify-content: space-between;
   padding: calc(27 / var(--vw-base) * 100vw) calc(30 / var(--vw-base) * 100vw);
   background-color: var(--color-white);
-  border: calc(1 / var(--vw-base) * 100vw) solid rgb(210, 210, 210);
+  border: calc(2 / var(--vw-base) * 100vw) dashed rgb(210, 210, 210);
   border-radius: calc(20 / var(--vw-base) * 100vw);
 }
 
@@ -700,127 +708,6 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   REVIEWS
-   ═══════════════════════════════════════════════════════════════ */
-.reviews {
-  padding-top:    calc(40 / var(--vw-base) * 100vw);
-  padding-bottom: calc(40 / var(--vw-base) * 100vw);
-  background-color: var(--color-bg);
-}
-
-.reviews .container {
-  display: flex;
-  flex-direction: column;
-  gap: calc(30 / var(--vw-base) * 100vw);
-}
-
-.reviews__title {
-  font-size:   calc(35 / var(--vw-base) * 100vw);
-  font-weight: 600;
-  line-height: calc(40 / 35);
-  color: var(--color-text);
-}
-
-.reviews__viewport {
-  overflow: hidden;
-}
-
-.reviews__track {
-  display: flex;
-  gap: calc(30 / var(--vw-base) * 100vw);
-  transition: transform 0.3s ease;
-}
-
-.reviews__card {
-  flex-shrink: 0;
-  width: calc((100% - calc(60 / var(--vw-base) * 100vw)) / 3);
-  display: flex;
-  flex-direction: column;
-  gap: calc(15 / var(--vw-base) * 100vw);
-  padding: calc(20 / var(--vw-base) * 100vw);
-  background-color: var(--color-white);
-  border-radius: calc(20 / var(--vw-base) * 100vw);
-}
-
-.reviews__author {
-  display: flex;
-  flex-direction: column;
-  gap: calc(6 / var(--vw-base) * 100vw);
-}
-
-.reviews__author-name {
-  font-size:   calc(16 / var(--vw-base) * 100vw);
-  font-weight: 600;
-  line-height: calc(20 / 16);
-  color: var(--color-text);
-}
-
-.reviews__author-car {
-  font-size:   calc(14 / var(--vw-base) * 100vw);
-  font-weight: 500;
-  line-height: calc(20 / 14);
-  color: rgb(154, 154, 154);
-}
-
-.reviews__text {
-  font-size:   calc(14 / var(--vw-base) * 100vw);
-  font-weight: 400;
-  line-height: calc(20 / 14);
-  color: var(--color-text);
-}
-
-.reviews__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: auto;
-}
-
-.reviews__source {
-  display: flex;
-  align-items: center;
-  gap: calc(5 / var(--vw-base) * 100vw);
-  font-size:   calc(14 / var(--vw-base) * 100vw);
-  font-weight: 600;
-  line-height: calc(16 / 14);
-  color: var(--color-red);
-  text-decoration: none;
-}
-
-.reviews__source-icon {
-  width:  calc(8 / var(--vw-base) * 100vw);
-  height: calc(8 / var(--vw-base) * 100vw);
-  fill: none;
-  stroke: var(--color-red);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.reviews__rating {
-  display: flex;
-  align-items: center;
-  gap: calc(5 / var(--vw-base) * 100vw);
-}
-
-.reviews__star {
-  width:  calc(14 / var(--vw-base) * 100vw);
-  height: calc(14 / var(--vw-base) * 100vw);
-  fill: var(--color-star);
-}
-
-.reviews__rating-value {
-  font-size:   calc(14 / var(--vw-base) * 100vw);
-  font-weight: 600;
-  line-height: calc(16 / 14);
-  color: var(--color-text);
-}
-
-.reviews__dots {
-  display: none;
-}
-
-/* ═══════════════════════════════════════════════════════════════
    FAQ
    ═══════════════════════════════════════════════════════════════ */
 .faq {
@@ -917,11 +804,96 @@
 }
 
 
-.seo-text__content {
-  font-size:   calc(18 / var(--vw-base) * 100vw);
-  font-weight: 400;
-  line-height: calc(20 / 18);
+.seo-text__body > * {
+  margin-bottom: 1.25em;
+}
+
+.seo-text__body > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.seo-text__body > *:first-child {
+  margin-top: 0 !important;
+}
+
+.seo-text__body h2,
+.seo-text__body h3,
+.seo-text__body h4 {
+  margin-top: 1.6em;
+  margin-bottom: 1em;
+}
+
+.seo-text__body h2,
+.seo-text__body h3 {
+  font-size: calc(22 / var(--vw-base) * 100vw);
+  line-height: 1.09;
+}
+
+.seo-text__body h4 {
+  font-size: calc(18 / var(--vw-base) * 100vw);
+  line-height: 1.11;
+}
+
+.seo-text__body img {
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+}
+
+.seo-text__body ul,
+.seo-text__body ol {
+  padding-left: calc(24 / var(--vw-base) * 100vw);
+}
+
+.seo-text__body ul li {
+  list-style: disc;
+}
+
+.seo-text__body ul li::marker {
+  color: var(--color-red);
+}
+
+.seo-text__body ol li {
+  list-style: decimal;
+}
+
+.seo-text__body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  border: calc(1 / var(--vw-base) * 100vw) solid rgba(14, 13, 13, 0.12);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  font-size: calc(14 / var(--vw-base) * 100vw);
+  line-height: 1.43;
+  background: var(--color-white);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow-x: auto;
+}
+
+.seo-text__body table th,
+.seo-text__body table td {
+  padding: calc(12 / var(--vw-base) * 100vw) calc(15 / var(--vw-base) * 100vw);
+  border-bottom: calc(1 / var(--vw-base) * 100vw) solid rgba(14, 13, 13, 0.12);
+  font-size: calc(14 / var(--vw-base) * 100vw);
+  line-height: 1.43;
+  text-align: left;
   color: var(--color-text);
+}
+
+.seo-text__body table th + th,
+.seo-text__body table td + td {
+  border-left: calc(1 / var(--vw-base) * 100vw) solid rgba(14, 13, 13, 0.12);
+}
+
+.seo-text__body table thead th {
+  font-weight: 500;
+  color: var(--color-red);
+  background: var(--color-red-light);
+}
+
+.seo-text__body table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1016,10 +988,6 @@
     gap: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .sc-hero__stats-grid {
-    gap: calc(9 / var(--vw-base) * 100vw);
-  }
-
   .sc-hero__stat-value {
     font-size: calc(20 / var(--vw-base) * 100vw);
     line-height: calc(25 / 20);
@@ -1042,6 +1010,8 @@
 
   .sc-hero__partners-title {
     font-size: calc(16 / var(--vw-base) * 100vw);
+    width: 100%;
+    text-align: center;
   }
 
   .sc-hero__partners-logos {
@@ -1078,6 +1048,10 @@
   .symptoms__grid {
     grid-template-columns: 1fr;
     gap: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .symptoms__card {
+    border-radius: calc(10 / var(--vw-base) * 100vw);
   }
 
   .symptoms__card-image {
@@ -1288,53 +1262,6 @@
     background-color: var(--color-red);
   }
 
-  /* ── REVIEWS ──────────────────────────────────── */
-  .reviews {
-    padding-top:    calc(15 / var(--vw-base) * 100vw);
-    padding-bottom: calc(15 / var(--vw-base) * 100vw);
-  }
-
-  .reviews .container {
-    gap: calc(20 / var(--vw-base) * 100vw);
-  }
-
-  .reviews__title {
-    font-size: calc(26 / var(--vw-base) * 100vw);
-    line-height: calc(30 / 26);
-  }
-
-  .reviews__track {
-    gap: 0;
-  }
-
-  .reviews__card {
-    width: 100%;
-    border-radius: calc(10 / var(--vw-base) * 100vw);
-    padding: calc(15 / var(--vw-base) * 100vw);
-  }
-
-  .reviews__dots {
-    display: flex;
-    justify-content: center;
-    gap: calc(10 / var(--vw-base) * 100vw);
-  }
-
-  .reviews__dot {
-    width:  calc(10 / var(--vw-base) * 100vw);
-    height: calc(10 / var(--vw-base) * 100vw);
-    border-radius: calc(20 / var(--vw-base) * 100vw);
-    border: none;
-    padding: 0;
-    background-color: rgba(234, 51, 35, 0.2);
-    cursor: pointer;
-    transition: width 0.3s, background-color 0.3s;
-  }
-
-  .reviews__dot.-active {
-    width: calc(60 / var(--vw-base) * 100vw);
-    background-color: var(--color-red);
-  }
-
   /* ── FAQ ───────────────────────────────────────── */
   .faq {
     padding-top:    calc(15 / var(--vw-base) * 100vw);
@@ -1382,8 +1309,30 @@
     padding-bottom: calc(15 / var(--vw-base) * 100vw);
   }
 
-  .seo-text__content {
+  .seo-text__body h2,
+  .seo-text__body h3 {
+    font-size: calc(16 / var(--vw-base) * 100vw);
+  }
+
+  .seo-text__body h4 {
     font-size: calc(14 / var(--vw-base) * 100vw);
+  }
+
+  .seo-text__body img {
+    border-radius: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .seo-text__body table {
+    border-radius: calc(15 / var(--vw-base) * 100vw);
+    font-size: calc(12 / var(--vw-base) * 100vw);
+    line-height: 1.17;
+  }
+
+  .seo-text__body table th,
+  .seo-text__body table td {
+    padding: calc(10 / var(--vw-base) * 100vw);
+    font-size: calc(12 / var(--vw-base) * 100vw);
+    line-height: 1.17;
   }
 
   /* ── DIAGNOSTIC FORM (select variant) ─────────── */

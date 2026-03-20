@@ -17,41 +17,22 @@ $features = miauto_get_meta( 'miauto_hero_features', $post_id );
 if ( empty( $slides ) ) {
     return;
 }
-
-// Service menu — from CPT miauto_service
-$services_query = new WP_Query( array(
-    'post_type'      => 'miauto_service',
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-) );
 ?>
 
 <section class="hero" aria-label="Главный экран">
     <div class="hero__inner">
-
-        <!-- Service menu card -->
-        <?php if ( $services_query->have_posts() ) : ?>
-        <aside class="hero__service-menu" aria-label="Категории услуг">
-            <ul class="hero__service-list">
-                <?php while ( $services_query->have_posts() ) : $services_query->the_post(); ?>
-                <li><a class="hero__service-link" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
-                <?php endwhile; wp_reset_postdata(); ?>
-            </ul>
-        </aside>
-        <?php endif; ?>
 
         <!-- Slider -->
         <div class="hero__bg-wrap">
 
             <?php foreach ( $slides as $index => $slide ) :
                 $is_active  = ( 0 === $index );
-                $image_id   = $slide['image'] ?? '';
-                $image_alt  = $slide['image_alt'] ?? '';
-                $title      = $slide['title'] ?? '';
-                $desc       = $slide['description'] ?? '';
-                $cta_text   = $slide['cta_text'] ?? '';
-                $cta_url    = $slide['cta_url'] ?? '';
+                $image_id   = $slide['slide_image'] ?? '';
+                $image_alt  = $slide['slide_image_alt'] ?? '';
+                $title      = $slide['slide_title'] ?? '';
+                $desc       = $slide['slide_desc'] ?? '';
+                $cta_text   = $slide['slide_cta_text'] ?? '';
+                $cta_url    = $slide['slide_cta_url'] ?? '';
                 $heading_tag = ( 0 === $index ) ? 'h1' : 'h2';
             ?>
             <div class="hero__slide<?php echo $is_active ? ' -active' : ''; ?>" data-slide="<?php echo esc_attr( $index ); ?>">
@@ -75,7 +56,7 @@ $services_query = new WP_Query( array(
                     <div class="hero__features-mobile" aria-label="Преимущества">
                         <?php foreach ( $features as $feat ) : ?>
                         <div class="hero__feature-badge">
-                            <span class="hero__feature-badge-text"><?php echo esc_html( $feat['text'] ); ?></span>
+                            <span class="hero__feature-badge-text"><?php echo esc_html( $feat['feat_text'] ); ?></span>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -107,10 +88,10 @@ $services_query = new WP_Query( array(
         <div class="hero__features" aria-label="Преимущества">
             <?php foreach ( $features as $feat ) : ?>
             <div class="hero__feature-item">
-                <?php if ( ! empty( $feat['svg'] ) ) : ?>
-                <?php echo miauto_kses_svg( $feat['svg'] ); ?>
+                <?php if ( ! empty( $feat['feat_svg'] ) ) : ?>
+                <?php echo miauto_kses_svg( $feat['feat_svg'] ); ?>
                 <?php endif; ?>
-                <span class="hero__feature-text"><?php echo esc_html( $feat['text'] ); ?></span>
+                <span class="hero__feature-text"><?php echo esc_html( $feat['feat_text'] ); ?></span>
             </div>
             <?php endforeach; ?>
         </div>

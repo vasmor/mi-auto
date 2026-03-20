@@ -15,22 +15,24 @@ Container::make( 'post_meta', 'Главная: Hero-слайдер' )
     ->add_fields( array(
         Field::make( 'complex', 'miauto_hero_slides', 'Слайды' )
             ->add_fields( array(
-                Field::make( 'image', 'image', 'Фоновое изображение' ),
-                Field::make( 'text', 'image_alt', 'Alt изображения' ),
-                Field::make( 'text', 'title', 'Заголовок' ),
+                Field::make( 'image', 'slide_image', 'Фоновое изображение' ),
+                Field::make( 'text', 'slide_image_alt', 'Alt изображения' ),
+                Field::make( 'text', 'slide_title', 'Заголовок' ),
                 Field::make( 'textarea', 'slide_desc', 'Описание' ),
-                Field::make( 'text', 'cta_text', 'Текст кнопки' ),
-                Field::make( 'text', 'cta_url', 'Ссылка кнопки' ),
+                Field::make( 'text', 'slide_cta_text', 'Текст кнопки' ),
+                Field::make( 'text', 'slide_cta_url', 'Ссылка кнопки' ),
             ) )
-            ->set_header_template( '<%- title %>' ),
+            ->set_header_template( '<%- slide_title %>' )
+            ->set_layout( 'tabbed-horizontal' ),
 
         Field::make( 'complex', 'miauto_hero_features', 'Преимущества (значки под слайдером)' )
             ->add_fields( array(
-                Field::make( 'text', 'text', 'Текст' ),
-                Field::make( 'textarea', 'svg', 'SVG-иконка' )
+                Field::make( 'text', 'feat_text', 'Текст' ),
+                Field::make( 'textarea', 'feat_svg', 'SVG-иконка' )
                     ->set_help_text( 'Вставьте SVG-код иконки' ),
             ) )
-            ->set_header_template( '<%- text %>' ),
+            ->set_header_template( '<%- feat_text %>' )
+            ->set_layout( 'tabbed-horizontal' ),
     ) );
 
 // ── Модели авто ───────────────────────────────────────────────
@@ -99,9 +101,10 @@ Container::make( 'post_meta', 'Главная: Услуги СТО' )
                 Field::make( 'rich_text', 'panel_text', 'Описание' ),
                 Field::make( 'complex', 'tab_features', 'Список работ' )
                     ->add_fields( array(
-                        Field::make( 'text', 'item', 'Название работы' ),
+                        Field::make( 'text', 'tabfeat_item', 'Название работы' ),
                     ) )
-                    ->set_header_template( '<%- item %>' ),
+                    ->set_header_template( '<%- tabfeat_item %>' )
+                    ->set_layout( 'tabbed-horizontal' ),
                 Field::make( 'text', 'price_label', 'Метка цены' )
                     ->set_default_value( 'Стоимость работ от' ),
                 Field::make( 'text', 'price_value', 'Цена' ),

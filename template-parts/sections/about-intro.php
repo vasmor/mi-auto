@@ -35,8 +35,8 @@ if ( empty( $title ) ) {
 
             <?php if ( ! empty( $texts ) ) : ?>
                 <?php foreach ( $texts as $item ) : ?>
-                    <?php if ( ! empty( $item['text'] ) ) : ?>
-                    <p class="about-intro__text"><?php echo esc_html( $item['text'] ); ?></p>
+                    <?php if ( ! empty( $item['intro_text'] ) ) : ?>
+                    <p class="about-intro__text"><?php echo esc_html( $item['intro_text'] ); ?></p>
                     <?php endif; ?>
                 <?php endforeach; ?>
             <?php endif; ?>

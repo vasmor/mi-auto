@@ -55,6 +55,7 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
             <!-- Rating -->
             <div class="header__rating" aria-label="Рейтинг">
                 <div class="header__rating-row">
+					<svg class="header__rating-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 15 15" aria-hidden="true"><path fill="#ea3323" d="M9.04.245a5.21 5.21 0 0 0-5.57 1.616l2.466 2.073z"/><path fill="#ea3323" d="M3.471 1.86a5.2 5.2 0 0 0-1.216 3.348 5.8 5.8 0 0 0 .515 2.485l3.167-3.76z"/><path fill="#ea3323" d="M7.461 3.218a1.99 1.99 0 0 1 1.52 3.277l3.102-3.689A5.23 5.23 0 0 0 9.038.231L5.936 3.933a1.98 1.98 0 0 1 1.525-.715"/><path fill="#ea3323" d="M7.46 7.204a1.996 1.996 0 0 1-1.525-3.283L2.768 7.693a18.5 18.5 0 0 0 2.362 3.38l3.863-4.577a1.98 1.98 0 0 1-1.532.708M8.912 12.321c1.738-2.716 3.76-3.952 3.76-7.08 0-.837-.202-1.66-.587-2.402l-6.952 8.233c.296.387.592.799.882 1.25 1.062 1.634.766 2.613 1.448 2.613.683 0 .386-.979 1.449-2.614"/></svg>
                     <div class="header__stars" aria-label="<?php echo esc_attr( $miauto_stars ); ?> звёзд">
                         <?php for ( $i = 0; $i < $miauto_stars; $i++ ) : ?>
                         <svg class="header__star" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -71,11 +72,11 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
             <?php if ( ! empty( $miauto_phones ) ) : ?>
             <div class="header__phones">
                 <?php foreach ( $miauto_phones as $phone ) : ?>
-                <a class="header__phone" href="tel:<?php echo esc_attr( $phone['raw'] ); ?>" aria-label="Позвонить <?php echo esc_attr( $phone['number'] ); ?>">
+                <a class="header__phone" href="tel:<?php echo esc_attr( $phone['phone_raw'] ); ?>" aria-label="Позвонить <?php echo esc_attr( $phone['phone_number'] ); ?>">
                     <svg class="header__phone-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M3.6 1H6.8L8.4 5.2L6.4 6.4C7.3 8.2 9.8 10.7 11.6 11.6L12.8 9.6L17 11.2V14.4C17 15.8 15.8 17 14.4 17C6.6 17 1 11.4 1 3.6C1 2.2 2.2 1 3.6 1Z"/>
                     </svg>
-                    <span><?php echo esc_html( $phone['number'] ); ?></span>
+                    <span><?php echo esc_html( $phone['phone_number'] ); ?></span>
                 </a>
                 <?php endforeach; ?>
             </div>
@@ -145,11 +146,11 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
         <?php if ( ! empty( $miauto_phones ) ) : ?>
         <div class="header__mobile-phones">
             <?php foreach ( $miauto_phones as $phone ) : ?>
-            <a class="header__mobile-phone" href="tel:<?php echo esc_attr( $phone['raw'] ); ?>" aria-label="<?php echo esc_attr( $phone['number'] ); ?>">
+            <a class="header__mobile-phone" href="tel:<?php echo esc_attr( $phone['phone_raw'] ); ?>" aria-label="<?php echo esc_attr( $phone['phone_number'] ); ?>">
                 <svg class="header__mobile-phone-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M3.6 1H6.8L8.4 5.2L6.4 6.4C7.3 8.2 9.8 10.7 11.6 11.6L12.8 9.6L17 11.2V14.4C17 15.8 15.8 17 14.4 17C6.6 17 1 11.4 1 3.6C1 2.2 2.2 1 3.6 1Z"/>
                 </svg>
-                <span><?php echo esc_html( $phone['number'] ); ?></span>
+                <span><?php echo esc_html( $phone['phone_number'] ); ?></span>
             </a>
             <?php endforeach; ?>
         </div>
@@ -180,11 +181,11 @@ $miauto_tg         = miauto_get_option( 'miauto_telegram_url' );
             <?php if ( ! empty( $miauto_phones ) ) : ?>
             <div class="header__drawer-phones">
                 <?php foreach ( $miauto_phones as $phone ) : ?>
-                <a class="header__drawer-phone" href="tel:<?php echo esc_attr( $phone['raw'] ); ?>">
+                <a class="header__drawer-phone" href="tel:<?php echo esc_attr( $phone['phone_raw'] ); ?>">
                     <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M3.6 1H6.8L8.4 5.2L6.4 6.4C7.3 8.2 9.8 10.7 11.6 11.6L12.8 9.6L17 11.2V14.4C17 15.8 15.8 17 14.4 17C6.6 17 1 11.4 1 3.6C1 2.2 2.2 1 3.6 1Z"/>
                     </svg>
-                    <?php echo esc_html( $phone['number'] ); ?>
+                    <?php echo esc_html( $phone['phone_number'] ); ?>
                 </a>
                 <?php endforeach; ?>
             </div>

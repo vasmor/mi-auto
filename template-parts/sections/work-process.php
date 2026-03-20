@@ -9,10 +9,9 @@ if ( empty( $args['skip_styles'] ) ) {
     wp_enqueue_style( 'miauto-work-process' );
 }
 
-$post_id  = $args['post_id'] ?? get_the_ID();
-$title    = miauto_get_meta( 'miauto_work_process_title', $post_id );
-$subtitle = miauto_get_meta( 'miauto_work_process_subtitle', $post_id );
-$steps    = miauto_get_meta( 'miauto_work_process_steps', $post_id );
+$title    = miauto_get_option( 'miauto_work_process_title' );
+$subtitle = miauto_get_option( 'miauto_work_process_subtitle' );
+$steps    = miauto_get_option( 'miauto_work_process_steps' );
 
 if ( empty( $steps ) ) {
     return;
@@ -34,18 +33,18 @@ if ( empty( $steps ) ) {
         <div class="work-process__grid">
             <?php foreach ( $steps as $step ) : ?>
             <div class="work-process__step">
-                <?php if ( ! empty( $step['svg'] ) ) : ?>
+                <?php if ( ! empty( $step['step_svg'] ) ) : ?>
                 <div class="work-process__icon">
-                    <?php echo miauto_kses_svg( $step['svg'] ); ?>
+                    <?php echo miauto_kses_svg( $step['step_svg'] ); ?>
                 </div>
                 <?php endif; ?>
 
-                <?php if ( ! empty( $step['title'] ) ) : ?>
-                <h3 class="work-process__step-title"><?php echo esc_html( $step['title'] ); ?></h3>
+                <?php if ( ! empty( $step['step_title'] ) ) : ?>
+                <h3 class="work-process__step-title"><?php echo esc_html( $step['step_title'] ); ?></h3>
                 <?php endif; ?>
 
-                <?php if ( ! empty( $step['text'] ) ) : ?>
-                <p class="work-process__step-text"><?php echo esc_html( $step['text'] ); ?></p>
+                <?php if ( ! empty( $step['step_text'] ) ) : ?>
+                <p class="work-process__step-text"><?php echo esc_html( $step['step_text'] ); ?></p>
                 <?php endif; ?>
             </div>
             <?php endforeach; ?>

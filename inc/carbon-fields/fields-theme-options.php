@@ -39,16 +39,11 @@ $miauto_options = Container::make( 'theme_options', 'Опции темы' )
     ->add_tab( 'Footer', array(
         Field::make( 'complex', 'miauto_footer_partners', 'Партнёрские ссылки' )
             ->add_fields( array(
-                Field::make( 'text', 'title', 'Название' ),
-                Field::make( 'text', 'url', 'Ссылка' ),
+                Field::make( 'text', 'fpartner_title', 'Название' ),
+                Field::make( 'text', 'fpartner_url', 'Ссылка' ),
             ) )
-            ->set_header_template( '<%- title %>' ),
-        Field::make( 'complex', 'miauto_footer_advantages', 'Преимущества' )
-            ->add_fields( array(
-                Field::make( 'text', 'title', 'Название' ),
-                Field::make( 'text', 'url', 'Ссылка' ),
-            ) )
-            ->set_header_template( '<%- title %>' ),
+            ->set_header_template( '<%- fpartner_title %>' )
+            ->set_layout( 'tabbed-horizontal' ),
         Field::make( 'text', 'miauto_footer_privacy_text', 'Текст политики конфиденциальности' )
             ->set_default_value( 'Политика конфиденциальности данных' ),
         Field::make( 'text', 'miauto_footer_privacy_url', 'Ссылка на политику' )
@@ -73,12 +68,13 @@ $miauto_options = Container::make( 'theme_options', 'Опции темы' )
             ->set_default_value( 'info@mi-auto.ru' ),
         Field::make( 'complex', 'miauto_phones', 'Телефоны' )
             ->add_fields( array(
-                Field::make( 'text', 'number', 'Номер телефона' )
+                Field::make( 'text', 'phone_number', 'Номер телефона' )
                     ->set_help_text( 'Формат: +7 (926) 338-39-29' ),
-                Field::make( 'text', 'raw', 'Номер для ссылки tel:' )
+                Field::make( 'text', 'phone_raw', 'Номер для ссылки tel:' )
                     ->set_help_text( 'Формат: +79263383929' ),
             ) )
-            ->set_header_template( '<%- number %>' ),
+            ->set_header_template( '<%- phone_number %>' )
+            ->set_layout( 'tabbed-horizontal' ),
         Field::make( 'text', 'miauto_vk_url', 'Ссылка ВКонтакте' ),
         Field::make( 'text', 'miauto_telegram_url', 'Ссылка Telegram' ),
     ) );
@@ -109,6 +105,48 @@ Container::make( 'theme_options', 'Общие блоки' )
     ->add_tab( 'Партнёры', array(
         Field::make( 'text', 'miauto_partners_title', 'Заголовок секции' )
             ->set_default_value( 'Наши партнеры' ),
-        Field::make( 'media_gallery', 'miauto_partners_gallery', 'Логотипы партнёров' )
-            ->set_type( array( 'image' ) ),
+        Field::make( 'complex', 'miauto_partners_items', 'Партнёры' )
+            ->add_fields( array(
+                Field::make( 'image', 'pitem_image', 'Логотип' ),
+                Field::make( 'text',  'pitem_title', 'Название партнёра' ),
+                Field::make( 'text',  'pitem_url',   'Ссылка' ),
+            ) )
+            ->set_header_template( '<%- pitem_title %>' )
+            ->set_layout( 'tabbed-horizontal' ),
+    ) )
+
+    ->add_tab( 'Как мы работаем', array(
+        Field::make( 'text', 'miauto_work_process_title', 'Заголовок' )
+            ->set_default_value( 'Как мы работаем' ),
+        Field::make( 'text', 'miauto_work_process_subtitle', 'Подзаголовок' ),
+        Field::make( 'complex', 'miauto_work_process_steps', 'Шаги' )
+            ->set_layout( 'tabbed-horizontal' )
+            ->set_header_template( '<%- step_title %>' )
+            ->add_fields( array(
+                Field::make( 'textarea', 'step_svg', 'SVG-иконка' )
+                    ->set_help_text( 'SVG-код иконки (тег &lt;svg&gt;...&lt;/svg&gt;).' ),
+                Field::make( 'text', 'step_title', 'Заголовок шага' ),
+                Field::make( 'text', 'step_text', 'Описание шага' ),
+            ) ),
+    ) )
+
+    ->add_tab( 'Отзывы', array(
+        Field::make( 'complex', 'miauto_reviews', 'Карточки отзывов' )
+            ->set_layout( 'tabbed-horizontal' )
+            ->set_header_template( '<%- review_author_name %>' )
+            ->add_fields( array(
+                Field::make( 'text', 'review_author_name', 'Имя автора' ),
+                Field::make( 'text', 'review_author_car', 'Автомобиль' ),
+                Field::make( 'textarea', 'review_text', 'Текст отзыва' ),
+                Field::make( 'text', 'review_source_label', 'Источник (текст)' )
+                    ->set_default_value( 'Яндекс.Карты' ),
+                Field::make( 'text', 'review_source_url', 'Ссылка на источник' ),
+                Field::make( 'text', 'review_rating', 'Рейтинг' )
+                    ->set_default_value( '5,0' ),
+                Field::make( 'association', 'review_services', 'Привязка к услуге' )
+                    ->set_types( array(
+                        array( 'type' => 'post', 'post_type' => 'miauto_service' ),
+                    ) )
+                    ->set_help_text( 'Если не выбрана — отзыв виден на всех страницах услуг.' ),
+            ) ),
     ) );

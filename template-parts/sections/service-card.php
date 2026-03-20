@@ -1,8 +1,8 @@
 <?php
 /**
- * Section: Service Card (sc-hero, symptoms, svc-list, sc-prices, warranty).
+ * Section: Service Card (sc-hero, symptoms, svc-list, sc-prices).
  *
- * Renders all unique sections for the single service page.
+ * Renders unique sections for the single service page (warranty moved to warranty.php).
  *
  * @package miauto
  */
@@ -20,8 +20,8 @@ $sc_cta_secondary = miauto_get_meta( 'miauto_sc_hero_cta_secondary_text', $post_
 $sc_image         = miauto_get_meta( 'miauto_sc_hero_image', $post_id );
 $sc_stats         = miauto_get_meta( 'miauto_sc_hero_stats', $post_id );
 
-// Partners from theme options gallery.
-$partners_gallery = miauto_get_option( 'miauto_partners_gallery' );
+// Partners from theme options (Общие блоки → Партнёры).
+$partners_gallery = miauto_get_option( 'miauto_partners_items' );
 
 // ── Symptoms data ───────────────────────────────────────────────
 $sym_title    = miauto_get_meta( 'miauto_sc_symptoms_title', $post_id );
@@ -42,10 +42,6 @@ $pr_footer_heading = miauto_get_meta( 'miauto_sc_prices_footer_heading', $post_i
 $pr_footer_desc    = miauto_get_meta( 'miauto_sc_prices_footer_desc', $post_id );
 $pr_footer_btn     = miauto_get_meta( 'miauto_sc_prices_footer_btn_text', $post_id );
 
-// ── Warranty data ───────────────────────────────────────────────
-$wr_title    = miauto_get_meta( 'miauto_sc_warranty_title', $post_id );
-$wr_subtitle = miauto_get_meta( 'miauto_sc_warranty_subtitle', $post_id );
-$wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 ?>
 
 <?php // ═══════════════════════════════════════════════════════════════
@@ -68,7 +64,7 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 					<?php foreach ( $sc_features as $feature ) : ?>
 					<li class="sc-hero__feature">
 						<svg class="sc-hero__feature-icon" viewBox="0 0 14 10" aria-hidden="true"><path d="M1 5L5 9L13 1"/></svg>
-						<?php echo esc_html( $feature['text'] ); ?>
+						<?php echo esc_html( $feature['feature_text'] ); ?>
 					</li>
 					<?php endforeach; ?>
 				</ul>
@@ -121,13 +117,13 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 					<div class="sc-hero__partners">
 						<span class="sc-hero__partners-title">Партнеры:</span>
 						<div class="sc-hero__partners-logos">
-							<?php foreach ( $partners_gallery as $partner_image_id ) : ?>
-								<?php
-								echo wp_get_attachment_image( $partner_image_id, 'thumbnail', false, array(
+							<?php foreach ( $partners_gallery as $partner ) : ?>
+								<?php if ( ! empty( $partner['pitem_image'] ) ) : ?>
+								<?php echo wp_get_attachment_image( $partner['pitem_image'], 'full', false, array(
 									'class'   => 'sc-hero__partner-logo',
 									'loading' => 'lazy',
-								) );
-								?>
+								) ); ?>
+								<?php endif; ?>
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -160,8 +156,8 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 			<?php foreach ( $sym_cards as $card ) : ?>
 			<div class="symptoms__card">
 				<?php
-				if ( ! empty( $card['image'] ) ) {
-					echo wp_get_attachment_image( $card['image'], 'medium', false, array(
+				if ( ! empty( $card['sym_image'] ) ) {
+					echo wp_get_attachment_image( $card['sym_image'], 'medium', false, array(
 						'class'   => 'symptoms__card-image',
 						'loading' => 'lazy',
 					) );
@@ -169,11 +165,11 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 				?>
 				<div class="symptoms__card-content">
 					<div class="symptoms__card-text">
-						<?php if ( ! empty( $card['title'] ) ) : ?>
-						<h3 class="symptoms__card-title"><?php echo esc_html( $card['title'] ); ?></h3>
+						<?php if ( ! empty( $card['symptom_title'] ) ) : ?>
+						<h3 class="symptoms__card-title"><?php echo esc_html( $card['symptom_title'] ); ?></h3>
 						<?php endif; ?>
-						<?php if ( ! empty( $card['desc'] ) ) : ?>
-						<p class="symptoms__card-desc"><?php echo esc_html( $card['desc'] ); ?></p>
+						<?php if ( ! empty( $card['symptom_desc'] ) ) : ?>
+						<p class="symptoms__card-desc"><?php echo esc_html( $card['symptom_desc'] ); ?></p>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -212,11 +208,11 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 			<div class="svc-list__item">
 				<span class="svc-list__number"><?php echo esc_html( str_pad( $index + 1, 2, '0', STR_PAD_LEFT ) ); ?></span>
 				<div class="svc-list__item-body">
-					<?php if ( ! empty( $item['title'] ) ) : ?>
-					<h3 class="svc-list__item-title"><?php echo esc_html( $item['title'] ); ?></h3>
+					<?php if ( ! empty( $item['svc_title'] ) ) : ?>
+					<h3 class="svc-list__item-title"><?php echo esc_html( $item['svc_title'] ); ?></h3>
 					<?php endif; ?>
-					<?php if ( ! empty( $item['desc'] ) ) : ?>
-					<p class="svc-list__item-desc"><?php echo esc_html( $item['desc'] ); ?></p>
+					<?php if ( ! empty( $item['svc_desc'] ) ) : ?>
+					<p class="svc-list__item-desc"><?php echo esc_html( $item['svc_desc'] ); ?></p>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -250,8 +246,8 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 					<hr class="sc-prices__divider" aria-hidden="true">
 					<?php endif; ?>
 					<div class="sc-prices__row">
-						<span class="sc-prices__service-name"><?php echo esc_html( $row['name'] ); ?></span>
-						<span class="sc-prices__service-price"><?php echo esc_html( $row['price'] ); ?></span>
+						<span class="sc-prices__service-name"><?php echo esc_html( $row['service_name'] ); ?></span>
+						<span class="sc-prices__service-price"><?php echo esc_html( $row['sc_service_price'] ); ?></span>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -277,37 +273,3 @@ $wr_cards    = miauto_get_meta( 'miauto_sc_warranty_cards', $post_id );
 </section><!-- /.sc-prices -->
 <?php endif; ?>
 
-<?php // ═══════════════════════════════════════════════════════════════
-      // WARRANTY
-      // ═══════════════════════════════════════════════════════════════ ?>
-<?php if ( ! empty( $wr_cards ) ) : ?>
-<section class="warranty" aria-label="<?php echo esc_attr( $wr_title ); ?>">
-	<div class="container">
-
-		<div class="warranty__header">
-			<?php if ( ! empty( $wr_title ) ) : ?>
-			<h2 class="warranty__title"><?php echo esc_html( $wr_title ); ?></h2>
-			<?php endif; ?>
-			<?php if ( ! empty( $wr_subtitle ) ) : ?>
-			<p class="warranty__subtitle"><?php echo esc_html( $wr_subtitle ); ?></p>
-			<?php endif; ?>
-		</div>
-
-		<div class="warranty__grid">
-			<?php foreach ( $wr_cards as $card ) : ?>
-			<div class="warranty__card">
-				<?php if ( ! empty( $card['svg'] ) ) : ?>
-				<div class="warranty__card-icon">
-					<?php echo miauto_kses_svg( $card['svg'] ); ?>
-				</div>
-				<?php endif; ?>
-				<?php if ( ! empty( $card['text'] ) ) : ?>
-				<p class="warranty__card-text"><?php echo esc_html( $card['text'] ); ?></p>
-				<?php endif; ?>
-			</div>
-			<?php endforeach; ?>
-		</div>
-
-	</div>
-</section><!-- /.warranty -->
-<?php endif; ?>

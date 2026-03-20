@@ -50,12 +50,14 @@ $cf7_id     = miauto_get_option( 'miauto_form_cf7_id' );
                         <input class="form-section__input" type="email" name="email" placeholder="Введите e-mail" autocomplete="email">
                     </div>
 
-                    <button class="form-section__btn" type="submit">Записаться</button>
+                    <div class="form-section__actions">
+                        <button class="form-section__btn" type="submit">Записаться</button>
 
-                    <label class="form-section__privacy">
-                        <input class="form-section__checkbox" type="checkbox" name="privacy" required>
-                        <span class="form-section__privacy-text">Согласен с условиями <a class="form-section__privacy-link" href="<?php echo esc_url( miauto_get_option( 'miauto_footer_privacy_url' ) ); ?>">Политики конфиденциальности данных</a></span>
-                    </label>
+                        <label class="form-section__privacy">
+                            <input class="form-section__checkbox" type="checkbox" name="privacy" required>
+                            <span class="form-section__privacy-text">Согласен с условиями <a class="form-section__privacy-link" href="<?php echo esc_url( miauto_get_option( 'miauto_footer_privacy_url' ) ); ?>">Политики конфиденциальности данных</a></span>
+                        </label>
+                    </div>
                 </div>
             </form>
 

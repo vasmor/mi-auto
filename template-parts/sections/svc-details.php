@@ -36,7 +36,7 @@ if ( empty( $tabs ) ) {
                 ?>
                 <button class="svc-details__tab<?php echo $is_active ? ' -active' : ''; ?>" role="tab" aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>" data-tab="<?php echo esc_attr( $tab['tab_id'] ); ?>" type="button">
                     <?php if ( ! empty( $tab_icon ) ) : ?>
-                    <span class="svc-details__tab-icon" aria-hidden="true"><?php echo wp_kses( $tab_icon, array( 'svg' => array( 'xmlns' => true, 'viewBox' => true, 'fill' => true, 'width' => true, 'height' => true, 'class' => true, 'aria-hidden' => true ), 'path' => array( 'd' => true, 'fill' => true, 'fill-rule' => true, 'clip-rule' => true, 'stroke' => true, 'stroke-width' => true, 'stroke-miterlimit' => true, 'stroke-linecap' => true, 'stroke-linejoin' => true ), 'rect' => array( 'x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true, 'fill' => true ), 'circle' => array( 'cx' => true, 'cy' => true, 'r' => true, 'fill' => true, 'stroke' => true, 'stroke-width' => true ), 'g' => array( 'fill' => true ) ) ); ?></span>
+                    <span class="svc-details__tab-icon" aria-hidden="true"><?php echo miauto_kses_svg( $tab_icon ); ?></span>
                     <?php endif; ?>
                     <?php echo esc_html( $tab['tab_title'] ); ?>
                 </button>
@@ -76,7 +76,7 @@ if ( empty( $tabs ) ) {
                         <svg class="svc-details__feature-icon" viewBox="0 0 14 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                             <path d="M1 5L5 9L13 1" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <span class="svc-details__feature-text"><?php echo esc_html( $feat['item'] ); ?></span>
+                        <span class="svc-details__feature-text"><?php echo esc_html( $feat['tabfeat_item'] ); ?></span>
                     </div>
                     <?php endforeach; ?>
                 </div>
