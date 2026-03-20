@@ -29,3 +29,4 @@ require_once get_template_directory() . '/inc/demo-import/service-remont-vyhlopn
 require_once get_template_directory() . '/inc/demo-import/service-komp-diagnostika.php';
 require_once get_template_directory() . '/inc/demo-import/service-zamena-remnya-grm.php';
 require_once get_template_directory() . '/inc/demo-import/service-zapravka-konditsionera.php';
+require_once get_template_directory() . '/inc/demo-import/service-all.php';
