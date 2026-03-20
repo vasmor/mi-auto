@@ -141,18 +141,19 @@ function miauto_grm_upload_single( $filename ) {
 		return 0;
 	}
 
-	$upload_dir = wp_upload_dir();
-	$target     = $upload_dir['path'] . '/' . $filename;
+	$upload_dir      = wp_upload_dir();
+	$upload_filename = 'grm-' . $filename;
+	$target          = $upload_dir['path'] . '/' . $upload_filename;
 
 	if ( ! copy( $file_path, $target ) ) {
 		return 0;
 	}
 
-	$filetype  = wp_check_filetype( $filename );
+	$filetype  = wp_check_filetype( $upload_filename );
 	$attach_id = wp_insert_attachment( array(
-		'guid'           => $upload_dir['url'] . '/' . $filename,
+		'guid'           => $upload_dir['url'] . '/' . $upload_filename,
 		'post_mime_type' => $filetype['type'],
-		'post_title'     => pathinfo( $filename, PATHINFO_FILENAME ),
+		'post_title'     => pathinfo( $upload_filename, PATHINFO_FILENAME ),
 		'post_content'   => '',
 		'post_status'    => 'inherit',
 	), $target );
