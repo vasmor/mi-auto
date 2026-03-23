@@ -1,0 +1,380 @@
+/* ============================================================
+   model-tabs.css
+   Desktop 1440px / Mobile 370px
+   Styles for Model Tabs section + popup
+   ============================================================ */
+
+/* ═══════════════════════════════════════════════════════════════
+   MODEL TABS SECTION
+   ═══════════════════════════════════════════════════════════════ */
+.model-tabs {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.model-tabs .container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(30 / var(--vw-base) * 100vw);
+}
+
+.model-tabs__title {
+  font-size:   calc(35 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.14;
+  color: var(--color-text);
+}
+
+/* ── Tab buttons ─────────────────────────────────────────────── */
+.model-tabs__buttons {
+  display: flex;
+  gap: calc(10 / var(--vw-base) * 100vw);
+  flex-wrap: wrap;
+}
+
+.model-tabs__tab {
+  padding: calc(10 / var(--vw-base) * 100vw) calc(20 / var(--vw-base) * 100vw);
+  border: calc(1 / var(--vw-base) * 100vw) solid #d9d9d9;
+  border-radius: calc(10 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+  font-family: 'Inter', sans-serif;
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 500;
+  line-height: 1.43;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.model-tabs__tab:hover {
+  border-color: var(--color-red);
+  color: var(--color-red);
+}
+
+.model-tabs__tab.-active {
+  background-color: var(--color-red);
+  border-color: var(--color-red);
+  color: var(--color-white);
+}
+
+/* ── Tab panels ──────────────────────────────────────────────── */
+.model-tabs__panel {
+  display: none;
+}
+
+.model-tabs__panel.-active {
+  display: block;
+}
+
+/* ── Table scroll wrapper ────────────────────────────────────── */
+.model-tabs__table-scroll {
+  border-radius: calc(15 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+  overflow: hidden;
+}
+
+/* ── Tables ──────────────────────────────────────────────────── */
+.model-tabs__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.model-tabs__table thead th {
+  padding: calc(16 / var(--vw-base) * 100vw) calc(20 / var(--vw-base) * 100vw);
+	border: 1px solid rgba(255, 255, 255, .2);
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.43;
+  color: var(--color-white);
+  background-color: var(--color-red);
+  text-align: left;
+}
+
+.model-tabs__table tbody td {
+  padding: calc(14 / var(--vw-base) * 100vw) calc(20 / var(--vw-base) * 100vw);
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.43;
+  color: var(--color-text);
+  border-bottom: 1px solid #f0eded;
+}
+
+.model-tabs__table tbody td:last-child {
+  text-align: right;
+}
+
+.model-tabs__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.model-tabs__table tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ── TO table (multi-column) ─────────────────────────────────── */
+.model-tabs__table--to thead th {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.model-tabs__table--to thead tr:first-child th:first-child {
+  text-align: left;
+}
+
+.model-tabs__table--to tbody td {
+  text-align: center;
+}
+
+.model-tabs__table--to tbody td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.model-tabs__table--to tbody td:last-child {
+  text-align: center;
+}
+
+/* ── Cards content (Карты ТО) ────────────────────────────────── */
+.model-tabs__cards-content {
+  padding: calc(30 / var(--vw-base) * 100vw);
+  background-color: var(--color-white);
+  border-radius: calc(15 / var(--vw-base) * 100vw);
+}
+
+.model-tabs__cards-content h4 {
+  font-size:   calc(18 / var(--vw-base) * 100vw);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text);
+  margin-bottom: calc(15 / var(--vw-base) * 100vw);
+}
+
+.model-tabs__cards-content p {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  line-height: 1.4;
+  color: var(--color-text);
+  margin-bottom: calc(10 / var(--vw-base) * 100vw);
+}
+
+.model-tabs__cards-content ul {
+  padding-left: calc(20 / var(--vw-base) * 100vw);
+  margin-bottom: calc(15 / var(--vw-base) * 100vw);
+  list-style: disc;
+}
+
+.model-tabs__cards-content li {
+  font-size:   calc(14 / var(--vw-base) * 100vw);
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: calc(5 / var(--vw-base) * 100vw);
+}
+
+.model-tabs__cards-content ul li::marker {
+  color: var(--color-red);
+}
+
+.model-tabs__cards-content img {
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+.model-tabs__cards-content hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: calc(20 / var(--vw-base) * 100vw) 0;
+}
+
+.model-tabs__cards-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: calc(20 / var(--vw-base) * 100vw);
+}
+
+.model-tabs__cards-content table td,
+.model-tabs__cards-content table th {
+  padding: calc(8 / var(--vw-base) * 100vw) calc(10 / var(--vw-base) * 100vw);
+  border: 1px solid #e0e0e0;
+  font-size: calc(13 / var(--vw-base) * 100vw);
+  line-height: 1.4;
+}
+
+/* Popup trigger images */
+.model-tabs__popup-trigger {
+  display: inline-block;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.model-tabs__popup-trigger:hover {
+  opacity: 0.8;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   POPUP
+   ═══════════════════════════════════════════════════════════════ */
+.miauto-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.miauto-popup.-visible {
+  display: flex;
+}
+
+.miauto-popup__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.miauto-popup__content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background-color: var(--color-white);
+  border-radius: calc(15 / var(--vw-base) * 100vw);
+  overflow: auto;
+  z-index: 1;
+}
+
+.miauto-popup__close {
+  position: sticky;
+  top: 0;
+  float: right;
+  width:  calc(40 / var(--vw-base) * 100vw);
+  height: calc(40 / var(--vw-base) * 100vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-white);
+  border: none;
+  border-radius: 50%;
+  font-size: calc(24 / var(--vw-base) * 100vw);
+  color: var(--color-text);
+  cursor: pointer;
+  z-index: 2;
+  margin: calc(10 / var(--vw-base) * 100vw);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s;
+}
+
+.miauto-popup__close:hover {
+  background-color: #f0f0f0;
+}
+
+.miauto-popup__body {
+  padding: calc(20 / var(--vw-base) * 100vw) calc(30 / var(--vw-base) * 100vw) calc(30 / var(--vw-base) * 100vw);
+}
+
+.miauto-popup__body iframe {
+  max-width: 100%;
+  border: none;
+}
+
+.miauto-popup__body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.miauto-popup__body table td,
+.miauto-popup__body table th {
+  padding: calc(8 / var(--vw-base) * 100vw) calc(10 / var(--vw-base) * 100vw);
+  border: 1px solid #e0e0e0;
+  font-size: calc(13 / var(--vw-base) * 100vw);
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE  (max-width: 767px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  .model-tabs {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .model-tabs .container {
+    gap: calc(20 / var(--vw-base) * 100vw);
+  }
+
+  .model-tabs__title {
+    font-size: calc(26 / var(--vw-base) * 100vw);
+    line-height: calc(30 / 26);
+  }
+
+  /* Scrollable tabs on mobile */
+  .model-tabs__buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: calc(8 / var(--vw-base) * 100vw);
+  }
+
+  .model-tabs__buttons::-webkit-scrollbar {
+    display: none;
+  }
+
+  .model-tabs__tab {
+    flex-shrink: 0;
+    font-size: calc(13 / var(--vw-base) * 100vw);
+    padding: calc(8 / var(--vw-base) * 100vw) calc(16 / var(--vw-base) * 100vw);
+  }
+
+  /* Table scroll */
+  .model-tabs__table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .model-tabs__table {
+    min-width: calc(600 / var(--vw-base) * 100vw);
+  }
+
+  .model-tabs__table--to {
+    min-width: calc(800 / var(--vw-base) * 100vw);
+  }
+
+  /* Cards content */
+  .model-tabs__cards-content {
+    padding: calc(15 / var(--vw-base) * 100vw);
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .model-tabs__cards-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Popup */
+  .miauto-popup__content {
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: calc(10 / var(--vw-base) * 100vw);
+  }
+
+  .miauto-popup__body {
+    padding: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .miauto-popup__close {
+    width:  calc(35 / var(--vw-base) * 100vw);
+    height: calc(35 / var(--vw-base) * 100vw);
+    font-size: calc(20 / var(--vw-base) * 100vw);
+  }
+}

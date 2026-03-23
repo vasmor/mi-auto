@@ -130,6 +130,17 @@ Container::make( 'theme_options', 'Общие блоки' )
             ) ),
     ) )
 
+    ->add_tab( 'Карта ТО (обычн. усл.)', array(
+        Field::make( 'textarea', 'miauto_karta_to_normal', 'Код iframe карты ТО' )
+            ->set_help_text( 'Iframe-код Google Sheets с картой ТО для обычных условий эксплуатации.' )
+            ->set_rows( 4 ),
+    ) )
+
+    ->add_tab( 'Карта ТО (тяж. усл.)', array(
+        Field::make( 'rich_text', 'miauto_karta_to_heavy', 'Контент карты ТО (тяжёлые условия)' )
+            ->set_help_text( 'HTML-контент таблицы обслуживания при тяжёлых условиях эксплуатации.' ),
+    ) )
+
     ->add_tab( 'Отзывы', array(
         Field::make( 'complex', 'miauto_reviews', 'Карточки отзывов' )
             ->set_layout( 'tabbed-horizontal' )

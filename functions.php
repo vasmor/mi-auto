@@ -30,3 +30,6 @@ require_once get_template_directory() . '/inc/demo-import/service-komp-diagnosti
 require_once get_template_directory() . '/inc/demo-import/service-zamena-remnya-grm.php';
 require_once get_template_directory() . '/inc/demo-import/service-zapravka-konditsionera.php';
 require_once get_template_directory() . '/inc/demo-import/service-all.php';
+require_once get_template_directory() . '/inc/demo-import/import-model-data.php';
+require_once get_template_directory() . '/inc/demo-import/import-model-hero-asx.php';
+require_once get_template_directory() . '/inc/demo-import/import-model-hero-all.php';

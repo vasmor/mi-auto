@@ -26,7 +26,7 @@ function miauto_register_post_types() {
         'public'       => true,
         'has_archive'  => true,
         'menu_icon'    => 'dashicons-admin-generic',
-        'supports'     => array( 'title', 'thumbnail' ),
+        'supports'     => array( 'title', 'thumbnail', 'editor' ),
         'rewrite'      => array( 'slug' => 'models' ),
         'show_in_rest' => true,
     ) );

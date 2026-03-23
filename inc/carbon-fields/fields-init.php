@@ -25,5 +25,6 @@ function miauto_carbon_fields_register() {
     require_once MIAUTO_DIR . '/inc/carbon-fields/fields-works.php';
     require_once MIAUTO_DIR . '/inc/carbon-fields/fields-prices.php';
     require_once MIAUTO_DIR . '/inc/carbon-fields/fields-service.php';
+    require_once MIAUTO_DIR . '/inc/carbon-fields/fields-model.php';
 }
 add_action( 'carbon_fields_register_fields', 'miauto_carbon_fields_register' );

@@ -46,6 +46,9 @@ function miauto_register_assets() {
         'miauto-blog'          => 'blog.css',
         'miauto-article'       => 'article.css',
         'miauto-service-card'  => 'service-card.css',
+        'miauto-model-card'    => 'model-card.css',
+        'miauto-model-text'    => 'model-text.css',
+        'miauto-model-tabs'    => 'model-tabs.css',
         'miauto-reviews'       => 'reviews.css',
         'miauto-faq'           => 'faq.css',
     );
@@ -74,6 +77,7 @@ function miauto_register_assets() {
         'miauto-prices'        => 'prices.js',
         'miauto-blog'          => 'blog.js',
         'miauto-service-card'  => 'service-card.js',
+        'miauto-model-tabs'    => 'model-tabs.js',
         'miauto-reviews'       => 'reviews.js',
         'miauto-faq'           => 'faq.js',
     );

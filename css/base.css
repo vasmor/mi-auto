@@ -75,6 +75,40 @@ ol {
   list-style: none;
 }
 
+blockquote {
+	margin: 1.1em 0;
+	padding: calc(20 / var(--vw-base) * 100vw);
+	border-radius: calc(15 / var(--vw-base) * 100vw);
+	border-left: 3px solid var(--color-red);
+	background-color: var(--color-red-light);
+	overflow: auto;
+}
+
+blockquote:last-child, blockquote>*:last-child {
+	margin-bottom: 0;
+}
+
+blockquote:first-child, blockquote>*:first-child {
+	margin-top: 0;
+}
+
+blockquote ul, blockquote ol {
+	margin: 1.1em 0;
+	padding-left: calc(20 / var(--vw-base) * 100vw);
+}
+
+blockquote ul {
+	list-style: disc;
+}
+
+blockquote ul li::marker {
+	color: var(--color-red);
+}
+
+blockquote ol {
+	list-style: decimal;
+}
+
 /* ---------- Utility: content container ---------- */
 .container {
   width: 100%;
@@ -108,4 +142,14 @@ body .wpcf7 form .wpcf7-response-output {
 	padding: 0.2em 0.5em;
 	font-size: 0.9em;
 	text-align: center;
+}
+
+@media (max-width: 767px) {
+  	blockquote {
+    	padding: calc(15 / var(--vw-base) * 100vw) calc(10 / var(--vw-base) * 100vw);
+    }
+
+    blockquote ul, blockquote ol {
+    	padding-left: calc(15 / var(--vw-base) * 100vw);
+    }
 }

@@ -1,0 +1,182 @@
+/* ============================================================
+   model-text.css
+   Desktop 1440px / Mobile 370px
+   Styles for SEO text section on model pages
+   ============================================================ */
+
+.model-text {
+  padding-top:    calc(40 / var(--vw-base) * 100vw);
+  padding-bottom: calc(40 / var(--vw-base) * 100vw);
+  background-color: var(--color-bg);
+}
+
+.model-text__body > * {
+  margin-bottom: 1.25em;
+}
+
+.model-text__body > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.model-text__body > *:first-child {
+  margin-top: 0 !important;
+}
+
+.model-text__body p {
+  font-size:   calc(15 / var(--vw-base) * 100vw);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.model-text__body strong {
+  font-weight: 600;
+}
+
+.model-text__body h2,
+.model-text__body h3,
+.model-text__body h4 {
+  margin-top: 1.6em;
+  margin-bottom: 1em;
+}
+
+.model-text__body h2,
+.model-text__body h3 {
+  font-size: calc(22 / var(--vw-base) * 100vw);
+  line-height: 1.09;
+}
+
+.model-text__body h4 {
+  font-size: calc(18 / var(--vw-base) * 100vw);
+  line-height: 1.11;
+}
+
+.model-text__body img {
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+}
+
+.model-text__body ul,
+.model-text__body ol {
+  padding-left: calc(24 / var(--vw-base) * 100vw);
+}
+
+.model-text__body ul li {
+  list-style: disc;
+  font-size:   calc(15 / var(--vw-base) * 100vw);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.model-text__body ul li::marker {
+  color: var(--color-red);
+}
+
+.model-text__body ol li {
+  list-style: decimal;
+  font-size:   calc(15 / var(--vw-base) * 100vw);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.model-text__body blockquote {
+  margin: 1.6em 0;
+  padding: calc(20 / var(--vw-base) * 100vw) calc(25 / var(--vw-base) * 100vw);
+  border-left: calc(4 / var(--vw-base) * 100vw) solid var(--color-red);
+  background: var(--color-white);
+  border-radius: 0 calc(12 / var(--vw-base) * 100vw) calc(12 / var(--vw-base) * 100vw) 0;
+}
+
+.model-text__body blockquote p {
+  margin-bottom: 0;
+}
+
+.model-text__body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  border: calc(1 / var(--vw-base) * 100vw) solid rgba(14, 13, 13, 0.12);
+  border-radius: calc(20 / var(--vw-base) * 100vw);
+  font-size: calc(14 / var(--vw-base) * 100vw);
+  line-height: 1.43;
+  background: var(--color-white);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow-x: auto;
+}
+
+.model-text__body table th,
+.model-text__body table td {
+  padding: calc(12 / var(--vw-base) * 100vw) calc(15 / var(--vw-base) * 100vw);
+  border-bottom: calc(1 / var(--vw-base) * 100vw) solid rgba(14, 13, 13, 0.12);
+  font-size: calc(14 / var(--vw-base) * 100vw);
+  line-height: 1.43;
+  text-align: left;
+  color: var(--color-text);
+}
+
+.model-text__body table th + th,
+.model-text__body table td + td {
+  border-left: calc(1 / var(--vw-base) * 100vw) solid rgba(14, 13, 13, 0.12);
+}
+
+.model-text__body table thead th {
+  font-weight: 500;
+  color: var(--color-red);
+  background: var(--color-red-light);
+}
+
+.model-text__body table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE  (max-width: 767px, vw-base: 370)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  .model-text {
+    padding-top:    calc(15 / var(--vw-base) * 100vw);
+    padding-bottom: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body p {
+    font-size: calc(13 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body h2,
+  .model-text__body h3 {
+    font-size: calc(16 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body h4 {
+    font-size: calc(14 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body img {
+    border-radius: calc(15 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body ul li,
+  .model-text__body ol li {
+    font-size: calc(13 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body blockquote {
+    padding: calc(15 / var(--vw-base) * 100vw) calc(18 / var(--vw-base) * 100vw);
+  }
+
+  .model-text__body table {
+    border-radius: calc(15 / var(--vw-base) * 100vw);
+    font-size: calc(12 / var(--vw-base) * 100vw);
+    line-height: 1.17;
+  }
+
+  .model-text__body table th,
+  .model-text__body table td {
+    padding: calc(10 / var(--vw-base) * 100vw);
+    font-size: calc(12 / var(--vw-base) * 100vw);
+    line-height: 1.17;
+  }
+}
